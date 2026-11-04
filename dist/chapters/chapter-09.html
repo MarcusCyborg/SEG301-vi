@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163b3c">
+  <meta name="description" content="Tìm hiểu bộ sưu tập kiểm thử, chỉ số truy xuất, hiệu năng, kiểm định thống kê và thử nghiệm trực tuyến.">
+  <title>CHƯƠNG 9 Đánh giá công cụ tìm kiếm | SEG301m</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=20261104-vi">
+  <link rel="stylesheet" href="../tutor.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/katex/katex.min.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/highlight.css?v=20261104-vi">
+  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang"}</script>
+  <script src="../app.js?v=20261104-vi" defer></script>
+  <script src="../tutor.js?v=20261104-vi" defer></script>
+</head>
+<body data-page="chapter" data-language="vi">
+  <a class="skip-link" href="#learning-goals-vi">Chuyển đến bài học</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
+    <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 9</span>
+    <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
+  </header>
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__line"></span> SEG301m / CHƯƠNG 9</p>
+        <h1 id="page-title">Đánh giá công<br><em>cụ tìm kiếm</em></h1>
+        <p class="hero__description">Tìm hiểu bộ sưu tập kiểm thử, chỉ số truy xuất, hiệu năng, kiểm định thống kê và thử nghiệm trực tuyến.</p>
+        <a class="start-link" href="#learning-goals-vi">Bắt đầu học <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <span class="orbit orbit--one"></span><span class="orbit orbit--two"></span>
+        <span class="signal signal--one"></span><span class="signal signal--two"></span>
+        <span class="hero__query">NGUỒN <b>09</b></span>
+        <span class="hero__result hero__result--one">01 <b>TÀI LIỆU</b></span>
+        <span class="hero__result hero__result--two">02 <b>CHỈ MỤC</b></span>
+        <span class="hero__result hero__result--three">03 <b>KẾT QUẢ</b></span>
+        <span class="hero__visual-label">TỪ NGUỒN ĐẾN TÌM KIẾM</span>
+      </div>
+    </div>
+    <div class="hero__footer"><span>CHƯƠNG 9</span><span>Nguồn: toàn bộ 23 slide bài giảng</span></div>
+  </section>
+  <div class="page-layout" id="lesson">
+    <nav class="chapter-nav" aria-label="Mục lục"><div class="chapter-nav__sticky">
+      <p class="chapter-nav__label">MỤC LỤC <span>09 / 12</span></p>
+      <div class="chapter-nav__links"><a href="#prerequisites-vi" data-section="prerequisites"><span>01</span>Kiến thức cần chuẩn bị</a>
+<a href="#why-evaluate-vi" data-section="why-evaluate"><span>02</span>9.1 Vì sao cần đánh giá công cụ tìm kiếm</a>
+<a href="#evaluation-corpus-vi" data-section="evaluation-corpus"><span>03</span>9.2 Bộ sưu tập kiểm thử (Evaluation Corpus / Test Collection)</a>
+<a href="#logging-vi" data-section="logging"><span>04</span>9.3 Nhật ký truy vấn (Query Logs)</a>
+<a href="#shared-example-vi" data-section="shared-example"><span>05</span>Ví dụ đánh giá dùng chung</a>
+<a href="#basic-effectiveness-metrics-vi" data-section="basic-effectiveness-metrics"><span>06</span>9.4 Độ chính xác, Độ bao phủ, Tỷ lệ dương tính giả và Điểm F1</a>
+<a href="#ranked-effectiveness-metrics-vi" data-section="ranked-effectiveness-metrics"><span>07</span>9.5 Các chỉ số đo lường thứ hạng hàng đầu</a>
+<a href="#precision-recall-interpolation-vi" data-section="precision-recall-interpolation"><span>08</span>9.6 Nội suy Precision và Recall</a>
+<a href="#kendall-tau-vi" data-section="kendall-tau"><span>09</span>9.7 Hệ số tương quan hạng Kendall tau</a>
+<a href="#efficiency-metrics-vi" data-section="efficiency-metrics"><span>10</span>9.8 Chỉ số hiệu năng (Efficiency Metrics)</a>
+<a href="#training-validation-test-vi" data-section="training-validation-test"><span>11</span>9.9 Phân chia dữ liệu: Huấn luyện, Kiểm định và Kiểm thử</a>
+<a href="#significance-tests-vi" data-section="significance-tests"><span>12</span>9.10 Kiểm định ý nghĩa thống kê</a>
+<a href="#online-testing-vi" data-section="online-testing"><span>13</span>9.11 Thử nghiệm trực tuyến (Online Testing)</a>
+<a href="#exercise-vi" data-section="exercise"><span>14</span>Bài tập cuối chương: Phân tích truy vấn đa nghĩa</a>
+<a href="#summary-vi" data-section="summary"><span>15</span>Tổng kết</a>
+<a href="#quiz-vi" data-section="quiz"><span>16</span>Câu hỏi tự kiểm tra</a>
+<a href="#next-chapter-vi" data-section="next-chapter"><span>17</span>Chuyển tiếp sang chương sau</a>
+<a href="#glossary-vi" data-section="glossary"><span>18</span>Bảng thuật ngữ</a></div>
+      <div class="chapter-directory">
+    <p class="chapter-directory__label">ĐỦ 12 CHƯƠNG</p>
+    <div class="chapter-directory__links"><a class="chapter-directory__item" href="./chapter-01.html"><b>01</b>Truy xuất thông tin</a>
+<a class="chapter-directory__item" href="./chapter-02.html"><b>02</b>Các thành phần và luồng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-03.html"><b>03</b>Thu thập tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-04.html"><b>04</b>Biến từ thành dữ liệu có thể tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-05.html"><b>05</b>Từ chỉ mục đến kết quả hàng đầu</a>
+<a class="chapter-directory__item" href="./chapter-06.html"><b>06</b>Biến nhu cầu thành truy vấn</a>
+<a class="chapter-directory__item" href="./chapter-07.html"><b>07</b>Cách tính điểm kết quả</a>
+<a class="chapter-directory__item" href="./chapter-08.html"><b>08</b>Giúp nội dung được tìm thấy</a>
+<span class="chapter-directory__item is-current" aria-current="page"><b>09</b>Đo chất lượng tìm kiếm</span>
+<a class="chapter-directory__item" href="./chapter-10.html"><b>10</b>Phân loại và sắp xếp tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-11.html"><b>11</b>Dùng con người và mối quan hệ trong tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-12.html"><b>12</b>Khai thác thứ tự, cấu trúc và đa phương tiện</a></div>
+  </div>
+    </div></nav>
+    <main class="lesson-content" id="main-content">
+      <article class="lesson-language" lang="vi-VN" data-lang="vi">
+        <div class="intro-mark"><span>GHI CHÚ HỌC TẬP</span><span>Bản tiếng Việt · Chương 09</span></div>
+        <p><strong>Tài liệu gốc:</strong> Slide bài giảng SEG301m Chương 9, &quot;Evaluating Search Engines&quot; (23 slide)<br><strong>Cách đọc:</strong> Chương này hướng dẫn cách đánh giá định lượng chất lượng và hiệu năng của công cụ tìm kiếm. Đánh giá trong IR dựa trên việc thiết lập bộ sưu tập kiểm thử khách quan, tính toán các chỉ số độ chính xác, độ bao phủ, thứ hạng và kiểm định thống kê để khẳng định sự vượt trội có thực sự mang ý nghĩa hay chỉ là ngẫu nhiên.</p>
+<h2 id="learning-goals-vi" data-section-heading="learning-goals">Mục tiêu của chương</h2>
+<p>Sau khi học xong chương này, bạn có thể giải thích và tính toán các nội dung sau:</p>
+<ol>
+<li>Trình bày lý do cần đánh giá công cụ tìm kiếm và cấu trúc của một bộ sưu tập kiểm thử (evaluation corpus / test collection).</li>
+<li>Phân tích ưu điểm và hạn chế của việc sử dụng dữ liệu nhật ký truy vấn (query logs) trong đánh giá.</li>
+<li>Tính toán các chỉ số cơ bản: Độ chính xác (Precision), Độ bao phủ (Recall), Tỷ lệ dương tính giả (Fallout) và Điểm F1.</li>
+<li>Tính toán các chỉ số xếp hạng: Precision@k, Average Precision (AP), Mean Average Precision (MAP), Mean Reciprocal Rank (MRR) và NDCG@k.</li>
+<li>Giải thích phương pháp nội suy đường cong Precision-Recall và hệ số tương quan hạng Kendall tau.</li>
+<li>Đo lường các chỉ số hiệu năng (latency, throughput) và thực hiện kiểm định dấu chính xác (exact sign test) để kiểm tra ý nghĩa thống kê.</li>
+</ol>
+<p class="source-note"><span>SLIDE NGUỒN</span> 1-3</p>
+<figure class="chapter-map"><a href="../assets/chapter-09-mindmap.png" target="_blank" rel="noopener"><img src="../assets/chapter-09-mindmap.png" width="1491" height="1055" loading="lazy" alt="Sơ đồ tư duy bằng tiếng Anh cho Chương 9, Đánh giá công cụ tìm kiếm"></a><figcaption>Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 9. Chọn ảnh để xem kích thước đầy đủ.</figcaption></figure>
+<h2 id="prerequisites-vi" data-section-heading="prerequisites">Kiến thức cần chuẩn bị</h2>
+<ul>
+<li>Nắm vững các mô hình tính điểm xếp hạng từ Chương 7.</li>
+<li>Phân biệt rõ tính hiệu quả (effectiveness - chất lượng kết quả) và tính hiệu năng (efficiency - tốc độ xử lý) từ Chương 2.</li>
+<li>Hiểu khái niệm gán nhãn độ liên quan nhị phân (0 hoặc 1) và đa mức độ (graded relevance từ 0 đến 3).</li>
+</ul>
+<h2 id="why-evaluate-vi" data-section-heading="why-evaluate">9.1 Vì sao cần đánh giá công cụ tìm kiếm</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 4-5</p>
+<p>Một công cụ tìm kiếm không thể tự khẳng định mình &quot;tốt hơn&quot; chỉ dựa vào cảm tính của lập trình viên hay một vài câu truy vấn thử nghiệm ngẫu nhiên. Việc đánh giá định lượng là bắt buộc nhằm:</p>
+<ul>
+<li>So sánh khách quan giữa các thuật toán và mô hình xếp hạng khác nhau (ví dụ so sánh BM25 với Mô hình ngôn ngữ).</li>
+<li>Tinh chỉnh các siêu tham số (như <code>k1</code>, <code>b</code> trong BM25 hoặc <code>μ</code> trong Dirichlet smoothing).</li>
+<li>Phát hiện các trường hợp suy thoái chất lượng khi cập nhật thuật toán mới.</li>
+<li>Cân bằng sự đánh đổi giữa chất lượng xếp hạng và thời gian phản hồi máy chủ.</li>
+</ul>
+<p>Hai khía cạnh đánh giá luôn đi song hành:</p>
+<ul>
+<li><strong>Đánh giá tính hiệu quả (Effectiveness):</strong> Trả lời câu hỏi &quot;kết quả tìm kiếm có đúng và hữu ích với người dùng không?&quot;.</li>
+<li><strong>Đánh giá tính hiệu năng (Efficiency):</strong> Trả lời câu hỏi &quot;hệ thống chạy có nhanh và tốn ít bộ nhớ không?&quot;.</li>
+</ul>
+<h2 id="evaluation-corpus-vi" data-section-heading="evaluation-corpus">9.2 Bộ sưu tập kiểm thử (Evaluation Corpus / Test Collection)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 6-7</p>
+<p>Mô hình kiểm thử kinh điển Cranfield chuẩn hóa việc đánh giá thông qua một bộ sưu tập kiểm thử gồm ba thành phần bắt buộc:</p>
+<ol>
+<li><strong>Bộ sưu tập tài liệu chuẩn (Document collection):</strong> Tập hợp cố định các văn bản đại diện cho miền tìm kiếm.</li>
+<li><strong>Tập hợp câu truy vấn / nhu cầu thông tin mẫu (Test queries):</strong> Danh sách các câu hỏi tiêu biểu đại diện cho hành vi người dùng thực tế.</li>
+<li><strong>Phán đoán độ liên quan (Relevance judgments):</strong> Bảng nhãn chuẩn (ground truth) do chuyên gia con người thẩm định, ghi nhận tài liệu nào liên quan đến truy vấn nào.</li>
+</ol>
+<p>Trong các kho dữ liệu hàng triệu trang, con người không thể đọc hết từng tài liệu để gán nhãn. Phương pháp <strong>gộp kết quả (pooling)</strong> lấy top-k kết quả hàng đầu từ nhiều công cụ tìm kiếm khác nhau gộp lại để chuyên gia thẩm định. Các tài liệu nằm ngoài pool thường được coi là không liên quan.</p>
+<h2 id="logging-vi" data-section-heading="logging">9.3 Nhật ký truy vấn (Query Logs)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 8-9</p>
+<p>Nhật ký truy vấn ghi lại mã phiên, câu truy vấn, các URL hiển thị, dấu thời gian và lượt nhấp chuột. Đây là nguồn dữ liệu khổng lồ phản ánh hành vi thực tế, hỗ trợ đắc lực cho gợi ý từ khóa, bộ nhớ đệm và thử nghiệm A/B.</p>
+<p>Tuy nhiên, lượt nhấp chuột không phải là nhãn độ liên quan chuẩn xác tuyệt đối:</p>
+<ul>
+<li><strong>Thiên lệch vị trí (Position bias):</strong> Người dùng có xu hướng bấm vào các kết quả đầu tiên bất kể nội dung bên trong có thực sự hay hay không.</li>
+<li>Chịu ảnh hưởng bởi tiêu đề giật gân và đoạn trích tóm tắt.</li>
+<li>Có nhiều lượt nhấp nhầm rồi bấm nút quay lại ngay (click and bounce).</li>
+<li>Nếu đoạn trích snippet đã giải đáp trọn vẹn câu hỏi, người dùng hoàn toàn thỏa mãn mà không cần nhấp chuột.</li>
+<li>Các tài liệu tốt nhưng bị xếp ở trang sau không bao giờ có cơ hội nhận được lượt nhấp.</li>
+</ul>
+<p>Dữ liệu nhật ký chứa thông tin cá nhân riêng tư, do đó cần có chính sách ẩn danh hóa, kiểm soát quyền truy cập và giới hạn thời gian lưu trữ.</p>
+<h2 id="shared-example-vi" data-section-heading="shared-example">Ví dụ đánh giá dùng chung</h2>
+<p>Dưới đây là tập dữ liệu mẫu phục vụ tính toán xuyên suốt chương. Xét truy vấn Q1 trong kho ngữ liệu gồm <code>N = 20</code> tài liệu. Chuyên gia xác định có đúng 5 tài liệu liên quan là <code>D1, D3, D4, D6, D9</code> (các tài liệu còn lại <code>D10</code> đến <code>D20</code> đều không liên quan). Hệ thống truy xuất trả về danh sách top 8 tài liệu hàng đầu:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="right">Thứ hạng</th>
+<th>Tài liệu</th>
+<th align="right">Độ liên quan nhị phân</th>
+<th align="right">Độ liên quan đa mức (0-3)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">1</td>
+<td>D1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td>D2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td>D3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td>D4</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="right">5</td>
+<td>D5</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td align="right">6</td>
+<td>D6</td>
+<td align="right">1</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="right">7</td>
+<td>D7</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td align="right">8</td>
+<td>D8</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td align="right">Chưa lấy</td>
+<td>D9</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+</tbody></table></div>
+<p>Quy ước: Độ liên quan đa mức ≥ 1 tương ứng với nhãn nhị phân 1; mức 0 tương ứng với nhãn 0.</p>
+<p>Xét top 8 tài liệu được trả về:</p>
+<ul>
+<li><code>TP (True Positive - Đúng được lấy)</code> = 4 (<code>D1, D3, D4, D6</code>).</li>
+<li><code>FP (False Positive - Sai bị lấy nhầm)</code> = 4 (<code>D2, D5, D7, D8</code>).</li>
+<li><code>FN (False Negative - Đúng bị bỏ sót)</code> = 1 (<code>D9</code> - tài liệu liên quan nhưng không lọt vào top 8).</li>
+<li><code>TN (True Negative - Sai không bị lấy)</code> = 11 (<code>D10</code> đến <code>D20</code>).</li>
+</ul>
+<h2 id="basic-effectiveness-metrics-vi" data-section-heading="basic-effectiveness-metrics">9.4 Độ chính xác, Độ bao phủ, Tỷ lệ dương tính giả và Điểm F1</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 10-11</p>
+<h3 id="detail-1-vi">Độ chính xác (Precision) và Độ bao phủ (Recall)</h3>
+<div class="formula-block" role="math" aria-label="precision equals true positives divided by retrieved documents; recall equals true positives divided by relevant documents">
+  <span class="formula-main">Precision = TP / (TP + FP)</span>
+  <span class="formula-sub">Recall = TP / (TP + FN)</span>
+</div>
+
+<ul>
+<li><strong>Độ chính xác (Precision):</strong> Trong số các tài liệu hệ thống trả về, có bao nhiêu phần trăm thực sự liên quan? Mẫu số là tổng số tài liệu được lấy ra.</li>
+<li><strong>Độ bao phủ (Recall):</strong> Trong số toàn bộ các tài liệu liên quan tồn tại trong kho, hệ thống đã tìm ra được bao nhiêu phần trăm? Mẫu số là tổng số tài liệu liên quan trong kho (<code>TP + FN</code>).</li>
+</ul>
+<p>Với truy vấn Q1 ở ví dụ mẫu:</p>
+<pre><code class="language-text">Precision = 4 / (4 + 4) = 4 / 8 = 0.500 (50%)
+Recall    = 4 / (4 + 1) = 4 / 5 = 0.800 (80%)
+</code></pre>
+<h3 id="detail-2-vi">Tỷ lệ dương tính giả (Fallout)</h3>
+<div class="formula-block" role="math" aria-label="fallout equals false positives divided by all non-relevant documents">
+  <span class="formula-main">Fallout = FP / (FP + TN)</span>
+</div>
+
+<p>Fallout đo lường tỷ lệ các tài liệu không liên quan bị hệ thống lấy nhầm ra:
+<code>Fallout = 4 / (4 + 11) = 4 / 15 ≈ 0.267</code>.</p>
+<p>Cần lưu ý: Fallout không phải là <code>1 - Precision</code>. Mẫu số của <code>1 - Precision</code> là số tài liệu được lấy ra (<code>FP / (TP + FP)</code>), còn mẫu số của Fallout là toàn bộ các tài liệu rác trong kho dữ liệu (<code>FP / (FP + TN)</code>).</p>
+<h3 id="detail-3-vi">Điểm F1 (F-measure)</h3>
+<div class="formula-block" role="math" aria-label="F one equals two precision recall divided by precision plus recall">
+  <span class="formula-main">F1 = 2PR / (P + R)</span>
+</div>
+
+<p>F1 là trung bình điều hòa giữa Precision và Recall. Nếu một trong hai chỉ số quá thấp, F1 sẽ bị kéo tụt xuống rất mạnh:
+<code>F1 = (2 × 0.5 × 0.8) / (0.5 + 0.8) = 0.8 / 1.3 ≈ 0.615</code>.</p>
+<h2 id="ranked-effectiveness-metrics-vi" data-section-heading="ranked-effectiveness-metrics">9.5 Các chỉ số đo lường thứ hạng hàng đầu</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 12-15</p>
+<p>Người dùng thường chỉ quan tâm đến trang đầu tiên hoặc top 5 - top 10 kết quả. Do đó, các chỉ số có tính trọng số thứ bậc đóng vai trò quyết định.</p>
+<h3 id="detail-4-vi">Độ chính xác tại vị trí k (Precision@k)</h3>
+<p><code>P@k</code> là tỷ lệ tài liệu liên quan trong top <code>k</code> kết quả đầu tiên. Với Q1, trong top 5 kết quả đầu tiên (<code>D1, D2, D3, D4, D5</code>) có đúng 3 tài liệu liên quan (<code>D1, D3, D4</code>), do đó:
+<code>P@5 = 3 / 5 = 0.600</code>.</p>
+<h3 id="detail-5-vi">Độ chính xác trung bình (Average Precision - AP)</h3>
+<p>Average Precision (AP) tính trung bình các giá trị Precision tại các vị trí xuất hiện tài liệu liên quan, chia cho <strong>tổng số tài liệu liên quan trong bộ sưu tập</strong> (<code>R_total</code>):</p>
+<div class="formula-block" role="math" aria-label="average precision equals one over total relevant documents times sum of precision at relevant ranks">
+  <span class="formula-main">AP = (1 / R<sub>total</sub>) Σ<sub>k=1</sub><sup>n</sup> P@k · rel(k)</span>
+</div>
+
+<p>Trong Q1, các tài liệu liên quan xuất hiện ở thứ hạng 1, 3, 4, 6:</p>
+<ul>
+<li>Tại hạng 1 (<code>D1</code>): <code>P@1 = 1 / 1 = 1.000</code></li>
+<li>Tại hạng 3 (<code>D3</code>): <code>P@3 = 2 / 3 ≈ 0.667</code></li>
+<li>Tại hạng 4 (<code>D4</code>): <code>P@4 = 3 / 4 = 0.750</code></li>
+<li>Tại hạng 6 (<code>D6</code>): <code>P@6 = 4 / 6 ≈ 0.667</code></li>
+</ul>
+<pre><code class="language-text">AP(Q1) = (1.000 + 0.667 + 0.750 + 0.667) / 5
+       = 3.0833 / 5
+       ≈ 0.6167
+</code></pre>
+<p>Mẫu số chia cho 5 (tổng số tài liệu liên quan) nhằm phạt việc hệ thống bỏ sót tài liệu <code>D9</code>. Nếu chỉ chia cho 4 (số tài liệu lấy được), hình phạt bỏ sót tài liệu sẽ bị biến mất.</p>
+<h3 id="detail-6-vi">Mean Average Precision (MAP) và GMAP</h3>
+<p>Xét truy vấn thứ hai Q2 có <code>R_total = 3</code>, tài liệu liên quan xuất hiện ở hạng 2 và 5:
+<code>AP(Q2) = (1/2 + 2/5) / 3 = 0.900 / 3 = 0.3000</code>.</p>
+<p>Mean Average Precision (MAP) là trung bình số học của AP trên toàn bộ tập các câu truy vấn:</p>
+<pre><code class="language-text">MAP = (AP(Q1) + AP(Q2)) / 2 = (0.6167 + 0.3000) / 2 ≈ 0.4583
+</code></pre>
+<p>Slide 12 nhắc đến biến thể GMAP (Geometric Mean Average Precision) lấy trung bình nhân bằng cách lấy hàm mũ của trung bình logarit:</p>
+<div class="formula-block" role="math" aria-label="G MAP equals exponential of the average log average precision">
+  <span class="formula-main">GMAP = exp((1/n) Σ log AP<sub>i</sub>)</span>
+</div>
+
+<p>GMAP phạt rất nặng các câu truy vấn có kết quả tồi tệ (AP gần bằng 0), giúp đánh giá độ ổn định tổng thể của hệ thống.</p>
+<h3 id="detail-7-vi">Nghịch đảo thứ hạng đầu tiên và MRR (Mean Reciprocal Rank)</h3>
+<p>Chỉ số Reciprocal Rank (RR) lấy nghịch đảo vị trí của tài liệu liên quan đầu tiên:</p>
+<div class="formula-block" role="math" aria-label="reciprocal rank equals one divided by the rank of the first relevant result">
+  <span class="formula-main">RR = 1 / rank<sub>first relevant</sub></span>
+</div>
+
+<ul>
+<li>Với Q1, tài liệu đúng đầu tiên nằm ở hạng 1: <code>RR = 1 / 1 = 1.0</code>.</li>
+<li>Với Q2, tài liệu đúng đầu tiên nằm ở hạng 2: <code>RR = 1 / 2 = 0.5</code>.</li>
+<li><code>MRR = (1.0 + 0.5) / 2 = 0.750</code>.</li>
+</ul>
+<p>MRR rất thích hợp cho các tác vụ tìm kiếm điều hướng (navigational search) hoặc hệ thống hỏi đáp (QA) nơi người dùng chỉ cần một câu trả lời đúng đầu tiên.</p>
+<h3 id="detail-8-vi">DCG, IDCG và NDCG (Normalized Discounted Cumulative Gain)</h3>
+<p>Khi tài liệu có nhiều mức độ liên quan khác nhau (từ 0 đến 3), các chỉ số nhị phân không còn phản ánh trọn vẹn chất lượng. Chỉ số DCG sử dụng hàm tăng (gain) <code>2^rel - 1</code> kết hợp độ chiết khấu vị trí <code>log2(i + 1)</code>:</p>
+<div class="formula-block" role="math" aria-label="DCG at p equals the sum from i equals one to p of two to relevance i minus one divided by log base two of i plus one">
+  <span class="formula-main">DCG@p = Σ<sub>i=1</sub><sup>p</sup> (2<sup>rel<sub>i</sub></sup>−1) / log<sub>2</sub>(i+1)</span>
+</div>
+
+<p>Dãy nhãn độ liên quan thực tế của Q1 ở top 5 là <code>[3, 0, 2, 1, 0]</code>:</p>
+<pre><code class="language-text">DCG@5 = (2^3 - 1)/log2(2) + (2^0 - 1)/log2(3) + (2^2 - 1)/log2(4) + (2^1 - 1)/log2(5) + (2^0 - 1)/log2(6)
+      = 7 / 1 + 0 + 3 / 2 + 1 / log2(5) + 0
+      = 7 + 0 + 1.5000000000 + 0.4306765581 + 0
+      = 8.9306765581
+</code></pre>
+<p>Để chuẩn hóa, ta tính <strong>IDCG (Ideal DCG)</strong> bằng cách sắp xếp các tài liệu có điểm cao nhất của truy vấn đó theo thứ tự lý tưởng giảm dần. Toàn bộ các tài liệu có nhãn liên quan dương của Q1 là: <code>D1 = 3</code>, <code>D3 = 2</code>, <code>D6 = 2</code>, <code>D4 = 1</code>, <code>D9 = 1</code>. Do đó, dãy 5 tài liệu lý tưởng hàng đầu là <code>[3,2,2,1,1]</code>:</p>
+<pre><code class="language-text">IDCG@5 = 7/log2(2) + 3/log2(3) + 3/log2(4) + 1/log2(5) + 1/log2(6)
+       = 7 + 1.8927892607 + 1.5000000000 + 0.4306765581 + 0.3868528072
+       = 11.2103186260
+</code></pre>
+<p>Chỉ số chuẩn hóa:</p>
+<pre><code class="language-text">NDCG@5 = DCG@5 / IDCG@5 = 8.9306765581 / 11.2103186260 ≈ 0.7966478792
+</code></pre>
+<p>Tài liệu <code>D9</code> dù không xuất hiện trong top 8 kết quả thực tế của hệ thống, nhưng vì là tài liệu có liên quan tồn tại trong kho nên bắt buộc phải có mặt trong danh sách lý tưởng để tính IDCG. Nhờ chuẩn hóa chia cho IDCG lý tưởng, giá trị NDCG luôn nằm trong khoảng <code>[0, 1]</code> và có thể so sánh công bằng giữa các câu truy vấn khác nhau.</p>
+<h2 id="precision-recall-interpolation-vi" data-section-heading="precision-recall-interpolation">9.6 Nội suy Precision và Recall</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 13</p>
+<p>Khi duyệt xuống danh sách kết quả, đồ thị biểu diễn Precision theo Recall thường biến thiên răng cưa lên xuống không đều. Đường cong Precision-Recall nội suy (interpolated precision) lấy giá trị Precision cực đại đạt được tại mọi mức Recall lớn hơn hoặc bằng mức <code>r</code> đang xét:</p>
+<div class="formula-block" role="math" aria-label="interpolated precision at recall r equals maximum precision at any recall r prime greater than or equal to r">
+  <span class="formula-main">P<sub>interp</sub>(r) = max<sub>r′≥r</sub> P(r′)</span>
+</div>
+
+<p>Tại 4 điểm xuất hiện tài liệu liên quan của Q1:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="right">Thứ hạng</th>
+<th align="right">Recall</th>
+<th align="right">Precision thực tế</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">1</td>
+<td align="right">0.2</td>
+<td align="right">1.000</td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td align="right">0.4</td>
+<td align="right">0.667</td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td align="right">0.6</td>
+<td align="right">0.750</td>
+</tr>
+<tr>
+<td align="right">6</td>
+<td align="right">0.8</td>
+<td align="right">0.667</td>
+</tr>
+</tbody></table></div>
+<p>Tại mức <code>Recall = 0.4</code>, các giá trị Precision phía sau là <code>[0.667, 0.750, 0.667]</code>, giá trị cực đại là <code>0.750</code>.
+Tại mức <code>Recall = 0.6</code>, cực đại là <code>0.750</code>.
+Vì mức Recall tối đa đạt được là 0.8, nên tại mốc <code>Recall = 1.0</code>, giá trị nội suy quy ước là 0:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mốc Recall chuẩn</th>
+<th align="right">0.0</th>
+<th align="right">0.2</th>
+<th align="right">0.4</th>
+<th align="right">0.6</th>
+<th align="right">0.8</th>
+<th align="right">1.0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Precision nội suy</td>
+<td align="right">1.000</td>
+<td align="right">1.000</td>
+<td align="right">0.750</td>
+<td align="right">0.750</td>
+<td align="right">0.667</td>
+<td align="right">0.000</td>
+</tr>
+</tbody></table></div>
+<h2 id="kendall-tau-vi" data-section-heading="kendall-tau">9.7 Hệ số tương quan hạng Kendall tau</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 16</p>
+<p>Hệ số Kendall tau đo lường mức độ đồng thuận thứ tự giữa hai danh sách xếp hạng khác nhau đối với cùng một tập tài liệu. Khi không có các cặp hòa điểm (ties), công thức tính là:</p>
+<div class="formula-block" role="math" aria-label="Kendall tau equals concordant pairs minus discordant pairs divided by concordant plus discordant pairs">
+  <span class="formula-main">τ = (P − Q) / (P + Q)</span>
+</div>
+
+<ul>
+<li><code>P</code>: số lượng cặp thuận nghịch (concordant pairs) - cả hai danh sách đều xếp thứ tự tương đối giống nhau.</li>
+<li><code>Q</code>: số lượng cặp nghịch đảo (discordant pairs) - hai danh sách đảo ngược thứ tự tương đối của cặp tài liệu.</li>
+</ul>
+<p>Xét 4 tài liệu <code>{A, B, C, D}</code>: Danh sách 1 xếp <code>A &gt; B &gt; C &gt; D</code>, Danh sách 2 xếp <code>B &gt; A &gt; D &gt; C</code>. Tổng cộng có <code>4 × 3 / 2 = 6</code> cặp tài liệu:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Cặp tài liệu</th>
+<th>Danh sách 1</th>
+<th>Danh sách 2</th>
+<th>Đánh giá</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(A, B)</td>
+<td>A &gt; B</td>
+<td>B &gt; A</td>
+<td>Nghịch đảo (Q)</td>
+</tr>
+<tr>
+<td>(A, C)</td>
+<td>A &gt; C</td>
+<td>A &gt; C</td>
+<td>Thuận chiều (P)</td>
+</tr>
+<tr>
+<td>(A, D)</td>
+<td>A &gt; D</td>
+<td>A &gt; D</td>
+<td>Thuận chiều (P)</td>
+</tr>
+<tr>
+<td>(B, C)</td>
+<td>B &gt; C</td>
+<td>B &gt; C</td>
+<td>Thuận chiều (P)</td>
+</tr>
+<tr>
+<td>(B, D)</td>
+<td>B &gt; D</td>
+<td>B &gt; D</td>
+<td>Thuận chiều (P)</td>
+</tr>
+<tr>
+<td>(C, D)</td>
+<td>C &gt; D</td>
+<td>D &gt; C</td>
+<td>Nghịch đảo (Q)</td>
+</tr>
+</tbody></table></div>
+<p>Có <code>P = 4</code> và <code>Q = 2</code>, hệ số tương quan:
+<code>τ = (4 − 2) / (4 + 2) = 2 / 6 ≈ 0.333</code>.</p>
+<p>Hệ số Kendall tau nhận giá trị từ -1 (hoàn toàn ngược nhau) đến +1 (hoàn toàn trùng khớp).</p>
+<h2 id="efficiency-metrics-vi" data-section-heading="efficiency-metrics">9.8 Chỉ số hiệu năng (Efficiency Metrics)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 17</p>
+<p>Đánh giá hệ thống tìm kiếm bắt buộc phải đo lường song song cả các chỉ số tài nguyên và tốc độ:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Chỉ số hiệu năng</th>
+<th>Đơn vị đo tiêu biểu</th>
+<th>Ý nghĩa đo lường</th>
+<th>Điều kiện đo chuẩn</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Thời gian lập chỉ mục (Elapsed time)</td>
+<td>Giây, Giờ</td>
+<td>Thời gian thực tế để xây dựng xong chỉ mục</td>
+<td>Cố định tập ngữ liệu, cấu hình ổ đĩa, số luồng</td>
+</tr>
+<tr>
+<td>Thời gian CPU (Processor time)</td>
+<td>CPU giây</td>
+<td>Tổng thời gian tiêu thụ thực tế của vi xử lý</td>
+<td>Tách biệt với thời gian chờ I/O</td>
+</tr>
+<tr>
+<td>Thông lượng truy vấn (Throughput)</td>
+<td>Queries / giây (QPS)</td>
+<td>Số lượng truy vấn hệ thống xử lý được trong 1 giây</td>
+<td>Cố định số lượng kết nối đồng thời</td>
+</tr>
+<tr>
+<td>Độ trễ truy vấn (Query latency)</td>
+<td>Mili-giây (ms)</td>
+<td>Thời gian phản hồi cho từng câu truy vấn</td>
+<td>Cần báo cáo cả trung vị, p95 và p99</td>
+</tr>
+<tr>
+<td>Dung lượng đĩa tạm thời</td>
+<td>Gigabyte (GB)</td>
+<td>Dung lượng ổ đĩa dùng cho các tệp tạm khi trộn khối</td>
+<td>Phụ thuộc thuật toán nén và bộ nhớ đệm</td>
+</tr>
+<tr>
+<td>Dung lượng chỉ mục hoàn chỉnh</td>
+<td>Gigabyte (GB)</td>
+<td>Kích thước lưu trữ cuối cùng của chỉ mục đảo</td>
+<td>Đầy đủ các trường và thông tin vị trí</td>
+</tr>
+</tbody></table></div>
+<p>Độ trễ và thông lượng có mối quan hệ đánh đổi: nếu gom truy vấn thành từng lô lớn (batching) để tăng thông lượng tổng thì độ trễ của từng người dùng đơn lẻ sẽ bị kéo dài.</p>
+<h2 id="training-validation-test-vi" data-section-heading="training-validation-test">9.9 Phân chia dữ liệu: Huấn luyện, Kiểm định và Kiểm thử</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 20</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tập dữ liệu</th>
+<th>Mục đích sử dụng</th>
+<th>Điều cấm kỵ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tập huấn luyện (Training)</td>
+<td>Khớp tham số trọng số của mô hình</td>
+<td>Báo cáo kết quả trên tập này làm hiệu năng cuối cùng</td>
+</tr>
+<tr>
+<td>Tập kiểm định (Validation / Dev)</td>
+<td>Tinh chỉnh siêu tham số, chọn lọc đặc trưng</td>
+<td>Coi đây là dữ liệu chưa biết sau khi đã nhìn nhiều lần</td>
+</tr>
+<tr>
+<td>Tập kiểm thử (Test)</td>
+<td>Đo lường hiệu năng cuối cùng một lần duy nhất</td>
+<td>Nhìn kết quả test rồi quay lại điều chỉnh tham số</td>
+</tr>
+</tbody></table></div>
+<p>Việc phân chia phải thực hiện theo đơn vị câu truy vấn (query-level split), đảm bảo không để các câu truy vấn giống nhau hoặc biến thể gần lọt vào cả hai tập.</p>
+<h2 id="significance-tests-vi" data-section-heading="significance-tests">9.10 Kiểm định ý nghĩa thống kê</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 18-19</p>
+<p>Khi so sánh Hệ thống A và Hệ thống B trên cùng một tập truy vấn mẫu:</p>
+<ul>
+<li><strong>Giả thuyết không (Null hypothesis - H0):</strong> Không có sự khác biệt thực sự về hiệu quả giữa A và B; sự chênh lệch quan sát được chỉ là do biến động ngẫu nhiên.</li>
+<li><strong>Giả thuyết đối (Alternative hypothesis - H1):</strong> Có sự khác biệt thực sự giữa hai hệ thống.</li>
+<li><strong>Mức ý nghĩa <code>α</code>:</strong> Ngưỡng xác suất ấn định trước (thường là 0.05) để đưa ra quyết định bác bỏ H0.</li>
+<li><strong>Giá trị p (p-value):</strong> Xác suất quan sát thấy sự chênh lệch lớn bằng hoặc hơn mức thực tế nếu giả định H0 là đúng.</li>
+</ul>
+<p>Giá trị p không phải là &quot;xác suất H0 đúng&quot; và cũng không phải là &quot;xác suất thuật toán B tốt hơn A&quot;.</p>
+<h3 id="detail-9-vi">Ví dụ kiểm định dấu chính xác (Exact Sign Test)</h3>
+<p>Xét hiệu số Average Precision <code>B - A</code> trên 10 câu truy vấn:</p>
+<pre><code class="language-text">+0.04, +0.03, +0.05, -0.01, +0.02,
++0.01, +0.04, -0.02, +0.03, +0.02
+</code></pre>
+<p>Hệ thống B thắng 8 câu, thua 2 câu; mức chênh lệch trung bình là <code>+0.021</code>. Không có câu nào hòa.</p>
+<p>Theo kiểm định dấu hai phía với biến ngẫu nhiên nhị thức <code>X ~ Binomial(10, 0.5)</code> dưới giả thuyết H0 (xác suất thắng/thua bằng 0.5):</p>
+<pre><code class="language-text">p = 2 × P(X ≥ 8)
+  = 2 × [C(10, 8) + C(10, 9) + C(10, 10)] / 2^10
+  = 2 × [45 + 10 + 1] / 1024
+  = 112 / 1024
+  = 0.109375
+</code></pre>
+<p>Với mức ý nghĩa <code>α = 0.05</code>, vì <code>p = 0.109375 &gt; 0.05</code>, chúng ta <strong>chưa đủ bằng chứng thống kê để bác bỏ giả thuyết H0</strong>. Điều này không có nghĩa là &quot;đã chứng minh A và B giống hệt nhau&quot;, mà chỉ có nghĩa là kích thước mẫu 10 truy vấn chưa đủ độ mạnh thống kê để khẳng định chắc chắn sự khác biệt.</p>
+<h2 id="online-testing-vi" data-section-heading="online-testing">9.11 Thử nghiệm trực tuyến (Online Testing)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 21</p>
+<p>Trong thử nghiệm A/B (A/B testing), người dùng thật được phân bổ ngẫu nhiên vào nhóm kiểm chứng A hoặc nhóm thử nghiệm B. Hệ thống đo lường các chỉ số hành vi thực tế: tỷ lệ nhấp (CTR), tỷ lệ hoàn thành tác vụ, doanh thu và thời gian phản hồi.</p>
+<p>Thử nghiệm A/B phản ánh chính xác tác động người dùng thật nhưng tốn kém và tiềm ẩn rủi ro làm giảm trải nghiệm của người dùng nếu thuật toán mới gặp lỗi. Vì vậy, chỉ những mô hình đã vượt qua khâu đánh giá ngoại tuyến (offline evaluation) khắt khe mới được đưa vào thử nghiệm A/B trực tuyến.</p>
+<h2 id="exercise-vi" data-section-heading="exercise">Bài tập cuối chương: Phân tích truy vấn đa nghĩa</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 22</p>
+<p>Mục tiêu bài tập: Khảo sát các câu truy vấn đa nghĩa như <code>jaguar</code>, <code>windows</code>, <code>hello</code>, <code>charles clarke</code> trên công cụ tìm kiếm Web thương mại để xem top 10 kết quả phân bổ cho bao nhiêu nét nghĩa khác nhau:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Câu truy vấn</th>
+<th>Các nét nghĩa và đối tượng có thể có</th>
+<th>Hạng mục cần theo dõi trong top 10</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>jaguar</code></td>
+<td>Loài báo đốm, hãng xe ô tô Jaguar, đội thể thao, hệ điều hành</td>
+<td>Số lượng kết quả thuộc từng nghĩa, quảng cáo đi kèm</td>
+</tr>
+<tr>
+<td><code>windows</code></td>
+<td>Hệ điều hành Microsoft Windows, cửa sổ nhà, dịch vụ lắp kính</td>
+<td>Phân loại theo informational / navigational / transactional</td>
+</tr>
+<tr>
+<td><code>hello</code></td>
+<td>Lời chào hỏi, bài hát của Adele, phim ảnh, chương trình Hello World</td>
+<td>Phân biệt danh từ chung với tên tác phẩm cụ thể</td>
+</tr>
+<tr>
+<td><code>charles clarke</code></td>
+<td>Chính trị gia, nhà khoa học máy tính, nhân vật lịch sử</td>
+<td>Cơ quan công tác, năm hoạt động để phân biệt người trùng tên</td>
+</tr>
+</tbody></table></div>
+<h3 id="detail-10-vi">Các bước thực hiện</h3>
+<ol>
+<li>Ghi lại thời điểm, vị trí địa lý, ngôn ngữ và trạng thái đăng nhập.</li>
+<li>Tách biệt kết quả quảng cáo và kết quả tự nhiên.</li>
+<li>Xác định nét nghĩa chủ đạo của từng kết quả trong top 10.</li>
+<li>Thống kê số lượng kết quả cho từng nét nghĩa và số lượng nét nghĩa phân biệt xuất hiện.</li>
+</ol>
+<details class="answer-key"><summary>Xem gợi ý trả lời</summary><div class="answer-key__body"><p>Nếu trong top 10 của <code>jaguar</code> có 6 trang về ô tô, 3 trang về động vật và 1 trang về đội bóng, kết quả đã bao phủ 3 nét nghĩa khác nhau. Tỷ lệ này phản ánh cách công cụ tìm kiếm đa dạng hóa kết quả để đáp ứng các nhu cầu khác nhau khi người dùng gõ từ khóa mơ hồ.</p></div></details>
+
+<h2 id="summary-vi" data-section-heading="summary">Tổng kết</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 23</p>
+<ul>
+<li>Bộ sưu tập kiểm thử chuẩn gồm tập tài liệu, tập truy vấn và bảng nhãn độ liên quan là nền tảng của đánh giá truy xuất thông tin.</li>
+<li>Nhật ký truy vấn cung cấp dữ liệu hành vi người dùng quy mô lớn nhưng bị thiên lệch vị trí và không phải là nhãn chân lý tuyệt đối.</li>
+<li>Precision và Recall đo lường hai góc nhìn bổ trợ nhau; Fallout đo lường tỷ lệ lấy nhầm tài liệu rác và không đồng nhất với <code>1 - Precision</code>.</li>
+<li>AP tổng hợp chất lượng của một truy vấn; MAP lấy trung bình trên nhiều truy vấn; MRR đo lường tốc độ tìm ra kết quả đúng đầu tiên.</li>
+<li>DCG và NDCG đánh giá xếp hạng trên thang đo đa mức độ kết hợp độ chiết khấu logarit theo vị trí.</li>
+<li>Hiệu năng hệ thống cần được đo lường tách bạch qua độ trễ, thông lượng, bộ nhớ và không gian đĩa.</li>
+<li>Phân chia dữ liệu train/dev/test ngăn ngừa rò rỉ thông tin; các phép kiểm định thống kê giúp xác minh sự tiến bộ có thực sự đáng tin cậy.</li>
+</ul>
+<h2 id="quiz-vi" data-section-heading="quiz">Câu hỏi tự kiểm tra</h2>
+<ol>
+<li>Vì sao không thể tự ý coi các tài liệu nằm ngoài danh sách gộp (pool) chắc chắn 100% là tài liệu không liên quan?</li>
+<li>Mẫu số của chỉ số Fallout và mẫu số của <code>1 - Precision</code> khác nhau như thế nào?</li>
+<li>Average Precision (AP) và Mean Average Precision (MAP) lấy trung bình trên những đơn vị nào?</li>
+<li>Việc chỉ số Reciprocal Rank (RR) chỉ nhìn vào tài liệu đúng đầu tiên tạo ra hạn chế gì?</li>
+<li>Vì sao tài liệu liên quan không được lấy ra (như <code>D9</code>) vẫn ảnh hưởng trực tiếp tới giá trị IDCG?</li>
+<li>Nếu giá trị p thu được từ kiểm định là <code>p = 0.03</code>, liệu có thể khẳng định rằng &quot;thuật toán B có 97% xác suất vượt trội hơn A&quot; không?</li>
+</ol>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><ol>
+<li>Vì tài liệu đó chỉ đơn thuần là không lọt vào top kết quả của các hệ thống được chọn vào pool nên chưa được chuyên gia đọc thẩm định; nội dung thực tế của nó hoàn toàn có thể vẫn chứa thông tin liên quan.</li>
+<li>Mẫu số của Fallout là toàn bộ các tài liệu không liên quan trong toàn bộ kho dữ liệu (<code>FP + TN</code>); mẫu số của <code>1 - Precision</code> là tổng số tài liệu mà hệ thống đã lấy ra (<code>FP + TP</code>).</li>
+<li>AP lấy trung bình các giá trị precision tại các vị trí tài liệu đúng bên trong một câu truy vấn; MAP lấy trung bình các giá trị AP trên toàn bộ tập hợp các câu truy vấn.</li>
+<li>RR không phân biệt được chất lượng của phần còn lại của danh sách: một hệ thống trả về duy nhất 1 tài liệu đúng ở top 1 rồi toàn rác phía sau vẫn nhận điểm RR bằng 1 hệt như một hệ thống trả về 10 tài liệu xuất sắc liên tiếp.</li>
+<li>Vì IDCG là thước đo lý tưởng tính trên toàn bộ các tài liệu liên quan có trong kho dữ liệu; việc bỏ sót tài liệu đúng sẽ làm giảm điểm DCG thực tế so với mẫu số IDCG lý tưởng, qua đó phạt đúng mức sự thiếu sót của hệ thống.</li>
+<li>Hoàn toàn không được diễn giải như vậy. Giá trị <code>p = 0.03</code> chỉ biểu thị rằng: nếu giả định hai hệ thống không có sự khác biệt (H0 đúng) thì xác suất quan sát thấy sự chênh lệch lớn như thực nghiệm chỉ là 3%.</li>
+</ol></div></details>
+
+<h2 id="next-chapter-vi" data-section-heading="next-chapter">Chuyển tiếp sang chương sau</h2>
+<p>Đánh giá chất lượng không chỉ áp dụng cho xếp hạng văn bản mà còn áp dụng cho các bài toán phân loại và tổ chức dữ liệu. Chương 10 tiếp theo sẽ nghiên cứu các thuật toán Phân loại (Classification: Naive Bayes, SVM) và Phân cụm (Clustering: Phân cấp, K-means) cùng các ma trận nhầm lẫn và độ tinh khiết (Purity).</p>
+<h2 id="glossary-vi" data-section-heading="glossary">Bảng thuật ngữ</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>English</th>
+<th>Tiếng Việt</th>
+<th>Ý nghĩa trong chương này</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Test collection</td>
+<td>Bộ sưu tập kiểm thử</td>
+<td>Bộ dữ liệu chuẩn hóa gồm tài liệu, truy vấn và nhãn liên quan</td>
+</tr>
+<tr>
+<td>Relevance judgment</td>
+<td>Phán đoán độ liên quan</td>
+<td>Nhãn đánh giá mức độ hữu ích của tài liệu đối với câu truy vấn</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td>Độ chính xác</td>
+<td>Tỷ lệ tài liệu liên quan trong số các tài liệu lấy ra</td>
+</tr>
+<tr>
+<td>Recall</td>
+<td>Độ bao phủ</td>
+<td>Tỷ lệ tài liệu liên quan tìm được trên tổng số tài liệu đúng có trong kho</td>
+</tr>
+<tr>
+<td>Fallout</td>
+<td>Tỷ lệ dương tính giả</td>
+<td>Tỷ lệ tài liệu không liên quan bị hệ thống lấy nhầm</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>Điểm F1</td>
+<td>Trung bình điều hòa giữa Precision và Recall</td>
+</tr>
+<tr>
+<td>Precision@k</td>
+<td>Độ chính xác tại top k</td>
+<td>Tỷ lệ tài liệu liên quan trong k kết quả đầu tiên</td>
+</tr>
+<tr>
+<td>Average Precision</td>
+<td>Độ chính xác trung bình (AP)</td>
+<td>Chỉ số tổng hợp chất lượng xếp hạng của một câu truy vấn</td>
+</tr>
+<tr>
+<td>MAP</td>
+<td>Mean Average Precision (MAP)</td>
+<td>Trung bình số học của các điểm AP trên toàn bộ các câu truy vấn</td>
+</tr>
+<tr>
+<td>Reciprocal Rank</td>
+<td>Nghịch đảo thứ hạng (RR)</td>
+<td>Nghịch đảo vị trí của tài liệu liên quan đầu tiên tìm thấy</td>
+</tr>
+<tr>
+<td>MRR</td>
+<td>Mean Reciprocal Rank (MRR)</td>
+<td>Trung bình điểm RR trên toàn bộ các câu truy vấn</td>
+</tr>
+<tr>
+<td>DCG</td>
+<td>Độ tăng tích lũy chiết khấu</td>
+<td>Chỉ số cộng dồn độ liên quan đa mức có chiết khấu theo vị trí</td>
+</tr>
+<tr>
+<td>NDCG</td>
+<td>Độ tăng tích lũy chiết khấu chuẩn hóa</td>
+<td>Tỷ lệ giữa DCG thực tế và IDCG lý tưởng</td>
+</tr>
+<tr>
+<td>Kendall tau</td>
+<td>Hệ số Kendall tau</td>
+<td>Thước đo mức độ đồng thuận thứ tự tương đối giữa hai danh sách</td>
+</tr>
+<tr>
+<td>Query latency</td>
+<td>Độ trễ truy vấn</td>
+<td>Thời gian hệ thống xử lý và phản hồi cho một câu truy vấn</td>
+</tr>
+<tr>
+<td>Query throughput</td>
+<td>Thông lượng truy vấn</td>
+<td>Số lượng câu truy vấn hệ thống xử lý được trong một đơn vị thời gian</td>
+</tr>
+<tr>
+<td>Null hypothesis</td>
+<td>Giả thuyết không (H0)</td>
+<td>Giả thuyết cho rằng không có sự khác biệt thực sự giữa hai hệ thống</td>
+</tr>
+<tr>
+<td>P-value</td>
+<td>Giá trị p</td>
+<td>Xác suất quan sát thấy chênh lệch lớn như thực tế nếu giả thuyết H0 đúng</td>
+</tr>
+</tbody></table></div>
+
+        <footer class="lesson-footer"><span class="lesson-footer__meta"><span>SEG301m / CHƯƠNG 9</span><span class="site-credit">Made by <strong>Marcus</strong></span></span><a href="#top">Về đầu trang ↑</a></footer>
+      </article>
+      <nav class="chapter-pager" aria-label="Chapter navigation"><a class="chapter-pager__previous" href="./chapter-08.html">
+    <span>Chương trước</span>
+    <strong>08 · Tối ưu hóa công cụ tìm kiếm (SEO)</strong>
+  </a><a class="chapter-pager__next" href="./chapter-10.html">
+    <span>Chương sau</span>
+    <strong>10 · Phân loại và phân cụm</strong>
+  </a></nav>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,260 @@
+{
+  "site": {
+    "title": "Ghi chú học tập SEG301m",
+    "description": "Ghi chú học tập SEG301m về truy xuất thông tin và công cụ tìm kiếm, được biên soạn dễ hiểu cho người mới."
+  },
+  "chapters": [
+    {
+      "id": "chapter-01",
+      "number": 1,
+      "output": "chapter-01.html",
+      "slideCount": 24,
+      "title": "Truy xuất thông tin và công cụ tìm kiếm",
+      "englishTitle": "Information Retrieval and Search Engines",
+      "shortTitle": "Truy xuất thông tin",
+      "description": "Tìm hiểu cách truy xuất thông tin hoạt động và cách công cụ tìm kiếm biến các nguyên lý đó thành dịch vụ.",
+      "status": "complete",
+      "content": "content/chapter-01-information-retrieval-vi.md",
+      "asset": {
+        "source": "mindmap/1.png",
+        "output": "assets/chapter-01-mindmap.png",
+        "width": 1536,
+        "height": 1024,
+        "insertBefore": "information-retrieval",
+        "alt": "Sơ đồ tư duy bằng tiếng Anh cho Chương 1, Truy xuất thông tin và công cụ tìm kiếm",
+        "caption": "Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 1. Chọn ảnh để xem kích thước đầy đủ."
+      }
+    },
+    {
+      "id": "chapter-02",
+      "number": 2,
+      "output": "chapter-02.html",
+      "slideCount": 34,
+      "title": "Kiến trúc của công cụ tìm kiếm",
+      "englishTitle": "Architecture of a Search Engine",
+      "shortTitle": "Các thành phần và luồng tìm kiếm",
+      "description": "Theo dõi các thành phần của công cụ tìm kiếm từ khâu thu thập tài liệu đến xếp hạng và đánh giá.",
+      "status": "complete",
+      "content": "content/chapter-02-search-engine-architecture-vi.md",
+      "asset": {
+        "source": "mindmap/2.png",
+        "output": "assets/chapter-02-mindmap.png",
+        "width": 1672,
+        "height": 941,
+        "insertBefore": "prerequisites",
+        "alt": "Sơ đồ tư duy bằng tiếng Anh cho Chương 2, Kiến trúc của công cụ tìm kiếm",
+        "caption": "Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 2. Chọn ảnh để xem kích thước đầy đủ."
+      }
+    },
+    {
+      "id": "chapter-03",
+      "number": 3,
+      "output": "chapter-03.html",
+      "slideCount": 33,
+      "title": "Thu thập dữ liệu và nguồn cấp",
+      "englishTitle": "Crawls and Feeds",
+      "shortTitle": "Thu thập tài liệu",
+      "description": "Tìm hiểu crawler, độ mới, nguồn cấp, bảng mã, phát hiện trùng lặp và loại bỏ nhiễu.",
+      "status": "complete",
+      "content": "content/chapter-03-crawls-and-feeds-vi.md",
+      "asset": {
+        "source": "mindmap/3.png",
+        "output": "assets/chapter-03-mindmap.png",
+        "width": 1491,
+        "height": 1055,
+        "insertBefore": "prerequisites",
+        "alt": "Sơ đồ tư duy bằng tiếng Anh cho Chương 3, Thu thập dữ liệu và nguồn cấp",
+        "caption": "Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 3. Chọn ảnh để xem kích thước đầy đủ."
+      }
+    },
+    {
+      "id": "chapter-04",
+      "number": 4,
+      "output": "chapter-04.html",
+      "slideCount": 29,
+      "title": "Xử lý văn bản",
+      "englishTitle": "Processing Text",
+      "shortTitle": "Biến từ thành dữ liệu có thể tìm kiếm",
+      "description": "Tìm hiểu tách token, stopword, stemming, cụm từ, phân tích liên kết, PageRank và trích xuất thông tin.",
+      "status": "complete",
+      "content": "content/chapter-04-processing-text-vi.md",
+      "asset": {
+        "source": "mindmap/4.png",
+        "output": "assets/chapter-04-mindmap.png",
+        "width": 1448,
+        "height": 1086,
+        "insertBefore": "prerequisites",
+        "alt": "Sơ đồ tư duy bằng tiếng Anh cho Chương 4, Xử lý văn bản",
+        "caption": "Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 4. Chọn ảnh để xem kích thước đầy đủ."
+      }
+    },
+    {
+      "id": "chapter-05",
+      "number": 5,
+      "output": "chapter-05.html",
+      "slideCount": 43,
+      "title": "Xếp hạng với chỉ mục",
+      "englishTitle": "Ranking with Indexes",
+      "shortTitle": "Từ chỉ mục đến kết quả hàng đầu",
+      "description": "Tìm hiểu chỉ mục đảo, nén, xây dựng, phân tán và xử lý truy vấn top-k hiệu quả.",
+      "status": "complete",
+      "content": "content/chapter-05-ranking-with-indexes-vi.md",
+      "asset": {
+        "source": "mindmap/5.png",
+        "output": "assets/chapter-05-mindmap.png",
+        "width": 1448,
+        "height": 1086,
+        "insertBefore": "prerequisites",
+        "alt": "Sơ đồ tư duy bằng tiếng Anh cho Chương 5, Xếp hạng với chỉ mục",
+        "caption": "Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 5. Chọn ảnh để xem kích thước đầy đủ."
+      }
+    },
+    {
+      "id": "chapter-06",
+      "number": 6,
+      "output": "chapter-06.html",
+      "slideCount": 19,
+      "title": "Truy vấn và giao diện",
+      "englishTitle": "Queries and Interfaces",
+      "shortTitle": "Biến nhu cầu thành truy vấn",
+      "description": "Tìm hiểu nhu cầu thông tin, tinh chỉnh truy vấn, phản hồi, snippet, phân cụm kết quả và tìm kiếm xuyên ngôn ngữ.",
+      "status": "complete",
+      "content": "content/chapter-06-queries-and-interfaces-vi.md",
+      "asset": {
+        "source": "mindmap/6.png",
+        "output": "assets/chapter-06-mindmap.png",
+        "width": 1672,
+        "height": 941,
+        "insertBefore": "prerequisites",
+        "alt": "Sơ đồ tư duy bằng tiếng Anh cho Chương 6, Truy vấn và giao diện",
+        "caption": "Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 6. Chọn ảnh để xem kích thước đầy đủ."
+      }
+    },
+    {
+      "id": "chapter-07",
+      "number": 7,
+      "output": "chapter-07.html",
+      "slideCount": 25,
+      "title": "Mô hình truy xuất",
+      "englishTitle": "Retrieval Models",
+      "shortTitle": "Cách tính điểm kết quả",
+      "description": "So sánh Boolean, không gian vector, BM25, mô hình ngôn ngữ, mạng suy luận và learning to rank.",
+      "status": "complete",
+      "content": "content/chapter-07-retrieval-models-vi.md",
+      "asset": {
+        "source": "mindmap/7.png",
+        "output": "assets/chapter-07-mindmap.png",
+        "width": 1491,
+        "height": 1055,
+        "insertBefore": "prerequisites",
+        "alt": "Sơ đồ tư duy bằng tiếng Anh cho Chương 7, Mô hình truy xuất",
+        "caption": "Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 7. Chọn ảnh để xem kích thước đầy đủ."
+      }
+    },
+    {
+      "id": "chapter-08",
+      "number": 8,
+      "output": "chapter-08.html",
+      "slideCount": 26,
+      "title": "Tối ưu hóa công cụ tìm kiếm (SEO)",
+      "englishTitle": "Search Engine Optimization",
+      "shortTitle": "Giúp nội dung được tìm thấy",
+      "description": "Tìm hiểu SEO qua crawling, cải thiện trang, dữ liệu có cấu trúc và đo lường hiệu quả.",
+      "status": "complete",
+      "content": "content/chapter-08-search-engine-optimization-vi.md",
+      "asset": {
+        "source": "mindmap/8.png",
+        "output": "assets/chapter-08-mindmap.png",
+        "width": 1536,
+        "height": 1024,
+        "insertBefore": "prerequisites",
+        "alt": "Sơ đồ tư duy bằng tiếng Anh cho Chương 8, Tối ưu hóa công cụ tìm kiếm (SEO)",
+        "caption": "Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 8. Chọn ảnh để xem kích thước đầy đủ."
+      }
+    },
+    {
+      "id": "chapter-09",
+      "number": 9,
+      "output": "chapter-09.html",
+      "slideCount": 23,
+      "title": "Đánh giá công cụ tìm kiếm",
+      "englishTitle": "Evaluating Search Engines",
+      "shortTitle": "Đo chất lượng tìm kiếm",
+      "description": "Tìm hiểu bộ sưu tập kiểm thử, chỉ số truy xuất, hiệu năng, kiểm định thống kê và thử nghiệm trực tuyến.",
+      "status": "complete",
+      "content": "content/chapter-09-evaluating-search-engines-vi.md",
+      "asset": {
+        "source": "mindmap/9.png",
+        "output": "assets/chapter-09-mindmap.png",
+        "width": 1491,
+        "height": 1055,
+        "insertBefore": "prerequisites",
+        "alt": "Sơ đồ tư duy bằng tiếng Anh cho Chương 9, Đánh giá công cụ tìm kiếm",
+        "caption": "Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 9. Chọn ảnh để xem kích thước đầy đủ."
+      }
+    },
+    {
+      "id": "chapter-10",
+      "number": 10,
+      "output": "chapter-10.html",
+      "slideCount": 23,
+      "title": "Phân loại và phân cụm",
+      "englishTitle": "Classification and Clustering",
+      "shortTitle": "Phân loại và sắp xếp tài liệu",
+      "description": "So sánh Naive Bayes, SVM, chọn đặc trưng, phương pháp phân cấp và K-means.",
+      "status": "complete",
+      "content": "content/chapter-10-classification-and-clustering-vi.md",
+      "asset": {
+        "source": "mindmap/10.png",
+        "output": "assets/chapter-10-mindmap.png",
+        "width": 1448,
+        "height": 1086,
+        "insertBefore": "prerequisites",
+        "alt": "Sơ đồ tư duy bằng tiếng Anh cho Chương 10, Phân loại và phân cụm",
+        "caption": "Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 10. Chọn ảnh để xem kích thước đầy đủ."
+      }
+    },
+    {
+      "id": "chapter-11",
+      "number": 11,
+      "output": "chapter-11.html",
+      "slideCount": 27,
+      "title": "Tìm kiếm xã hội",
+      "englishTitle": "Social Search",
+      "shortTitle": "Dùng con người và mối quan hệ trong tìm kiếm",
+      "description": "Tìm hiểu tag, cộng đồng, HITS, hỏi đáp, lọc cộng tác và tìm kiếm phân tán.",
+      "status": "complete",
+      "content": "content/chapter-11-social-search-vi.md",
+      "asset": {
+        "source": "mindmap/11.png",
+        "output": "assets/chapter-11-mindmap.png",
+        "width": 1491,
+        "height": 1055,
+        "insertBefore": "prerequisites",
+        "alt": "Sơ đồ tư duy bằng tiếng Anh cho Chương 11, Tìm kiếm xã hội",
+        "caption": "Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 11. Chọn ảnh để xem kích thước đầy đủ."
+      }
+    },
+    {
+      "id": "chapter-12",
+      "number": 12,
+      "output": "chapter-12.html",
+      "slideCount": 14,
+      "title": "Vượt ra ngoài mô hình túi từ",
+      "englishTitle": "Beyond Bag of Words",
+      "shortTitle": "Khai thác thứ tự, cấu trúc và đa phương tiện",
+      "description": "Tìm hiểu đặc trưng, phụ thuộc từ, cấu trúc, thực thể, hỏi đáp và truy xuất đa phương tiện.",
+      "status": "complete",
+      "content": "content/chapter-12-beyond-bag-of-words-vi.md",
+      "asset": {
+        "source": "mindmap/12.png",
+        "output": "assets/chapter-12-mindmap.png",
+        "width": 1448,
+        "height": 1086,
+        "insertBefore": "bag-of-words-limitations",
+        "alt": "Sơ đồ tư duy bằng tiếng Anh cho Chương 12, Vượt ra ngoài mô hình túi từ",
+        "caption": "Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 12. Chọn ảnh để xem kích thước đầy đủ."
+      }
+    }
+  ]
+}

@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163b3c">
+  <meta name="description" content="Tìm hiểu cách truy xuất thông tin hoạt động và cách công cụ tìm kiếm biến các nguyên lý đó thành dịch vụ.">
+  <title>CHƯƠNG 1 Truy xuất thông tin và công cụ tìm kiếm | SEG301m</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=20261104-vi">
+  <link rel="stylesheet" href="../tutor.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/katex/katex.min.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/highlight.css?v=20261104-vi">
+  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang"}</script>
+  <script src="../app.js?v=20261104-vi" defer></script>
+  <script src="../tutor.js?v=20261104-vi" defer></script>
+</head>
+<body data-page="chapter" data-language="vi">
+  <a class="skip-link" href="#learning-goals-vi">Chuyển đến bài học</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
+    <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 1</span>
+    <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
+  </header>
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__line"></span> SEG301m / CHƯƠNG 1</p>
+        <h1 id="page-title">Truy xuất thông tin và<br><em>công cụ tìm kiếm</em></h1>
+        <p class="hero__description">Tìm hiểu cách truy xuất thông tin hoạt động và cách công cụ tìm kiếm biến các nguyên lý đó thành dịch vụ.</p>
+        <a class="start-link" href="#learning-goals-vi">Bắt đầu học <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <span class="orbit orbit--one"></span><span class="orbit orbit--two"></span>
+        <span class="signal signal--one"></span><span class="signal signal--two"></span>
+        <span class="hero__query">NGUỒN <b>01</b></span>
+        <span class="hero__result hero__result--one">01 <b>TÀI LIỆU</b></span>
+        <span class="hero__result hero__result--two">02 <b>CHỈ MỤC</b></span>
+        <span class="hero__result hero__result--three">03 <b>KẾT QUẢ</b></span>
+        <span class="hero__visual-label">TỪ NGUỒN ĐẾN TÌM KIẾM</span>
+      </div>
+    </div>
+    <div class="hero__footer"><span>CHƯƠNG 1</span><span>Nguồn: toàn bộ 24 slide bài giảng</span></div>
+  </section>
+  <div class="page-layout" id="lesson">
+    <nav class="chapter-nav" aria-label="Mục lục"><div class="chapter-nav__sticky">
+      <p class="chapter-nav__label">MỤC LỤC <span>01 / 12</span></p>
+      <div class="chapter-nav__links"><a href="#information-retrieval-vi" data-section="information-retrieval"><span>01</span>1.1 Truy xuất thông tin là gì</a>
+<a href="#search-engines-vi" data-section="search-engines"><span>02</span>1.2 Công cụ tìm kiếm là gì</a>
+<a href="#search-engineers-vi" data-section="search-engineers"><span>03</span>1.3 Công việc của kỹ sư tìm kiếm</a>
+<a href="#web-search-vi" data-section="web-search"><span>04</span>1.4 Luồng tìm kiếm Web</a>
+<a href="#other-search-vi" data-section="other-search"><span>05</span>1.5 Tìm kiếm ngoài Web</a>
+<a href="#applications-vi" data-section="applications"><span>06</span>1.6 Các ứng dụng khác của truy xuất thông tin</a>
+<a href="#putting-it-together-vi" data-section="putting-it-together"><span>07</span>Kết nối các ứng dụng trong một quy trình</a>
+<a href="#exercise-vi" data-section="exercise"><span>08</span>Bài tập cuối chương</a>
+<a href="#summary-vi" data-section="summary"><span>09</span>Tổng kết</a>
+<a href="#quiz-vi" data-section="quiz"><span>10</span>Câu hỏi tự kiểm tra</a>
+<a href="#glossary-vi" data-section="glossary"><span>11</span>Bảng thuật ngữ</a></div>
+      <div class="chapter-directory">
+    <p class="chapter-directory__label">ĐỦ 12 CHƯƠNG</p>
+    <div class="chapter-directory__links"><span class="chapter-directory__item is-current" aria-current="page"><b>01</b>Truy xuất thông tin</span>
+<a class="chapter-directory__item" href="./chapter-02.html"><b>02</b>Các thành phần và luồng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-03.html"><b>03</b>Thu thập tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-04.html"><b>04</b>Biến từ thành dữ liệu có thể tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-05.html"><b>05</b>Từ chỉ mục đến kết quả hàng đầu</a>
+<a class="chapter-directory__item" href="./chapter-06.html"><b>06</b>Biến nhu cầu thành truy vấn</a>
+<a class="chapter-directory__item" href="./chapter-07.html"><b>07</b>Cách tính điểm kết quả</a>
+<a class="chapter-directory__item" href="./chapter-08.html"><b>08</b>Giúp nội dung được tìm thấy</a>
+<a class="chapter-directory__item" href="./chapter-09.html"><b>09</b>Đo chất lượng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-10.html"><b>10</b>Phân loại và sắp xếp tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-11.html"><b>11</b>Dùng con người và mối quan hệ trong tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-12.html"><b>12</b>Khai thác thứ tự, cấu trúc và đa phương tiện</a></div>
+  </div>
+    </div></nav>
+    <main class="lesson-content" id="main-content">
+      <article class="lesson-language" lang="vi-VN" data-lang="vi">
+        <div class="intro-mark"><span>GHI CHÚ HỌC TẬP</span><span>Bản tiếng Việt · Chương 01</span></div>
+        <p><strong>Tài liệu gốc:</strong> Slide bài giảng SEG301m Chương 1, &quot;Information Retrieval and Search Engines&quot; (24 slide)<br><strong>Cách đọc:</strong> Mỗi mục có dòng &quot;Slide nguồn&quot; để chỉ rõ phần tương ứng trong bài giảng. Những đoạn mang nhãn &quot;Giải thích thêm ngoài slide&quot; hoặc &quot;Ví dụ bổ sung ngoài slide&quot; được thêm để người mới dễ theo dõi, không phải là nội dung được trích nguyên văn từ slide.</p>
+<h2 id="learning-goals-vi" data-section-heading="learning-goals">Mục tiêu của chương</h2>
+<p>Sau khi học xong chương này, bạn có thể:</p>
+<ol>
+<li>Giải thích truy xuất thông tin là gì và mối quan hệ giữa câu hỏi của người dùng với thông tin được tìm thấy.</li>
+<li>Giải thích cách công cụ tìm kiếm đưa các nguyên lý của truy xuất thông tin vào một dịch vụ thực tế.</li>
+<li>Mô tả công việc của kỹ sư tìm kiếm và luồng xử lý cơ bản của tìm kiếm Web.</li>
+<li>Nhận biết các loại tìm kiếm ngoài Web và những ứng dụng khác của truy xuất thông tin.</li>
+</ol>
+<p class="source-note"><span>SLIDE NGUỒN</span> 1-3</p>
+<figure class="chapter-map"><a href="../assets/chapter-01-mindmap.png" target="_blank" rel="noopener"><img src="../assets/chapter-01-mindmap.png" width="1536" height="1024" loading="lazy" alt="Sơ đồ tư duy bằng tiếng Anh cho Chương 1, Truy xuất thông tin và công cụ tìm kiếm"></a><figcaption>Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 1. Chọn ảnh để xem kích thước đầy đủ.</figcaption></figure>
+<h2 id="information-retrieval-vi" data-section-heading="information-retrieval">1.1 Truy xuất thông tin là gì</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 4-7</p>
+<h3 id="detail-1-vi">Vì sao cần truy xuất thông tin</h3>
+<p>Tìm kiếm trên Web là một hoạt động rất quen thuộc. Nhiều người tìm thông tin hằng ngày, thậm chí nhiều lần trong một giờ. Khi lượng thông tin quá lớn, chúng ta không thể đọc từng tài liệu để tìm thứ mình cần. Vì vậy, cần có những phương pháp giúp tìm đúng thông tin nhanh hơn và thuận tiện hơn.</p>
+<p>Slide 4 nêu các nhóm thường giải quyết bài toán này, gồm nhà khoa học máy tính, kỹ sư phần mềm, chuyên gia khoa học thông tin và người làm tối ưu hóa công cụ tìm kiếm.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Ví dụ bổ sung ngoài slide</span><p>Hãy tưởng tượng một thư viện rất lớn và bạn cần tìm tài liệu về thức ăn của khủng long. Đọc lần lượt mọi cuốn sách là không khả thi. Bạn cần dùng tiêu đề, mục lục, từ khóa hoặc hệ thống phân loại để chọn ra những cuốn có khả năng hữu ích. Truy xuất thông tin cũng giải quyết một bài toán tương tự trên dữ liệu số.</p></aside>
+<h3 id="detail-2-vi">Định nghĩa truy xuất thông tin</h3>
+<p><strong>Truy xuất thông tin (Information Retrieval, IR)</strong> là lĩnh vực nghiên cứu việc tổ chức, xây dựng cấu trúc, lưu trữ, tìm kiếm và lấy ra thông tin. Slide 6 trình bày định nghĩa của Salton (1968) qua năm hoạt động sau:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Thuật ngữ trên slide</th>
+<th>Nghĩa tiếng Việt</th>
+<th>Hiểu đơn giản</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Organization</td>
+<td>Tổ chức</td>
+<td>Sắp xếp thông tin để có thể quản lý và tìm lại.</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>Cấu trúc</td>
+<td>Phân biệt các phần như tiêu đề, nội dung, tác giả hoặc ngày tạo.</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Lưu trữ</td>
+<td>Giữ thông tin trong hệ thống máy tính.</td>
+</tr>
+<tr>
+<td>Searching</td>
+<td>Tìm kiếm</td>
+<td>Dùng truy vấn làm đầu mối để tìm trong tập thông tin.</td>
+</tr>
+<tr>
+<td>Retrieval</td>
+<td>Lấy ra</td>
+<td>Chọn và trả về những thông tin có khả năng phù hợp.</td>
+</tr>
+</tbody></table></div>
+<h3 id="detail-3-vi">Hệ thống so sánh điều gì khi tìm kiếm</h3>
+<p>Từ hoặc câu hỏi mà người dùng nhập vào hệ thống được gọi là <strong>truy vấn (query)</strong>. Đối tượng được tìm kiếm, chẳng hạn một bài viết hoặc trang Web, được gọi chung là <strong>tài liệu (document)</strong>.</p>
+<p>Slide 7 mô tả một &quot;kho thông tin&quot; rất lớn. Người dùng đặt truy vấn để tìm một phần thông tin quan trọng trong kho đó. Nhiệm vụ cốt lõi là hiểu và mô hình hóa cách con người so sánh các văn bản, sau đó thiết kế thuật toán để máy tính thực hiện phép so sánh này đủ chính xác.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Tài liệu có chứa đúng từ trong truy vấn chưa chắc đã hữu ích. Nếu người dùng tìm &quot;cách trồng táo đỏ&quot;, một bài hướng dẫn trồng táo thường phù hợp hơn một trang bán chiếc đĩa có hình quả táo, dù cả hai đều có thể chứa cụm từ &quot;táo đỏ&quot;.</p></aside>
+<p>Mức độ một tài liệu đáp ứng nhu cầu thông tin được gọi là <strong>độ liên quan (relevance)</strong>. Việc sắp xếp kết quả theo mức độ hữu ích dự đoán được gọi là <strong>xếp hạng (ranking)</strong>.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Với truy vấn &quot;thức ăn cho mèo&quot;, giữa một bài viết về dinh dưỡng cho mèo và một trang bán đĩa có hình mèo, tài liệu nào thường liên quan hơn? Hãy giải thích dựa trên nhu cầu của người tìm.</p></aside>
+<h2 id="search-engines-vi" data-section-heading="search-engines">1.2 Công cụ tìm kiếm là gì</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 8-10</p>
+<p>Slide 8 định nghĩa <strong>công cụ tìm kiếm (search engine)</strong> là việc áp dụng các kỹ thuật truy xuất thông tin vào những tập văn bản có quy mô lớn. Các ví dụ trên slide gồm:</p>
+<ul>
+<li>công cụ tìm kiếm Web;</li>
+<li>công cụ tìm kiếm trên máy tính cá nhân;</li>
+<li>công cụ tìm kiếm trong doanh nghiệp.</li>
+</ul>
+<p>Nói cách khác, truy xuất thông tin cung cấp các nguyên lý và mô hình để tìm thông tin, còn công cụ tìm kiếm biến chúng thành một hệ thống hoạt động thực tế.</p>
+<h3 id="detail-4-vi">Ví dụ về công cụ tìm kiếm Web</h3>
+<p>Slide 9 dùng Google làm ví dụ. Hệ thống phải thu thập trang Web bằng quá trình <strong>crawl</strong>, xử lý lượng dữ liệu rất lớn và phản hồi nhanh cho nhiều truy vấn từ khắp thế giới.</p>
+<p>Các con số về dung lượng dữ liệu hoặc thời gian phản hồi trên slide phản ánh bối cảnh khi slide được soạn. Bài học này chỉ dùng chúng để minh họa yêu cầu về quy mô, không coi đó là số liệu hiện tại.</p>
+<p>Luồng tổng quát gồm hai giai đoạn:</p>
+<ol>
+<li>Trước khi người dùng tìm kiếm, hệ thống thu thập và chuẩn bị các trang Web để có thể tra cứu.</li>
+<li>Khi người dùng gửi truy vấn, hệ thống tìm trong dữ liệu đã chuẩn bị và trả về kết quả.</li>
+</ol>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Crawl là công việc thu thập được thực hiện trước hoặc theo lịch. Tìm kiếm là công việc xử lý câu hỏi khi người dùng gửi truy vấn. Hai hoạt động liên quan chặt chẽ nhưng không diễn ra cùng một thời điểm.</p></aside>
+<h3 id="detail-5-vi">Truy xuất thông tin và công cụ tìm kiếm tập trung vào điều gì</h3>
+<p>Slide 10 đặt các vấn đề của truy xuất thông tin bên cạnh các vấn đề khi xây dựng công cụ tìm kiếm:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Truy xuất thông tin</th>
+<th>Câu hỏi cần giải quyết</th>
+<th>Công cụ tìm kiếm</th>
+<th>Câu hỏi cần giải quyết</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Độ liên quan và xếp hạng hiệu quả</td>
+<td>Kết quả hữu ích có được đưa lên trước không?</td>
+<td>Hiệu năng, tìm kiếm và lập chỉ mục hiệu quả</td>
+<td>Hệ thống có xử lý nhanh ở quy mô lớn không?</td>
+</tr>
+<tr>
+<td>Đánh giá</td>
+<td>Có thể đo chất lượng kết quả bằng cách nào?</td>
+<td>Đưa dữ liệu mới vào hệ thống</td>
+<td>Trang hoặc tài liệu mới có được bổ sung không?</td>
+</tr>
+<tr>
+<td>Nhu cầu thông tin và tương tác người dùng</td>
+<td>Người dùng thật sự muốn biết gì và họ diễn đạt ra sao?</td>
+<td>Độ bao phủ và độ mới</td>
+<td>Hệ thống có đủ dữ liệu cần thiết và cập nhật kịp thời không?</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Khả năng mở rộng</td>
+<td>Dữ liệu và số người dùng tăng lên thì hệ thống còn hoạt động tốt không?</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Khả năng thích nghi và vấn đề riêng của ứng dụng</td>
+<td>Hệ thống có điều chỉnh theo từng mục đích và xử lý spam được không?</td>
+</tr>
+</tbody></table></div>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Một hệ thống có thể trả kết quả rất đúng nhưng quá chậm, hoặc chạy rất nhanh nhưng trả kết quả kém liên quan. Công cụ tìm kiếm thực tế phải cân bằng chất lượng truy xuất với yêu cầu vận hành.</p></aside>
+<h2 id="search-engineers-vi" data-section-heading="search-engineers">1.3 Công việc của kỹ sư tìm kiếm</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 11-12</p>
+<p>Slide 11 mô tả phần lớn kỹ sư tìm kiếm là những người được đào tạo về khoa học máy tính, thường có nền tảng về hệ thống hoặc cơ sở dữ liệu. Slide cũng nhận xét rằng chỉ một số ít trong nhóm này được đào tạo chuyên sâu về truy xuất thông tin.</p>
+<p>Đây là nhận định trong slide nguồn, không phải kết quả khảo sát hiện tại về toàn bộ thị trường lao động.</p>
+<p>Slide 12 liệt kê các công việc chính:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Công việc</th>
+<th>Nội dung</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Mở rộng công cụ tìm kiếm</td>
+<td>Bổ sung chức năng hoặc khả năng mới.</td>
+</tr>
+<tr>
+<td>Duy trì công cụ tìm kiếm</td>
+<td>Giữ dịch vụ ổn định và xử lý sự cố vận hành.</td>
+</tr>
+<tr>
+<td>Tinh chỉnh công cụ tìm kiếm hiện có</td>
+<td>Cải thiện chất lượng kết quả hoặc hiệu năng.</td>
+</tr>
+<tr>
+<td>Sửa đổi công cụ tìm kiếm</td>
+<td>Điều chỉnh hệ thống cho yêu cầu hoặc môi trường mới.</td>
+</tr>
+<tr>
+<td>Thiết kế và triển khai công cụ tìm kiếm mới</td>
+<td>Xây dựng một hệ thống mới từ kiến trúc đến phần mềm.</td>
+</tr>
+<tr>
+<td>Tối ưu nội dung và xử lý spam</td>
+<td>Giúp nội dung có thể được tìm thấy đúng cách và chống hành vi thao túng kết quả.</td>
+</tr>
+</tbody></table></div>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Ví dụ bổ sung ngoài slide</span><p>Trong một thư viện số, kỹ sư tìm kiếm có thể thiết kế mục lục, cải thiện cách xếp hạng sách, bổ sung bộ lọc và theo dõi để hệ thống vẫn phản hồi tốt khi số tài liệu tăng lên.</p></aside>
+<h2 id="web-search-vi" data-section-heading="web-search">1.4 Luồng tìm kiếm Web</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 9, 13</p>
+<p>Slide 13 minh họa quá trình từ lúc người dùng nhập truy vấn đến lúc nhận kết quả:</p>
+<ol>
+<li>Xác định một tập trang Web có chứa các từ trong truy vấn.</li>
+<li>Tính <strong>điểm (score)</strong> cho từng trang.</li>
+<li>Loại bỏ các trang trùng lặp hoặc dư thừa.</li>
+<li>Tạo phần mô tả ngắn cho các trang còn lại và hiển thị kết quả.</li>
+</ol>
+<p>Điểm số giúp hệ thống quyết định trang nào nên đứng trước. Bước loại trùng giúp cùng một nội dung không xuất hiện nhiều lần. Phần mô tả ngắn giúp người dùng đánh giá nhanh một kết quả trước khi mở trang.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích chính xác hơn</span><p>Slide dùng cụm &quot;generate summaries&quot;. Trong ngữ cảnh trang kết quả tìm kiếm, phần này nên hiểu là đoạn mô tả ngắn hoặc <strong>snippet</strong> của từng kết quả, không nhất thiết là một bản tóm tắt đầy đủ của toàn bộ tài liệu.</p></aside>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Ví dụ bổ sung ngoài slide</span><p>Với truy vấn &quot;cách làm bánh mì&quot;, hệ thống trước hết tìm các trang có khả năng liên quan, tính điểm cho từng trang, gộp hoặc bỏ các bản sao, rồi hiển thị tiêu đề cùng một đoạn văn ngắn để người dùng chọn.</p></aside>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Nếu cùng một bài viết xuất hiện dưới hai URL khác nhau, bước nào trong luồng trên cần xử lý tình huống này?</p></aside>
+<h2 id="other-search-vi" data-section-heading="other-search">1.5 Tìm kiếm ngoài Web</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 14</p>
+<h3 id="detail-6-vi">Tìm kiếm trên máy tính cá nhân</h3>
+<p><strong>Công cụ tìm kiếm trên máy tính cá nhân (desktop search engine)</strong> cung cấp khả năng tìm và duyệt các tệp trên ổ đĩa cục bộ, đôi khi gồm cả các ổ đĩa trong mạng nội bộ. Hệ thống phải hiểu nhiều định dạng tệp và các thuộc tính như thời gian tạo.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Ví dụ bổ sung ngoài slide</span><p>Khi tìm &quot;báo cáo tuần trước&quot;, hệ thống có thể dùng tên tệp, nội dung bên trong, loại tệp và ngày tạo thay vì chỉ so khớp tên.</p></aside>
+<h3 id="detail-7-vi">Tìm kiếm trong doanh nghiệp</h3>
+<p><strong>Công cụ tìm kiếm doanh nghiệp (enterprise search engine)</strong> cung cấp dịch vụ quản lý và tìm kiếm tài liệu trong doanh nghiệp hoặc tổ chức. Theo slide, hệ thống này còn có thể hỗ trợ yêu cầu tuân thủ, chẳng hạn lưu giữ email và các trao đổi công việc trong thời gian quy định.</p>
+<p>Web search, desktop search và enterprise search cùng dùng nguyên lý truy xuất thông tin, nhưng khác nhau về phạm vi dữ liệu, quyền truy cập, định dạng tài liệu và yêu cầu vận hành.</p>
+<h2 id="applications-vi" data-section-heading="applications">1.6 Các ứng dụng khác của truy xuất thông tin</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15-22</p>
+<p>Slide 15 liệt kê tám nhóm ứng dụng của truy xuất thông tin.</p>
+<h3 id="detail-8-vi">1. Định tuyến, lọc và phân phối tài liệu có chọn lọc</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15-16</p>
+<p>Hệ thống xem xét nội dung tài liệu để chuyển tài liệu đến đúng nhóm người dùng, hoặc loại những tài liệu không phù hợp. <strong>Phân phối có chọn lọc (selective dissemination)</strong> nghĩa là chỉ đưa thông tin đến những người có mối quan tâm tương ứng.</p>
+<p>Slide 16 dùng một bài viết về Việt Nam và Hàn Quốc. Hệ thống chọn nhóm &quot;politics&quot; thay vì &quot;business&quot; hoặc &quot;lifestyle&quot;, sau đó chuyển bài viết cho những người đăng ký nhóm đó.</p>
+<h3 id="detail-9-vi">2. Phân cụm và phân loại văn bản</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15, 17</p>
+<p><strong>Phân cụm (clustering)</strong> gom các tài liệu giống nhau thành nhóm dựa trên dữ liệu. <strong>Phân loại (categorization hoặc classification)</strong> đưa tài liệu vào các nhóm đã được xác định trước.</p>
+<p>Slide 17 cho thấy các mẫu thuộc ba nhóm politics, business và lifestyle. Một bài viết mới về Việt Nam và Hàn Quốc được hệ thống đưa vào nhóm politics.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Ví dụ bổ sung ngoài slide</span><p>Khi sắp đồ chơi, tự gom các món giống nhau thành từng nhóm là phân cụm. Nếu đã có các hộp ghi sẵn &quot;xe&quot;, &quot;búp bê&quot; và &quot;khối xếp hình&quot;, rồi đặt từng món vào đúng hộp, đó là phân loại.</p></aside>
+<h3 id="detail-10-vi">3. Tóm tắt văn bản</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15, 18</p>
+<p><strong>Hệ thống tóm tắt (summarization system)</strong> rút gọn tài liệu thành một số đoạn, câu hoặc cụm từ quan trọng mô tả nội dung. Slide 18 minh họa một bài báo dài được rút thành câu ngắn nói về việc khuyến khích sáng tạo để tạo cơ hội cho người trẻ.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Một bản tóm tắt tốt cần giữ đúng ý chính. Việc rút ngắn không nên làm sai nghĩa hoặc bỏ mất thông tin quan trọng đối với mục đích sử dụng.</p></aside>
+<h3 id="detail-11-vi">4. Trích xuất thông tin</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15, 19</p>
+<p><strong>Trích xuất thông tin (information extraction)</strong> nhận diện các thực thể có tên, chẳng hạn địa điểm và ngày tháng, rồi kết hợp chúng thành bản ghi có cấu trúc mô tả quan hệ giữa các thực thể.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Ví dụ bổ sung ngoài slide</span><p>Từ câu &quot;Hội thảo diễn ra tại Hà Nội ngày 25 tháng 9&quot;, hệ thống có thể tạo bản ghi gồm địa điểm: Hà Nội, ngày: 25 tháng 9, sự kiện: hội thảo.</p></aside>
+<h3 id="detail-12-vi">5. Phát hiện và theo dõi chủ đề</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15, 20</p>
+<p><strong>Phát hiện và theo dõi chủ đề (topic detection and tracking)</strong> tìm các sự kiện trong dòng tin tức hoặc nguồn thông tin liên tục, sau đó theo dõi sự kiện khi nó thay đổi theo thời gian.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Ví dụ bổ sung ngoài slide</span><p>Hệ thống có thể phát hiện bản tin đầu tiên về một cơn bão, rồi gom các bài cập nhật về đường đi và thiệt hại vào cùng sự kiện.</p></aside>
+<h3 id="detail-13-vi">6. Tìm kiếm chuyên gia</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15, 21</p>
+<p><strong>Tìm kiếm chuyên gia (expert search)</strong> xác định thành viên trong một tổ chức có chuyên môn về một lĩnh vực cụ thể. Kết quả cần tìm ở đây là con người, không chỉ là tài liệu.</p>
+<h3 id="detail-14-vi">7. Hệ thống hỏi đáp</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15, 22</p>
+<p><strong>Hệ thống hỏi đáp (question answering system)</strong> tích hợp thông tin từ nhiều nguồn để đưa ra câu trả lời ngắn gọn cho một câu hỏi cụ thể.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Ví dụ bổ sung ngoài slide</span><p>Với câu hỏi &quot;Thư viện đóng cửa lúc mấy giờ?&quot;, hệ thống có thể tìm trong trang giờ mở cửa và trả lời trực tiếp thay vì chỉ đưa một danh sách liên kết.</p></aside>
+<h3 id="detail-15-vi">8. Truy xuất thông tin đa phương tiện</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15</p>
+<p><strong>Truy xuất thông tin đa phương tiện (multimedia information retrieval)</strong> tìm kiếm trên ảnh, âm thanh, video và các dạng dữ liệu khác ngoài văn bản. Slide 15 chỉ nêu tên ứng dụng này, không cung cấp một slide diễn giải riêng.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Ví dụ bổ sung ngoài slide</span><p>Người dùng có thể tìm ảnh bằng mô tả &quot;cầu đỏ bên sông&quot; hoặc tìm đoạn video có một cảnh cụ thể. Đây là ví dụ để minh họa khái niệm, không phải ví dụ có sẵn trên slide.</p></aside>
+<h2 id="putting-it-together-vi" data-section-heading="putting-it-together">Kết nối các ứng dụng trong một quy trình</h2>
+<p>Phần này là diễn giải bổ sung để liên kết các ứng dụng trên.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Hãy hình dung một dịch vụ nhận tin tức mỗi ngày. Hệ thống trích xuất địa điểm và ngày tháng từ bài viết, gom các bài cùng sự kiện bằng phân cụm, phân loại chúng vào các chủ đề đã định nghĩa, chuyển bài phù hợp đến người đăng ký, tạo đoạn tóm tắt và tiếp tục theo dõi các bài cập nhật. Một sản phẩm thực tế có thể kết hợp nhiều kỹ thuật truy xuất thông tin thay vì chỉ dùng một kỹ thuật riêng lẻ.</p></aside>
+<h2 id="exercise-vi" data-section-heading="exercise">Bài tập cuối chương</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 23</p>
+<p>Yêu cầu trên slide:</p>
+<blockquote>
+<p>Dùng Web để tìm càng nhiều ví dụ càng tốt về công cụ tìm kiếm mã nguồn mở, hệ thống truy xuất thông tin hoặc công nghệ liên quan. Viết mô tả ngắn cho từng hệ thống, sau đó tổng hợp điểm giống và khác nhau.</p>
+</blockquote>
+<p>Bạn có thể trình bày kết quả theo bảng sau:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Nội dung cần tìm</th>
+<th>Câu hỏi gợi ý</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tên và trang chính thức</td>
+<td>Dự án tên gì? Nguồn thông tin chính thức ở đâu?</td>
+</tr>
+<tr>
+<td>Mục đích chính</td>
+<td>Hệ thống dùng để tìm trên Web, trong doanh nghiệp hay trong một ứng dụng?</td>
+</tr>
+<tr>
+<td>Loại dữ liệu</td>
+<td>Hệ thống tìm văn bản, tệp, ảnh hay loại dữ liệu nào khác?</td>
+</tr>
+<tr>
+<td>Điểm giống nhau</td>
+<td>Các hệ thống có chung mục tiêu hoặc thành phần nào?</td>
+</tr>
+<tr>
+<td>Điểm khác nhau</td>
+<td>Chúng khác nhau về dữ liệu, cách triển khai hoặc trường hợp sử dụng nào?</td>
+</tr>
+</tbody></table></div>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Gợi ý thực hiện</span><p>Chọn ít nhất hai dự án và đọc tài liệu chính thức. Điền các thông tin có thể kiểm chứng vào bảng, rồi giải thích trường hợp nào phù hợp với từng dự án. Không nên kết luận chỉ dựa trên tên sản phẩm hoặc một bài giới thiệu không chính thức.</p></aside>
+<h2 id="summary-vi" data-section-heading="summary">Tổng kết</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 24, đồng thời ôn lại slide 1-23</p>
+<ul>
+<li>Truy xuất thông tin nghiên cứu cách tổ chức, lưu trữ, tìm kiếm và lấy ra thông tin phù hợp với nhu cầu.</li>
+<li>Công cụ tìm kiếm là ứng dụng thực tế của kỹ thuật truy xuất thông tin trên tập văn bản quy mô lớn.</li>
+<li>Tìm kiếm Web gồm việc xác định trang ứng viên, tính điểm, loại trùng và tạo mô tả ngắn cho kết quả.</li>
+<li>Các kỹ thuật truy xuất thông tin còn được dùng cho định tuyến tài liệu, phân loại, phân cụm, tóm tắt, trích xuất thông tin, theo dõi chủ đề, tìm chuyên gia, hỏi đáp và tìm kiếm đa phương tiện.</li>
+</ul>
+<h2 id="quiz-vi" data-section-heading="quiz">Câu hỏi tự kiểm tra</h2>
+<ol>
+<li>Query và document lần lượt chỉ điều gì?</li>
+<li>Vì sao có cùng từ với truy vấn chưa chắc đồng nghĩa với liên quan?</li>
+<li>Truy xuất thông tin và công cụ tìm kiếm có quan hệ như thế nào?</li>
+<li>Crawl khác việc xử lý truy vấn của người dùng ở thời điểm nào?</li>
+<li>Trong luồng tìm kiếm Web, bước nào xử lý hai URL có nội dung giống nhau?</li>
+<li>Phân cụm khác phân loại ở điểm nào?</li>
+<li>Kỹ thuật nào phù hợp để gom các bản tin cập nhật về cùng một sự kiện?</li>
+<li>Desktop search và enterprise search tìm dữ liệu ở đâu?</li>
+</ol>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><ol>
+<li>Query là từ, câu hỏi hoặc điều kiện người dùng gửi vào hệ thống. Document là đối tượng được tìm kiếm, chẳng hạn bài viết hoặc trang Web.</li>
+<li>Một từ có thể xuất hiện trong nhiều ngữ cảnh khác nhau. Độ liên quan phụ thuộc vào nhu cầu thông tin chứ không chỉ phụ thuộc vào việc trùng từ.</li>
+<li>Truy xuất thông tin cung cấp nguyên lý và mô hình; công cụ tìm kiếm áp dụng chúng vào hệ thống thực tế.</li>
+<li>Crawl thu thập dữ liệu trước hoặc theo lịch. Xử lý truy vấn diễn ra khi người dùng gửi yêu cầu tìm kiếm.</li>
+<li>Bước loại bỏ trang trùng lặp hoặc dư thừa.</li>
+<li>Phân cụm tìm nhóm từ dữ liệu chưa có nhãn; phân loại đưa tài liệu vào các nhóm đã định nghĩa.</li>
+<li>Phát hiện và theo dõi chủ đề.</li>
+<li>Desktop search tìm trên máy cá nhân hoặc mạng nội bộ; enterprise search tìm trong kho tài liệu của tổ chức.</li>
+</ol></div></details>
+
+<h2 id="glossary-vi" data-section-heading="glossary">Bảng thuật ngữ</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>English</th>
+<th>Tiếng Việt</th>
+<th>Giải thích ngắn</th>
+<th>Slide nguồn</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Information Retrieval (IR)</td>
+<td>Truy xuất thông tin</td>
+<td>Lĩnh vực tìm và lấy ra thông tin hữu ích cho một nhu cầu.</td>
+<td>4-7</td>
+</tr>
+<tr>
+<td>Search engine</td>
+<td>Công cụ tìm kiếm</td>
+<td>Hệ thống áp dụng kỹ thuật IR trên tập dữ liệu lớn.</td>
+<td>8-10</td>
+</tr>
+<tr>
+<td>Information need</td>
+<td>Nhu cầu thông tin</td>
+<td>Điều người dùng thật sự muốn biết.</td>
+<td>7, 10</td>
+</tr>
+<tr>
+<td>Query</td>
+<td>Truy vấn</td>
+<td>Từ, câu hỏi hoặc điều kiện gửi vào hệ thống.</td>
+<td>7, 9, 13</td>
+</tr>
+<tr>
+<td>Document</td>
+<td>Tài liệu</td>
+<td>Đối tượng được tìm kiếm, không chỉ giới hạn ở tài liệu giấy.</td>
+<td>7, 14-19</td>
+</tr>
+<tr>
+<td>Relevance</td>
+<td>Độ liên quan</td>
+<td>Mức độ tài liệu đáp ứng nhu cầu thông tin.</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Ranking</td>
+<td>Xếp hạng</td>
+<td>Sắp kết quả theo mức độ hữu ích dự đoán.</td>
+<td>10, 13</td>
+</tr>
+<tr>
+<td>Score</td>
+<td>Điểm</td>
+<td>Giá trị dùng để quyết định thứ tự kết quả.</td>
+<td>13</td>
+</tr>
+<tr>
+<td>Crawl</td>
+<td>Thu thập Web / crawl</td>
+<td>Quá trình lấy các trang Web về hệ thống.</td>
+<td>9</td>
+</tr>
+<tr>
+<td>Indexing</td>
+<td>Lập chỉ mục</td>
+<td>Chuẩn bị cấu trúc dữ liệu để tìm nhanh.</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Coverage</td>
+<td>Độ bao phủ</td>
+<td>Mức độ hệ thống thu thập đủ phạm vi dữ liệu cần thiết.</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Freshness</td>
+<td>Độ mới</td>
+<td>Mức độ dữ liệu phản ánh các cập nhật gần đây.</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Scalability</td>
+<td>Khả năng mở rộng</td>
+<td>Khả năng tiếp tục hoạt động khi dữ liệu hoặc người dùng tăng.</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Spam</td>
+<td>Spam</td>
+<td>Nội dung hoặc hành vi cố tình thao túng chất lượng kết quả.</td>
+<td>10, 12</td>
+</tr>
+<tr>
+<td>Desktop search</td>
+<td>Tìm kiếm trên máy tính cá nhân</td>
+<td>Tìm tệp trên máy hoặc mạng nội bộ.</td>
+<td>14</td>
+</tr>
+<tr>
+<td>Enterprise search</td>
+<td>Tìm kiếm doanh nghiệp</td>
+<td>Tìm trong tài liệu và dữ liệu của tổ chức.</td>
+<td>14</td>
+</tr>
+<tr>
+<td>Document filtering</td>
+<td>Lọc tài liệu</td>
+<td>Chọn hoặc loại tài liệu theo hồ sơ và điều kiện.</td>
+<td>15-16</td>
+</tr>
+<tr>
+<td>Selective dissemination</td>
+<td>Phân phối có chọn lọc</td>
+<td>Gửi thông tin đến người có mối quan tâm phù hợp.</td>
+<td>15-16</td>
+</tr>
+<tr>
+<td>Clustering</td>
+<td>Phân cụm</td>
+<td>Gom các đối tượng giống nhau thành nhóm từ dữ liệu.</td>
+<td>15, 17</td>
+</tr>
+<tr>
+<td>Categorization / Classification</td>
+<td>Phân loại</td>
+<td>Đưa đối tượng vào nhóm đã xác định trước.</td>
+<td>15, 17</td>
+</tr>
+<tr>
+<td>Summarization</td>
+<td>Tóm tắt</td>
+<td>Rút gọn tài liệu nhưng giữ nội dung chính.</td>
+<td>15, 18</td>
+</tr>
+<tr>
+<td>Information extraction</td>
+<td>Trích xuất thông tin</td>
+<td>Lấy thực thể và quan hệ từ văn bản thành dữ liệu có cấu trúc.</td>
+<td>15, 19</td>
+</tr>
+<tr>
+<td>Topic detection and tracking</td>
+<td>Phát hiện và theo dõi chủ đề</td>
+<td>Tìm sự kiện trong dòng tin và theo dõi diễn biến.</td>
+<td>15, 20</td>
+</tr>
+<tr>
+<td>Expert search</td>
+<td>Tìm kiếm chuyên gia</td>
+<td>Tìm người có chuyên môn trong một lĩnh vực.</td>
+<td>15, 21</td>
+</tr>
+<tr>
+<td>Question answering</td>
+<td>Hỏi đáp</td>
+<td>Trả lời trực tiếp một câu hỏi dựa trên nguồn thông tin.</td>
+<td>15, 22</td>
+</tr>
+<tr>
+<td>Multimedia information retrieval</td>
+<td>Truy xuất thông tin đa phương tiện</td>
+<td>Tìm kiếm ảnh, âm thanh, video và dữ liệu đa phương tiện.</td>
+<td>15</td>
+</tr>
+</tbody></table></div>
+
+        <footer class="lesson-footer"><span class="lesson-footer__meta"><span>SEG301m / CHƯƠNG 1</span><span class="site-credit">Made by <strong>Marcus</strong></span></span><a href="#top">Về đầu trang ↑</a></footer>
+      </article>
+      <nav class="chapter-pager" aria-label="Chapter navigation"><span></span><a class="chapter-pager__next" href="./chapter-02.html">
+    <span>Chương sau</span>
+    <strong>02 · Kiến trúc của công cụ tìm kiếm</strong>
+  </a></nav>
+    </main>
+  </div>
+</body>
+</html>

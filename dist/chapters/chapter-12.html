@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163b3c">
+  <meta name="description" content="Tìm hiểu đặc trưng, phụ thuộc từ, cấu trúc, thực thể, hỏi đáp và truy xuất đa phương tiện.">
+  <title>CHƯƠNG 12 Vượt ra ngoài mô hình túi từ | SEG301m</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=20261104-vi">
+  <link rel="stylesheet" href="../tutor.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/katex/katex.min.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/highlight.css?v=20261104-vi">
+  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang"}</script>
+  <script src="../app.js?v=20261104-vi" defer></script>
+  <script src="../tutor.js?v=20261104-vi" defer></script>
+</head>
+<body data-page="chapter" data-language="vi">
+  <a class="skip-link" href="#learning-goals-vi">Chuyển đến bài học</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
+    <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 12</span>
+    <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
+  </header>
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__line"></span> SEG301m / CHƯƠNG 12</p>
+        <h1 id="page-title">Vượt ra ngoài mô<br><em>hình túi từ</em></h1>
+        <p class="hero__description">Tìm hiểu đặc trưng, phụ thuộc từ, cấu trúc, thực thể, hỏi đáp và truy xuất đa phương tiện.</p>
+        <a class="start-link" href="#learning-goals-vi">Bắt đầu học <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <span class="orbit orbit--one"></span><span class="orbit orbit--two"></span>
+        <span class="signal signal--one"></span><span class="signal signal--two"></span>
+        <span class="hero__query">NGUỒN <b>12</b></span>
+        <span class="hero__result hero__result--one">01 <b>TÀI LIỆU</b></span>
+        <span class="hero__result hero__result--two">02 <b>CHỈ MỤC</b></span>
+        <span class="hero__result hero__result--three">03 <b>KẾT QUẢ</b></span>
+        <span class="hero__visual-label">TỪ NGUỒN ĐẾN TÌM KIẾM</span>
+      </div>
+    </div>
+    <div class="hero__footer"><span>CHƯƠNG 12</span><span>Nguồn: toàn bộ 14 slide bài giảng</span></div>
+  </section>
+  <div class="page-layout" id="lesson">
+    <nav class="chapter-nav" aria-label="Mục lục"><div class="chapter-nav__sticky">
+      <p class="chapter-nav__label">MỤC LỤC <span>12 / 12</span></p>
+      <div class="chapter-nav__links"><a href="#bag-of-words-limitations-vi" data-section="bag-of-words-limitations"><span>01</span>Bắt đầu từ những giới hạn của Bag of Words</a>
+<a href="#feature-based-retrieval-vi" data-section="feature-based-retrieval"><span>02</span>12.1 Mô hình truy xuất dựa trên đặc trưng</a>
+<a href="#term-dependence-vi" data-section="term-dependence"><span>03</span>12.2 Phụ thuộc từ và MRF</a>
+<a href="#document-structure-and-xml-vi" data-section="document-structure-and-xml"><span>04</span>12.3 Cấu trúc tài liệu và truy xuất XML</a>
+<a href="#entity-search-vi" data-section="entity-search"><span>05</span>12.4 Truy xuất thực thể</a>
+<a href="#question-answering-vi" data-section="question-answering"><span>06</span>12.5 Hỏi đáp</a>
+<a href="#multimedia-search-vi" data-section="multimedia-search"><span>07</span>12.6 Tìm kiếm hình ảnh, video và âm thanh</a>
+<a href="#one-search-fits-all-vi" data-section="one-search-fits-all"><span>08</span>12.7 Một phương pháp tìm kiếm có đáp ứng được mọi nhu cầu?</a>
+<a href="#supplementary-exercise-vi" data-section="supplementary-exercise"><span>09</span>Bài tập bổ sung: Thiết kế ba kiểu tìm kiếm cho cùng một truy vấn</a>
+<a href="#summary-vi" data-section="summary"><span>10</span>Tổng kết</a>
+<a href="#quiz-vi" data-section="quiz"><span>11</span>Câu hỏi tự kiểm tra</a>
+<a href="#glossary-vi" data-section="glossary"><span>12</span>Bảng thuật ngữ</a></div>
+      <div class="chapter-directory">
+    <p class="chapter-directory__label">ĐỦ 12 CHƯƠNG</p>
+    <div class="chapter-directory__links"><a class="chapter-directory__item" href="./chapter-01.html"><b>01</b>Truy xuất thông tin</a>
+<a class="chapter-directory__item" href="./chapter-02.html"><b>02</b>Các thành phần và luồng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-03.html"><b>03</b>Thu thập tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-04.html"><b>04</b>Biến từ thành dữ liệu có thể tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-05.html"><b>05</b>Từ chỉ mục đến kết quả hàng đầu</a>
+<a class="chapter-directory__item" href="./chapter-06.html"><b>06</b>Biến nhu cầu thành truy vấn</a>
+<a class="chapter-directory__item" href="./chapter-07.html"><b>07</b>Cách tính điểm kết quả</a>
+<a class="chapter-directory__item" href="./chapter-08.html"><b>08</b>Giúp nội dung được tìm thấy</a>
+<a class="chapter-directory__item" href="./chapter-09.html"><b>09</b>Đo chất lượng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-10.html"><b>10</b>Phân loại và sắp xếp tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-11.html"><b>11</b>Dùng con người và mối quan hệ trong tìm kiếm</a>
+<span class="chapter-directory__item is-current" aria-current="page"><b>12</b>Khai thác thứ tự, cấu trúc và đa phương tiện</span></div>
+  </div>
+    </div></nav>
+    <main class="lesson-content" id="main-content">
+      <article class="lesson-language" lang="vi-VN" data-lang="vi">
+        <div class="intro-mark"><span>GHI CHÚ HỌC TẬP</span><span>Bản tiếng Việt · Chương 12</span></div>
+        <p><strong>Tài liệu gốc:</strong> Slide bài giảng SEG301m Chương 12, &quot;Beyond Bag of Words&quot; (14 slide)<br><strong>Cách đọc:</strong> Mô hình túi từ (Bag of Words, BoW) là biểu diễn nền tảng rất mạnh mẽ, nhưng lại lược bỏ thứ tự từ, cấu trúc tài liệu, thực thể và nội dung đa phương tiện. Chương này dựa trên các kỹ thuật tìm kiếm đã học để bổ sung thêm các manh mối phù hợp cho từng mục tiêu cụ thể.</p>
+<h2 id="learning-goals-vi" data-section-heading="learning-goals">Mục tiêu của chương</h2>
+<p>Sau khi học xong chương này, bạn có thể giải thích và thực hiện các nội dung sau:</p>
+<ol>
+<li>Nêu rõ những thông tin mô hình túi từ giữ lại và những thông tin bị mất qua các ví dụ cụ thể.</li>
+<li>Tính điểm số trong mô hình truy xuất dựa trên đặc trưng (feature-based retrieval) và giải thích sự thay đổi thứ bậc khi thay đổi trọng số.</li>
+<li>Phân chia tập huấn luyện (training data), tập kiểm định (validation data), tập kiểm thử (test data) và chọn ứng viên tham số từ kết quả đánh giá.</li>
+<li>Giải thích bốn cấu trúc phụ thuộc từ (term dependence) và phân biệt cụm từ với tính gần kề (proximity).</li>
+<li>Phân biệt đơn vị kết quả trả về giữa truy xuất phần tử XML, truy xuất thực thể và hệ thống hỏi đáp (QA).</li>
+<li>Nêu rõ biểu diễn văn bản cho hình ảnh, video, âm thanh cùng giới hạn của OCR và nhận dạng tiếng nói.</li>
+<li>Giải thích lý do mỗi dịch vụ tìm kiếm cần biểu diễn, xếp hạng và tiêu chí đánh giá khác nhau.</li>
+</ol>
+<p class="source-note"><span>SLIDE NGUỒN</span> 1-3</p>
+<figure class="chapter-map"><a href="../assets/chapter-12-mindmap.png" target="_blank" rel="noopener"><img src="../assets/chapter-12-mindmap.png" width="1448" height="1086" loading="lazy" alt="Sơ đồ tư duy bằng tiếng Anh cho Chương 12, Vượt ra ngoài mô hình túi từ"></a><figcaption>Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 12. Chọn ảnh để xem kích thước đầy đủ.</figcaption></figure>
+<h2 id="bag-of-words-limitations-vi" data-section-heading="bag-of-words-limitations">Bắt đầu từ những giới hạn của Bag of Words</h2>
+<p>Mô hình túi từ (Bag of Words, BoW) biểu diễn tài liệu dưới dạng tập hợp hoặc tần số xuất hiện của các từ. Mô hình giữ lại thông tin một từ có xuất hiện hay không và xuất hiện bao nhiêu lần, nhưng thông thường sẽ loại bỏ hoàn toàn thứ tự từ và vị trí xuất hiện.</p>
+<pre><code class="language-text">chó cắn người
+người cắn chó
+</code></pre>
+<p>Trong mô hình BoW cơ bản, cả hai câu trên đều chứa <code>chó, người, cắn</code> mỗi từ đúng 1 lần, do đó có vector biểu diễn giống hệt nhau. Tuy nhiên, ý nghĩa ai cắn ai lại hoàn toàn trái ngược. Câu tiếng Anh <code>dog bites man</code> và <code>man bites dog</code> cũng thể hiện rõ hạn chế này.</p>
+<p>Việc BoW bỏ qua thứ tự từ không có nghĩa là các mô hình dựa trên từ (term-based model) mất đi giá trị. Các mô hình như tf-idf, BM25 và mô hình ngôn ngữ (language model) vẫn đóng vai trò cốt lõi trong các hệ thống tìm kiếm quy mô lớn. Khi cần thiết, hệ thống sẽ bổ sung thêm các manh mối sau:</p>
+<ul>
+<li>Vị trí từ và khoảng cách gần kề giữa các từ.</li>
+<li>Cấu trúc tài liệu như tiêu đề, tác giả, đề mục và từng phần văn bản.</li>
+<li>Thực thể và quan hệ giữa con người, tổ chức, địa danh.</li>
+<li>Đặc trưng hình ảnh, đặc trưng âm thanh, văn bản trích xuất từ OCR hoặc bản gỡ băng từ nhận dạng tiếng nói.</li>
+</ul>
+<p>Khái niệm &quot;Vượt ra ngoài mô hình túi từ&quot; không chỉ gói gọn trong biểu diễn vector nhúng (embedding) hay mô hình ngôn ngữ lớn (LLM). Trọng tâm cốt lõi của slide bài giảng tập trung vào: mô hình đặc trưng, phụ thuộc từ, cấu trúc tài liệu, thực thể, hỏi đáp (QA) và dữ liệu đa phương tiện.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Việc mô hình BoW không dùng thứ tự từ có đồng nghĩa với việc không dùng tần số xuất hiện của từ (term frequency) không?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Không đồng nghĩa. Mô hình BoW thông thường vẫn lưu giữ sự hiện diện và tần số xuất hiện của từng từ. Thông tin bị mất ở đây là từ nào đứng trước, từ nào đứng sau, các từ cách nhau bao xa, hoặc từ nằm ở phần nào trong tài liệu.</p></div></details>
+
+<h2 id="feature-based-retrieval-vi" data-section-heading="feature-based-retrieval">12.1 Mô hình truy xuất dựa trên đặc trưng</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 4-6</p>
+<h3 id="detail-1-vi">Biểu diễn cặp truy vấn - tài liệu bằng các đặc trưng</h3>
+<p>Mô hình truy xuất dựa trên đặc trưng (feature-based retrieval model) tính toán nhiều đặc trưng khác nhau cho từng cặp truy vấn <code>Q</code> và tài liệu <code>D</code>, sau đó cộng tổng có trọng số:</p>
+<div class="formula-block" role="math" aria-label="linear feature based retrieval score equals weighted sum of feature functions plus Z">
+  <span class="formula-main">S<sub>Λ</sub>(D;Q) = Σ<sub>j</sub> λ<sub>j</sub>f<sub>j</sub>(D,Q) + Z</span>
+</div>
+
+<ul>
+<li><code>D</code>: tài liệu cần tính điểm.</li>
+<li><code>Q</code>: truy vấn của người dùng.</li>
+<li><code>f_j(D,Q)</code>: hàm đặc trưng thứ <code>j</code>, ánh xạ cặp truy vấn và tài liệu thành một số thực.</li>
+<li><code>Λ = (λ_1, …, λ_m)</code>: vector trọng số của các đặc trưng.</li>
+<li><code>S_Λ(D;Q)</code>: điểm số dùng để xếp hạng. Đây là điểm số đánh giá, không nhất thiết là xác suất.</li>
+<li><code>Z</code>: hằng số không phụ thuộc vào <code>D</code> đối với cùng một <code>Q</code> và <code>Λ</code>. Slide nêu rõ <code>Z</code> có thể phụ thuộc vào <code>Q</code> hoặc <code>Λ</code>.</li>
+</ul>
+<p>Khi cộng cùng một hằng số <code>Z</code> cho mọi tài liệu ứng viên của cùng một truy vấn, chênh lệch điểm số giữa các tài liệu không đổi nên thứ tự xếp hạng được bảo toàn. Tuy nhiên, nếu <code>Z</code> hoặc thang đo đặc trưng khác nhau giữa các truy vấn thì điểm số giữa các truy vấn khác nhau sẽ không thể so sánh trực tiếp. Slide gốc không định nghĩa <code>Z</code> là hàm phân phối hay số hạng chuẩn hóa xác suất.</p>
+<p>Nếu mô hình không áp đặt ràng buộc, trọng số <code>λ_j</code> có thể nhận giá trị âm và tổng các trọng số không bắt buộc phải bằng 1. Ví dụ, nếu coi độ dài tài liệu là một yếu tố phạt thì có thể gán trọng số âm cho đặc trưng độ dài.</p>
+<h3 id="detail-2-vi">Tính điểm ba tài liệu</h3>
+<p>Xét truy vấn <code>thông tin tìm kiếm mô hình</code>. Riêng đặc trưng <code>f1</code> được tính trực tiếp từ tập các từ truy vấn phân biệt theo công thức độ bao phủ:</p>
+<div class="formula-block" role="math" aria-label="coverage is the number of distinct query terms found in the document divided by the number of distinct query terms">
+  <span class="formula-main">coverage(D,Q) = |unique(Q) ∩ unique(D)| / |unique(Q)|</span>
+</div>
+
+<p>Truy vấn này có đúng 3 từ phân biệt. Tài liệu D1 chứa cả ba từ <code>thông tin, tìm kiếm, mô hình</code>, D2 cũng chứa cả ba từ <code>thông tin, tìm kiếm, mô hình</code>, còn D3 chỉ chứa duy nhất từ <code>mô hình</code>. Do đó, độ bao phủ lần lượt là <code>3/3</code>, <code>3/3</code> và <code>1/3</code>. Sự xuất hiện lặp lại của một từ không làm tăng tử số. Các đặc trưng từ <code>f2</code> đến <code>f5</code> là các giá trị giả định từ 0 đến 1 dùng cho mục đích minh họa bài học:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Đặc trưng</th>
+<th>Ý nghĩa</th>
+<th align="right">D1</th>
+<th align="right">D2</th>
+<th align="right">D3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>f1</code> coverage</td>
+<td>Độ bao phủ các từ truy vấn phân biệt (tính toán)</td>
+<td align="right">1.0</td>
+<td align="right">1.0</td>
+<td align="right">1/3</td>
+</tr>
+<tr>
+<td><code>f2</code> manh mối TF</td>
+<td>Tần số từ truy vấn đã chuẩn hóa (giả định)</td>
+<td align="right">0.7</td>
+<td align="right">0.9</td>
+<td align="right">1.0</td>
+</tr>
+<tr>
+<td><code>f3</code> khớp từ hiếm</td>
+<td>Mức độ khớp với từ hiếm (giả định)</td>
+<td align="right">0.6</td>
+<td align="right">0.4</td>
+<td align="right">0.9</td>
+</tr>
+<tr>
+<td><code>f4</code> tính gần kề</td>
+<td>Mức độ các từ truy vấn xuất hiện gần nhau (giả định)</td>
+<td align="right">1.0</td>
+<td align="right">0.2</td>
+<td align="right">0.0</td>
+</tr>
+<tr>
+<td><code>f5</code> chi phí độ dài</td>
+<td>Giá trị càng lớn tài liệu càng dài (giả định)</td>
+<td align="right">0.8</td>
+<td align="right">0.5</td>
+<td align="right">0.3</td>
+</tr>
+</tbody></table></div>
+<p>Trước hết, áp dụng bộ trọng số <code>Λ_A = (2.0, 0.8, 1.0, 1.2, -0.5)</code> và <code>Z = 0.3</code>:</p>
+<pre><code class="language-text">S_A(D1) = 2(1.0) + 0.8(0.7) + 1(0.6) + 1.2(1.0) - 0.5(0.8) + 0.3 = 4.26
+S_A(D2) = 2(1.0) + 0.8(0.9) + 1(0.4) + 1.2(0.2) - 0.5(0.5) + 0.3 = 3.41
+S_A(D3) = 2(1/3) + 0.8(1.0) + 1(0.9) + 1.2(0.0) - 0.5(0.3) + 0.3 = 2.5167
+</code></pre>
+<p>Thứ tự xếp hạng là <code>D1 &gt; D2 &gt; D3</code>. Do đặc trưng gần kề (<code>f4</code>) có trọng số lớn, tài liệu D1 với các từ nằm sát nhau được xếp trên đầu.</p>
+<p>Tiếp theo, áp dụng bộ trọng số <code>Λ_B = (1.0, 1.3, 2.0, 0.2, -0.2)</code> ưu tiên khớp từ hiếm và tần số từ:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tài liệu</th>
+<th align="right"><code>S_B</code></th>
+<th align="right">Thứ bậc</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1</td>
+<td align="right">3.45</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>D2</td>
+<td align="right">3.21</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>D3</td>
+<td align="right">3.6733</td>
+<td align="right">1</td>
+</tr>
+</tbody></table></div>
+<p>Mặc dù D3 chỉ chứa 1 trong 3 từ truy vấn (<code>mô hình</code>), nhưng nhờ điểm khớp từ hiếm và TF rất cao trong dữ liệu giả định, D3 đã vươn lên dẫn đầu với <code>Λ_B</code>. Thay đổi trọng số đồng nghĩa với việc thay đổi quan điểm &quot;manh mối nào quan trọng hơn&quot;. Nếu các đặc trưng có thang đo khác nhau thì không thể chỉ nhìn vào độ lớn của trọng số để so sánh tầm quan trọng, do đó cần lưu trữ cả phương pháp chuẩn hóa đặc trưng.</p>
+<h3 id="detail-3-vi">Học tham số là gì</h3>
+<p>Slide 5 nêu mục tiêu tối ưu hóa:</p>
+<div class="formula-block" role="math" aria-label="lambda hat is the parameter setting that maximizes evaluation metric E for training data T">
+  <span class="formula-main">Λ̂ = arg max<sub>Λ</sub> E(R<sub>Λ</sub>;T)</span>
+</div>
+
+<p>Toán tử <code>arg max</code> trả về &quot;cấu hình tham số làm cực đại hóa chỉ số đánh giá&quot;, chứ không phải giá trị đánh giá cực đại đó. Cần phân biệt rõ việc tính điểm với một bộ <code>Λ</code> cố định và việc tìm kiếm bộ <code>Λ</code> tối ưu trong quá trình học:</p>
+<ul>
+<li>Tập huấn luyện (training data): Dùng để khớp mô hình và sinh các ứng viên.</li>
+<li>Tập kiểm định (validation data): Dùng để chọn trọng số, ngưỡng và đặc trưng phù hợp.</li>
+<li>Tập kiểm thử (test data): Dùng để đo lường hiệu năng cuối cùng một lần duy nhất sau khi đã hoàn tất mọi lựa chọn.</li>
+</ul>
+<p>Nếu dùng tập kiểm thử để chọn trọng số thì thông tin kiểm thử đã bị rò rỉ vào mô hình.</p>
+<h4 id="detail-4-vi">Lựa chọn ứng viên tham số trên tập kiểm định</h4>
+<p>Dữ liệu dưới đây là tập kiểm định phục vụ việc theo dõi quy trình lựa chọn, không phải kết quả thực nghiệm. Ba đặc trưng lần lượt là <code>f1 = mức độ khớp từ</code>, <code>f2 = thứ tự từ và tính gần kề</code>, <code>f3 = chất lượng nguồn tài liệu tiên nghiệm</code>, đều nằm trong khoảng từ 0 đến 1. Ba ứng viên trọng số là <code>Λ_A = (1, 0, 0)</code>, <code>Λ_B = (0, 1, 0)</code>, <code>Λ_C = (0, 0, 1)</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Truy vấn kiểm định</th>
+<th>Tài liệu</th>
+<th>Vector đặc trưng <code>(f1, f2, f3)</code></th>
+<th align="right">Mức liên quan</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>V1</td>
+<td>A</td>
+<td><code>(0.9, 0.7, 0.9)</code></td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>V1</td>
+<td>B</td>
+<td><code>(0.7, 0.9, 0.3)</code></td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>V1</td>
+<td>C</td>
+<td><code>(0.2, 0.1, 0.6)</code></td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>V2</td>
+<td>D</td>
+<td><code>(0.1, 0.1, 0.6)</code></td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>V2</td>
+<td>E</td>
+<td><code>(0.6, 0.9, 0.9)</code></td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>V2</td>
+<td>F</td>
+<td><code>(0.9, 0.5, 0.3)</code></td>
+<td align="right">1</td>
+</tr>
+</tbody></table></div>
+<p>Quy tắc giải quyết hòa điểm giữa các tài liệu là xếp theo thứ tự mã định danh tài liệu tăng dần. Chỉ số NDCG@3 áp dụng độ tăng (gain) <code>2^rel - 1</code> và độ chiết khấu (discount) <code>log2(rank + 1)</code> như Chương 9. Vì cả ba tài liệu đều có nhãn liên quan nên IDCG được tạo từ chính tập đánh giá:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Truy vấn</th>
+<th>Nhãn liên quan</th>
+<th>Thứ tự lý tưởng</th>
+<th align="right">IDCG@3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>V1</td>
+<td>A=3, B=1, C=0</td>
+<td>A, B, C</td>
+<td align="right">7.630930</td>
+</tr>
+<tr>
+<td>V2</td>
+<td>D=0, E=2, F=1</td>
+<td>E, F, D</td>
+<td align="right">3.630930</td>
+</tr>
+</tbody></table></div>
+<p>Minh họa tính toán cho <code>Λ_A</code> trên truy vấn V2:</p>
+<pre><code class="language-text">score(D) = 1(0.1) + 0(0.1) + 0(0.6) = 0.1
+score(E) = 1(0.6) + 0(0.9) + 0(0.9) = 0.6
+score(F) = 1(0.9) + 0(0.5) + 0(0.3) = 0.9
+Thứ tự xếp hạng: F, E, D
+DCG@3 = (2^1 - 1)/log2(2) + (2^2 - 1)/log2(3) + 0/log2(4) = 2.892789
+IDCG@3 = 3.630930
+NDCG@3 = 2.892789 / 3.630930 = 0.796708
+</code></pre>
+<p>Kết quả tính toán trên toàn bộ ba ứng viên:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Ứng viên</th>
+<th>Thứ tự V1</th>
+<th align="right">NDCG V1</th>
+<th>Thứ tự V2</th>
+<th align="right">NDCG V2</th>
+<th align="right">Trung bình</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Λ_A</code></td>
+<td>A, B, C</td>
+<td align="right">1.000000</td>
+<td>F, E, D</td>
+<td align="right">0.796708</td>
+<td align="right">0.898354</td>
+</tr>
+<tr>
+<td><code>Λ_B</code></td>
+<td>B, A, C</td>
+<td align="right">0.709810</td>
+<td>E, F, D</td>
+<td align="right">1.000000</td>
+<td align="right">0.854905</td>
+</tr>
+<tr>
+<td><code>Λ_C</code></td>
+<td>A, C, B</td>
+<td align="right">0.982838</td>
+<td>E, D, F</td>
+<td align="right">0.963941</td>
+<td align="right">0.973391</td>
+</tr>
+</tbody></table></div>
+<p>Trong ba ứng viên trên, hệ thống chọn <code>Λ_C</code> vì đạt NDCG trung bình cao nhất (0.973391). Nếu các ứng viên hòa điểm NDCG trung bình, quy ước ưu tiên là chọn bộ trọng số có chuẩn L2 nhỏ hơn, nếu vẫn hòa thì chọn theo thứ tự mã ứng viên. Quy ước này hoàn toàn độc lập với quy tắc giải quyết hòa điểm điểm số tài liệu. Cần nhấn mạnh rằng <code>Λ_C</code> chỉ là ứng viên tốt nhất trong số ba cấu hình được thử nghiệm, không khẳng định đây là nghiệm tối ưu toàn cục trên toàn bộ không gian tham số. Sau bước lựa chọn này, mô hình được đánh giá một lần duy nhất trên tập kiểm thử độc lập.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Với cùng một truy vấn, nếu cộng thêm <code>Z = 100</code> cho mọi tài liệu thì thứ bậc kết quả có thay đổi không?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Không thay đổi. Vì mọi tài liệu đều được cộng cùng một lượng điểm như nhau, chênh lệch điểm số giữa các cặp tài liệu được bảo toàn. Tuy nhiên, điều này không đồng nghĩa với việc có thể so sánh điểm số giữa hai truy vấn khác nhau.</p></div></details>
+
+<h2 id="term-dependence-vi" data-section-heading="term-dependence">12.2 Phụ thuộc từ và MRF</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 7</p>
+<p>Giả định độc lập từ (term independence) coi các từ <code>thông tin</code>, <code>tìm kiếm</code>, <code>mô hình</code> là các manh mối tách rời nhau. Tuy nhiên, một cụm từ xuất hiện đúng thứ tự hoặc các từ đồng xuất hiện gần nhau thường thể hiện chủ đề chính xác hơn nhiều so với việc chỉ đếm từ riêng lẻ.</p>
+<p>Trường ngẫu nhiên Markov (Markov Random Field, MRF) là mô hình đồ thị vô hướng biểu diễn sự phụ thuộc giữa các nút. Vì các cạnh không có mũi tên, sơ đồ MRF không đại diện cho quan hệ nhân quả hay quy trình luồng xử lý. Trong sơ đồ ở slide, nút <code>D</code> là tài liệu, các nút <code>q1, q2, q3</code> là các từ truy vấn.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Cấu trúc</th>
+<th>Cạnh nối giữa các từ truy vấn</th>
+<th>Mối quan hệ biểu diễn</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Độc lập hoàn toàn (full independence)</td>
+<td>Không có cạnh nào giữa các <code>q_i</code>. Mỗi <code>q_i</code> chỉ nối với <code>D</code></td>
+<td>Khớp từng từ đơn lẻ</td>
+</tr>
+<tr>
+<td>Phụ thuộc tuần tự (sequential dependence)</td>
+<td><code>q1-q2</code>, <code>q2-q3</code></td>
+<td>Cụm từ và tính gần kề giữa các từ liền kề</td>
+</tr>
+<tr>
+<td>Phụ thuộc hoàn toàn (full dependence)</td>
+<td><code>q1-q2</code>, <code>q1-q3</code>, <code>q2-q3</code></td>
+<td>Mối quan hệ giữa mọi cặp từ truy vấn</td>
+</tr>
+<tr>
+<td>Phụ thuộc tổng quát (general dependence)</td>
+<td>Chỉ nối các cặp từ cần thiết</td>
+<td>Mối quan hệ chọn lọc dựa trên tri thức miền</td>
+</tr>
+</tbody></table></div>
+<p>Sơ đồ phụ thuộc tổng quát trên slide thể hiện trường hợp chỉ liên kết một số cặp từ truy vấn nhất định. Việc chọn cạnh nào phụ thuộc vào từng bài toán cụ thể.</p>
+<h3 id="detail-5-vi">Phân biệt tài liệu cùng biểu diễn BoW nhờ vị trí từ</h3>
+<p>Xét truy vấn <code>thông tin tìm kiếm mô hình</code> và vị trí xuất hiện của các token. Cả ba tài liệu đều chứa mỗi từ truy vấn đúng 1 lần, do đó biểu diễn BoW đơn thuần là hoàn toàn giống nhau:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tài liệu</th>
+<th align="right">thông tin</th>
+<th align="right">tìm kiếm</th>
+<th align="right">mô hình</th>
+<th>Đoạn trích chuỗi token</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">4</td>
+<td><code>… thông tin tìm kiếm mô hình …</code></td>
+</tr>
+<tr>
+<td>D2</td>
+<td align="right">2</td>
+<td align="right">8</td>
+<td align="right">3</td>
+<td><code>… thông tin mô hình … … … … tìm kiếm …</code></td>
+</tr>
+<tr>
+<td>D3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">9</td>
+<td><code>… thông tin tìm kiếm … … … … … mô hình</code></td>
+</tr>
+</tbody></table></div>
+<p>Quy tắc đếm được công bố như sau:</p>
+<ul>
+<li>Cụm từ có thứ tự (ordered phrase): Nhận giá trị 1 nếu cả 3 từ xuất hiện liên tiếp đúng thứ tự truy vấn.</li>
+<li>Bigram có thứ tự: Đếm riêng số lượt khớp liên tiếp của <code>thông tin tìm kiếm</code> và <code>tìm kiếm mô hình</code> (mỗi lượt tính 1).</li>
+<li>Cửa sổ không thứ tự 4: Nhận giá trị 1 nếu phạm vi nhỏ nhất chứa đủ cả ba từ không vượt quá 4 token (không phân biệt thứ tự).</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tài liệu</th>
+<th align="right">Số unigram khớp</th>
+<th align="right">Cụm từ có thứ tự</th>
+<th align="right">Số bigram có thứ tự</th>
+<th align="right">Cửa sổ không thứ tự 4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>D2</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>D3</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+</tbody></table></div>
+<p>D1 khớp trọn vẹn cả cụm từ, D3 chỉ khớp bigram đầu tiên, còn D2 có các từ nằm cách xa nhau và sai thứ tự.</p>
+<p><strong>Ví dụ tính điểm bổ sung:</strong> Slide gốc không đưa ra công thức tuyến tính cố định. Dưới đây là ví dụ minh họa cách kết hợp các đặc trưng sinh ra từ MRF:</p>
+<div class="formula-block" role="math" aria-label="supplemental dependence score combines unigram ordered bigram and unordered window features">
+  <span class="formula-main">score = 1.0·unigram + 0.8·ordered-bigram + 0.5·window4</span>
+</div>
+
+<p>Điểm số: D1 đạt <code>3 + 1.6 + 0.5 = 5.1</code>, D2 đạt <code>3.0</code>, D3 đạt <code>3.8</code>. Điểm đặc trưng này không phải là xác suất chuẩn hóa. Nếu thay đổi kích thước cửa sổ, thứ tự từ hay quy tắc đếm trùng lặp thì kết quả sẽ thay đổi.</p>
+<h2 id="document-structure-and-xml-vi" data-section-heading="document-structure-and-xml">12.3 Cấu trúc tài liệu và truy xuất XML</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 8-9</p>
+<p>Tiêu đề tóm tắt chủ đề chính, tác giả xác định chủ thể chịu trách nhiệm, thời điểm đăng phản ánh độ mới, các đề mục thể hiện chủ đề cục bộ, còn phần thân chứa nội dung chi tiết. Cùng một từ nhưng nếu xuất hiện ở tiêu đề sẽ mang sức nặng manh mối khác hẳn so với khi nằm ở chân trang (footer).</p>
+<p>Hệ thống cần phân biệt giữa việc trả về toàn bộ tài liệu và việc chỉ trả về một phân đoạn hoặc phần tử cụ thể bên trong tài liệu. Định dạng XML biểu diễn cấu trúc tường minh, cho phép kết hợp đồng thời điều kiện nội dung và điều kiện cấu trúc.</p>
+<h3 id="detail-6-vi">Phân tích truy vấn CAS</h3>
+<p>Truy vấn nội dung và cấu trúc (Content-and-Structure query, CAS query) ở slide bài giảng:</p>
+<pre><code class="language-text">//article[.//fm/yr &lt; 2000]//sec[about(.,&quot;search engines&quot;)]
+</code></pre>
+<p>Xét tập dữ liệu XML nhỏ:</p>
+<pre><code class="language-xml">&lt;collection&gt;
+  &lt;article id=&quot;a1&quot;&gt;
+    &lt;fm&gt;&lt;yr&gt;1998&lt;/yr&gt;&lt;title&gt;Web Retrieval&lt;/title&gt;&lt;/fm&gt;
+    &lt;body&gt;
+      &lt;sec id=&quot;a1-s1&quot;&gt;&lt;title&gt;Indexing&lt;/title&gt;&lt;p&gt;Search engines build indexes.&lt;/p&gt;&lt;/sec&gt;
+      &lt;sec id=&quot;a1-s2&quot;&gt;&lt;title&gt;Networks&lt;/title&gt;&lt;p&gt;Packets cross routers.&lt;/p&gt;&lt;/sec&gt;
+    &lt;/body&gt;
+  &lt;/article&gt;
+  &lt;article id=&quot;a2&quot;&gt;
+    &lt;fm&gt;&lt;yr&gt;2005&lt;/yr&gt;&lt;title&gt;Modern Search&lt;/title&gt;&lt;/fm&gt;
+    &lt;body&gt;&lt;sec id=&quot;a2-s1&quot;&gt;&lt;p&gt;Search engines use many ranking signals.&lt;/p&gt;&lt;/sec&gt;&lt;/body&gt;
+  &lt;/article&gt;
+  &lt;article id=&quot;a3&quot;&gt;
+    &lt;fm&gt;&lt;yr&gt;1997&lt;/yr&gt;&lt;title&gt;Database Systems&lt;/title&gt;&lt;/fm&gt;
+    &lt;body&gt;&lt;sec id=&quot;a3-s1&quot;&gt;&lt;p&gt;Database engines execute structured queries.&lt;/p&gt;&lt;/sec&gt;&lt;/body&gt;
+  &lt;/article&gt;
+&lt;/collection&gt;
+</code></pre>
+<ul>
+<li><code>article</code>: phần tử đại diện cho toàn bộ bài báo khoa học.</li>
+<li><code>fm</code>: phần thông tin đầu trang (front matter), chứa dữ liệu thư mục.</li>
+<li><code>yr</code>: năm xuất bản.</li>
+<li><code>sec</code>: phần nội dung (section) bên trong bài báo.</li>
+<li><code>[.//fm/yr &lt; 2000]</code>: điều kiện cấu trúc và số học, chỉ giữ lại các bài báo xuất bản trước năm 2000.</li>
+<li><code>//sec[about(...)]</code>: điều kiện nội dung, tìm trong các bài báo thỏa mãn điều kiện năm những phần <code>sec</code> viết về <code>search engines</code>.</li>
+</ul>
+<p>Trong ví dụ này, phần tử duy nhất được trả về là <code>a1-s1</code>. Phần tử <code>a2-s1</code> khớp về mặt nội dung nhưng bị loại vì xuất bản năm 2005 (không thỏa mãn điều kiện năm &lt; 2000). Phần tử <code>a3-s1</code> thỏa mãn điều kiện năm nhưng nếu so khớp cụm từ chính xác thì không chứa <code>search engines</code>.</p>
+<p>Toán tử <code>about(...)</code> là toán tử tìm kiếm nội dung trong ngôn ngữ truy vấn IR trên slide, không phải hàm chuẩn tích hợp sẵn của XPath tiêu chuẩn (standard XPath), do đó không thể mặc định chạy được trên mọi bộ phân tích XPath thông thường. Trong thực tế, hệ thống có thể dùng XPath để lọc trước các bài viết theo năm và phân đoạn cấu trúc, sau đó tính điểm IR để xếp hạng nội dung các phân đoạn đó. Khớp chuỗi ký tự đơn thuần không được xem là tìm kiếm ngữ nghĩa trọn vẹn.</p>
+<h2 id="entity-search-vi" data-section-heading="entity-search">12.4 Truy xuất thực thể</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 10</p>
+<p>Trong truy xuất thực thể (entity search), đối tượng trả về cho truy vấn không phải là danh sách các tài liệu, mà là danh sách các thực thể cụ thể như con người, tổ chức, địa danh. Quy trình tối thiểu gồm ba giai đoạn:</p>
+<ol>
+<li>Nhận dạng thực thể có tên (named entity recognition, NER): Tìm các từ hoặc cụm từ đại diện cho thực thể (mention) trong văn bản.</li>
+<li>Liên kết và định danh thực thể (entity linking / resolution): Xác định từ đó trỏ tới thực thể cụ thể nào trong thế giới thực, hoặc xác định xem hai cách gọi khác nhau có cùng chỉ một thực thể hay không.</li>
+<li>Xếp hạng thực thể (entity ranking): Xếp hạng các thực thể phù hợp nhất với câu truy vấn.</li>
+</ol>
+<p>Từ <code>Apple</code> có thể là tên công ty hoặc loại quả; nhiều người có thể trùng họ tên với nhau. Ngược lại, <code>Gerard Salton</code> và <code>G. Salton</code> có khả năng cao cùng chỉ một nhà khoa học. Không thể chỉ dựa vào chuỗi ký tự bề mặt để gom nhóm hay tách rời thực thể.</p>
+<h3 id="detail-7-vi">Xây dựng tài liệu giả (pseudo-document) từ ngữ cảnh</h3>
+<p>Xét ngữ cảnh tiếng Anh trích xuất phục vụ bài học. Quy tắc tiền xử lý được ấn định như sau:</p>
+<ol>
+<li>Token hóa các chuỗi chữ cái Unicode liên tiếp và chuyển thành chữ thường. Dấu câu không tính là token, <code>G.</code> trở thành <code>g</code>.</li>
+<li>Xác định vị trí bắt đầu và kết thúc của biểu diễn thực thể trên chuỗi token chữ thường ban đầu.</li>
+<li>Loại bỏ bản thân tên thực thể, lấy tối đa 5 token bên trái và tối đa 5 token bên phải (không vượt qua ranh giới tài liệu).</li>
+<li>Sau khi đã chốt kích thước cửa sổ 5 từ, mới tiến hành loại bỏ stopword trong tập <code>{was, by, at, and, for, a}</code>. Tuyệt đối không loại stopword trước rồi mới đếm 5 từ.</li>
+</ol>
+<p>Ký hiệu <code>20 words</code> trên slide là ví dụ minh họa; khi triển khai cần nói rõ là tổng cộng 20 từ hay 20 từ mỗi bên. Ở đây chúng ta chọn cửa sổ 5 từ mỗi bên.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Câu gốc</th>
+<th>Biểu diễn thực thể</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>vector space information retrieval was developed by Gerard Salton at Cornell</code></td>
+<td>Gerard Salton</td>
+</tr>
+<tr>
+<td><code>G. Salton studied automatic indexing and retrieval models</code></td>
+<td>G. Salton</td>
+</tr>
+<tr>
+<td><code>Karen Spärck Jones proposed inverse document frequency for retrieval</code></td>
+<td>Karen Spärck Jones</td>
+</tr>
+<tr>
+<td><code>Google operates a web search engine and advertising platform</code></td>
+<td>Google</td>
+</tr>
+</tbody></table></div>
+<p>Xác định phạm vi cửa sổ ngữ cảnh:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Biểu diễn</th>
+<th>Vị trí sau chuẩn hóa</th>
+<th>Cửa sổ trước khi lọc stopword</th>
+<th>Cửa sổ sau khi lọc stopword</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Gerard Salton</td>
+<td>8-9</td>
+<td><code>information retrieval was developed by at cornell</code></td>
+<td><code>information retrieval developed cornell</code></td>
+</tr>
+<tr>
+<td>G. Salton</td>
+<td>1-2</td>
+<td><code>studied automatic indexing and retrieval</code></td>
+<td><code>studied automatic indexing retrieval</code></td>
+</tr>
+<tr>
+<td>Karen Spärck Jones</td>
+<td>1-3</td>
+<td><code>proposed inverse document frequency for</code></td>
+<td><code>proposed inverse document frequency</code></td>
+</tr>
+<tr>
+<td>Google</td>
+<td>1</td>
+<td><code>operates a web search engine</code></td>
+<td><code>operates web search engine</code></td>
+</tr>
+</tbody></table></div>
+<p>Trong ví dụ này, giả định bước liên kết thực thể đã định danh chính xác <code>Gerard Salton</code> và <code>G. Salton</code> là cùng một người. Sau đó, nối các cửa sổ ngữ cảnh của cùng một thực thể theo thứ tự xuất hiện để tạo thành tài liệu giả (pseudo-document):</p>
+<pre><code class="language-text">Gerard Salton pseudo-document (tài liệu giả):
+information retrieval developed cornell studied automatic indexing retrieval
+
+Karen Spärck Jones pseudo-document (tài liệu giả):
+proposed inverse document frequency
+
+Google pseudo-document (tài liệu giả):
+operates web search engine
+</code></pre>
+<p>Xét truy vấn <code>vector retrieval</code>. Ở đây chúng ta dùng &quot;tổng số lần xuất hiện của các từ truy vấn&quot; làm điểm số. Đây là chỉ số khác với &quot;số lượng từ truy vấn phân biệt được khớp&quot;:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Thực thể</th>
+<th align="right">Số lần xuất hiện <code>vector</code></th>
+<th align="right">Số lần xuất hiện <code>retrieval</code></th>
+<th align="right">Tổng điểm tần số xuất hiện</th>
+<th align="right">Số từ phân biệt khớp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Gerard Salton</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>Karen Spärck Jones</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Google</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody></table></div>
+<p>Thứ tự xếp hạng là <code>Gerard Salton &gt; Google &gt; Karen Spärck Jones</code> (các trường hợp hòa điểm 0 được xếp theo bảng mã Unicode của tên hiển thị). Đơn vị kết quả trả về ở đây là thực thể, không phải tài liệu.</p>
+<p>Nếu cửa sổ ngữ cảnh quá hẹp, hệ thống sẽ bỏ sót bằng chứng; nếu quá rộng, các chủ đề khác trong cùng đoạn văn sẽ bị lẫn vào. Nếu một thực thể được nhắc đến quá nhiều lần làm lấn át điểm số, cần cân nhắc chuẩn hóa theo tài liệu hoặc kiểm soát tính đa dạng nguồn.</p>
+<h2 id="question-answering-vi" data-section-heading="question-answering">12.5 Hỏi đáp</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 11</p>
+<p>Hệ thống hỏi đáp (question answering, QA) hướng tới việc trả về câu trả lời cụ thể và trực tiếp, thay vì chỉ trả về một danh sách các tài liệu liên quan. Luồng xử lý tổng thể gồm các bước:</p>
+<pre><code class="language-text">Câu hỏi (question)
+  ↓
+Phân tích / Phân loại câu hỏi (question analysis / classification)
+  ↓ câu truy vấn và kiểu câu trả lời mong đợi
+Truy xuất đoạn văn (passage retrieval) từ kho dữ liệu hoặc Web
+  ↓ các đoạn văn ứng viên
+Lựa chọn câu trả lời (answer selection) dựa trên đặc trưng câu trả lời
+  ↓
+Câu trả lời cuối cùng (answer)
+</code></pre>
+<p>Bước phân tích câu hỏi không chỉ nắm bắt chủ đề mà còn ước lượng kiểu câu trả lời mong đợi (tên người, ngày tháng, định nghĩa, số lượng). Bước truy xuất đoạn văn tìm kiếm các câu hoặc đoạn văn ứng viên, còn bước lựa chọn câu trả lời dựa vào kiểu câu hỏi, khoảng cách từ, độ tin cậy của nguồn và mẫu ngữ pháp để chọn ra đáp án phù hợp nhất.</p>
+<h3 id="detail-8-vi">Ví dụ minh họa hoàn chỉnh</h3>
+<p>Xét câu hỏi: &quot;Trong thuật toán HITS, một trang có điểm uy tín (authority score) cao là trang như thế nào?&quot;. Kiểu câu trả lời mong đợi là định nghĩa hoặc giải thích nguyên lý.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Đoạn văn ứng viên</th>
+<th>Nội dung</th>
+<th>Đánh giá</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P1</td>
+<td><code>Những trang được liên kết nhiều từ các trang trung tâm tốt sẽ có điểm uy tín cao.</code></td>
+<td>Trả lời trực tiếp và đúng trọng tâm câu hỏi</td>
+</tr>
+<tr>
+<td>P2</td>
+<td><code>HITS thực hiện tính toán lặp trên tập các trang liên quan đến truy vấn.</code></td>
+<td>Có từ khóa HITS nhưng không chứa định nghĩa câu trả lời</td>
+</tr>
+<tr>
+<td>P3</td>
+<td><code>Điểm uy tín được quyết định hoàn toàn bởi số lượng liên kết đi ra.</code></td>
+<td>Đúng dạng thức trả lời nhưng nội dung sai lệch và mâu thuẫn</td>
+</tr>
+</tbody></table></div>
+<p>Khi chọn P1, câu trả lời của mô hình hỏi đáp dạng trích xuất (extractive QA) là một đoạn văn bản xuất hiện liên tục trong nguồn: <code>được liên kết nhiều từ các trang trung tâm tốt</code>. Nếu muốn diễn đạt thành câu hoàn chỉnh dễ đọc, hệ thống sau khi trích xuất sẽ chuyển sang khâu sinh câu: &quot;Đó là những trang nhận được nhiều liên kết trỏ tới từ các trang trung tâm uy tín&quot;. Cần phân biệt rõ hai giai đoạn này: câu sinh ra sau không phải là đoạn trích nguyên văn liên tục của P1.</p>
+<p>Đoạn P2 chứa từ khóa HITS nhưng không trả lời trọng tâm câu hỏi. Khi các đoạn văn ứng viên mâu thuẫn nhau như P3, hệ thống phải đối chiếu độ tin cậy của nguồn và tổng hợp nhiều bằng chứng; nếu không đủ cơ sở xác thực thì cần trả lời là &quot;chưa thể xác định&quot;.</p>
+<p>Công cụ tìm kiếm thông thường trả về danh sách tài liệu; hỏi đáp dạng trích xuất trả về một đoạn liên tục (span) trong văn bản nguồn; còn hỏi đáp dạng tạo sinh (generative QA) có thể tổng hợp thành câu văn mới nhưng tiềm ẩn nguy cơ ảo giác (hallucination) nếu thêm thắt chi tiết ngoài nguồn. Tài liệu bài học này bám sát luồng phân tích - truy xuất - lựa chọn trong slide bài giảng kinh điển.</p>
+<p>Câu hỏi dài chưa chắc đã đem lại kết quả tốt hơn. Nếu câu hỏi chứa quá nhiều từ thừa, giả định sai hoặc lồng ghép nhiều câu hỏi cùng lúc, khâu truy xuất đoạn văn sẽ gặp nhiều khó khăn.</p>
+<h2 id="multimedia-search-vi" data-section-heading="multimedia-search">12.6 Tìm kiếm hình ảnh, video và âm thanh</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 12</p>
+<p>Các phương tiện truyền thông phi văn bản vẫn có thể được tìm kiếm thông qua tiêu đề, mô tả, thẻ và văn bản xung quanh. Tuy nhiên, các biểu diễn văn bản này không thể phản ánh trọn vẹn màu sắc, bố cục, chuyển động, giai điệu hay âm thanh môi trường.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Đối tượng gốc</th>
+<th>Biểu diễn phục vụ tìm kiếm</th>
+<th>Ví dụ truy vấn phù hợp</th>
+<th>Hạn chế và lỗi thường gặp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ảnh slide bài giảng</td>
+<td>Tên tệp, mô tả, văn bản trích xuất OCR</td>
+<td><code>HITS authority formula</code></td>
+<td>OCR nhận dạng sai công thức toán, chữ dọc, ảnh mờ</td>
+</tr>
+<tr>
+<td>Ảnh du lịch</td>
+<td>Tiêu đề, thẻ, thời gian chụp, đặc trưng ảnh</td>
+<td><code>hoàng hôn trên biển</code></td>
+<td>Thẻ mang tính chủ quan; OCR không hiểu được cảnh vật</td>
+</tr>
+<tr>
+<td>Video bài giảng</td>
+<td>Tiêu đề, đề mục, bản gỡ băng âm thanh, khung hình tiêu biểu</td>
+<td><code>giải thích Dirichlet smoothing</code></td>
+<td>Nhận dạng tiếng nói nhận sai thuật ngữ chuyên môn hoặc tạp âm</td>
+</tr>
+<tr>
+<td>Âm nhạc và âm thanh</td>
+<td>Metadata, lời bài hát, giọng nói, đặc trưng âm học</td>
+<td><code>bài hát giọng nữ</code>, <code>tiếng vỗ tay</code></td>
+<td>Nhận dạng tiếng nói không nhận diện được giai điệu hay âm thanh môi trường</td>
+</tr>
+</tbody></table></div>
+<p>Công nghệ nhận dạng ký tự quang học (OCR) chuyển đổi chữ viết trong ảnh thành văn bản, nhưng không thể tự động hiểu toàn bộ bối cảnh, quan hệ giữa các vật thể hay cảm xúc trong bức ảnh. Công nghệ nhận dạng tiếng nói (speech recognition) chuyển lời nói thành văn bản, nhưng để phân biệt nhạc cụ, nhịp điệu, giai điệu hay tiếng động môi trường thì bắt buộc phải dùng các đặc trưng âm học chuyên biệt.</p>
+<p>Trong tìm kiếm ảnh và âm thanh dựa trên nội dung, hệ thống có thể kết hợp thêm màu sắc, hình dạng, vector nhúng hình ảnh và đặc trưng phổ âm thanh.</p>
+<h2 id="one-search-fits-all-vi" data-section-heading="one-search-fits-all">12.7 Một phương pháp tìm kiếm có đáp ứng được mọi nhu cầu?</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 13-14</p>
+<p>Không có một quy tắc xếp hạng duy nhất nào tối ưu cho mọi mục đích tìm kiếm. Dù có chung các kỹ thuật lập chỉ mục và thuật toán xếp hạng nền tảng, mỗi dịch vụ lại có đơn vị kết quả, ý định người dùng, yêu cầu về độ mới, độ trễ phản hồi và phương pháp đánh giá hoàn toàn khác nhau.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Dịch vụ</th>
+<th>Đơn vị kết quả trả về</th>
+<th>Ý định chính và đặc trưng quan trọng</th>
+<th>Yêu cầu độ mới và độ trễ</th>
+<th>Ví dụ chỉ số đánh giá</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tìm kiếm Web</td>
+<td>Trang web, câu trả lời, trang chủ</td>
+<td>Khớp từ truy vấn, liên kết, độ mới, tín hiệu spam</td>
+<td>Dữ liệu cực lớn, yêu cầu phản hồi mili-giây</td>
+<td>NDCG, tỷ lệ hoàn thành tác vụ, độ trễ</td>
+</tr>
+<tr>
+<td>Tìm kiếm học thuật</td>
+<td>Bài báo khoa học, tác giả, trích dẫn</td>
+<td>Tiêu đề, tóm tắt, lĩnh vực, số trích dẫn, năm</td>
+<td>Cần metadata chính xác và tính tái lập cao</td>
+<td>Recall, NDCG, tỷ lệ tìm kiếm trích dẫn thành công</td>
+</tr>
+<tr>
+<td>Tìm kiếm sản phẩm</td>
+<td>Mặt hàng, điều kiện bán</td>
+<td>Danh mục, thuộc tính, mức giá, tồn kho, đánh giá</td>
+<td>Cập nhật kho hàng và giá theo thời gian thực</td>
+<td>Mức liên quan, tỷ lệ mua hàng, tỷ lệ hoàn trả</td>
+</tr>
+<tr>
+<td>Tìm kiếm ảnh / âm nhạc</td>
+<td>Bức ảnh, bài nhạc, phân đoạn</td>
+<td>Thẻ, mô tả, đặc trưng hình ảnh và âm học</td>
+<td>Tốc độ phát trước (preview) và bản quyền</td>
+<td>Mức liên quan, độ đa dạng, hành vi lưu và nghe lại</td>
+</tr>
+</tbody></table></div>
+<p>Nếu tìm kiếm sản phẩm chỉ ưu tiên độ phổ biến, hệ thống có thể trả về các mặt hàng bán chạy nhưng sai lệch yêu cầu của truy vấn. Nếu tìm kiếm học thuật chỉ chú trọng bài mới xuất bản, người dùng sẽ bỏ lỡ các công trình kinh điển nền tảng. Tiêu chí đánh giá phải gắn liền với mục tiêu thực tế của từng dịch vụ.</p>
+<h3 id="detail-9-vi">Toàn cảnh quy trình tìm kiếm trong môn học</h3>
+<pre><code class="language-text">Thu thập (Acquisition)
+  Crawl Web, nguồn cấp (feed), cơ sở dữ liệu, nguồn P2P
+    ↓
+Xử lý văn bản (Processing)
+  Tách token, OCR, nhận dạng tiếng nói, trích xuất thực thể, phân tích cấu trúc
+    ↓
+Lập chỉ mục và Biểu diễn (Indexing / Representation)
+  Chỉ mục đảo, các trường dữ liệu, vị trí từ, tài liệu giả, đặc trưng đa phương tiện
+    ↓
+Tìm kiếm và Xếp hạng (Retrieval / Ranking)
+  BM25, mô hình ngôn ngữ, mô hình đặc trưng, phụ thuộc từ, HITS, gợi ý
+    ↓
+Tương tác người dùng (Interaction)
+  Hỗ trợ truy vấn, đoạn trích (snippet), hỏi đáp cộng đồng, tìm kiếm cộng tác, phản hồi
+    ↓
+Đánh giá (Evaluation)
+  Độ liên quan, thứ bậc, sai số, độ phủ, độ trễ phản hồi, hiệu quả thực tế của người dùng
+</code></pre>
+<p>Tín hiệu xã hội tác động mạnh đến thu thập, xếp hạng và tương tác. Cấu trúc tài liệu và thực thể bổ sung manh mối cho khâu xử lý và biểu diễn. Sự phụ thuộc từ nâng cao độ chính xác của khâu xếp hạng, còn xử lý đa phương tiện mở rộng năng lực biểu diễn dữ liệu. Không nên đưa mọi đặc trưng vào hệ thống một cách tùy tiện, mà cần thẩm định cẩn thận trên tập kiểm định xem đặc trưng nào thực sự mang lại hiệu quả cho bài toán.</p>
+<h2 id="supplementary-exercise-vi" data-section-heading="supplementary-exercise">Bài tập bổ sung: Thiết kế ba kiểu tìm kiếm cho cùng một truy vấn</h2>
+<p>Đây là bài tập bổ sung giúp liên kết các kiến thức trong chương.</p>
+<p>Với truy vấn <code>jaguar speed</code>, hãy thiết kế ba hệ thống tìm kiếm: tìm kiếm trang web, tìm kiếm sản phẩm và tìm kiếm hình ảnh.</p>
+<ol>
+<li>Nêu ít nhất hai nét nghĩa khác nhau của từ <code>jaguar</code>.</li>
+<li>Xác định đơn vị kết quả trả về của từng hệ thống.</li>
+<li>Chọn ít nhất hai đặc trưng bổ sung ngoài mô hình túi từ (BoW).</li>
+<li>Đưa ra một trường hợp thất bại tiềm ẩn và chỉ số đánh giá tương ứng.</li>
+</ol>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Từ <code>jaguar</code> có thể chỉ loài báo đốm (động vật) hoặc thương hiệu xe hơi Jaguar. Tìm kiếm Web trả về các trang web, có thể dựa vào lịch sử tìm kiếm hoặc các từ xuất hiện lân cận để phán đoán ý định người dùng. Tìm kiếm sản phẩm trả về danh mục mặt hàng, thương hiệu, mức giá, điều quan trọng là không được lẫn các trang từ điển động vật học vào danh sách hàng hóa. Tìm kiếm hình ảnh trả về các bức ảnh, kết hợp mô tả văn bản với đặc trưng hình ảnh. Chỉ số đánh giá: tìm kiếm Web dùng NDCG, tìm kiếm sản phẩm dùng độ phù hợp danh mục và tỷ lệ mua hàng, tìm kiếm ảnh dùng mức độ liên quan đa bậc kết hợp độ đa dạng. Nếu ý định của người dùng chưa rõ ràng, giao diện nên hiển thị các cụm kết quả phân chia theo nét nghĩa hoặc gợi ý bộ lọc thu hẹp phạm vi.</p></div></details>
+
+<h2 id="summary-vi" data-section-heading="summary">Tổng kết</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 27</p>
+<ul>
+<li>Mô hình BoW lưu giữ sự hiện diện và tần số của từ nhưng bỏ qua thứ tự, vị trí, cấu trúc và mối quan hệ thực thể.</li>
+<li>Mô hình truy xuất dựa trên đặc trưng kết hợp nhiều manh mối có trọng số; việc tính điểm với trọng số cố định tách biệt hoàn toàn với quá trình học tham số.</li>
+<li>Trọng số tối ưu được lựa chọn dựa trên tập kiểm định; tập kiểm thử chỉ được dùng một lần duy nhất cho khâu đánh giá cuối cùng.</li>
+<li>Mô hình phụ thuộc từ khai thác cụm từ và khoảng cách gần kề, sử dụng đồ thị vô hướng của MRF để biểu diễn quan hệ.</li>
+<li>Truy xuất XML kết hợp điều kiện nội dung và cấu trúc, cho phép trả về các phân đoạn nhỏ hơn toàn bộ tài liệu.</li>
+<li>Truy xuất thực thể gồm ba khâu rõ rệt: nhận dạng thực thể trong văn bản, liên kết định danh thực thể và xếp hạng thực thể.</li>
+<li>Hệ thống hỏi đáp (QA) trải qua các bước phân tích câu hỏi, truy xuất đoạn văn và lựa chọn câu trả lời để trả về đáp án trực tiếp.</li>
+<li>Tìm kiếm đa phương tiện kết hợp metadata văn bản với OCR, nhận dạng tiếng nói cùng các đặc trưng âm học và hình ảnh tùy theo mục tiêu.</li>
+<li>Mỗi dịch vụ tìm kiếm đòi hỏi đơn vị kết quả, nhóm đặc trưng, yêu cầu độ mới, độ trễ và tiêu chí đánh giá khác nhau.</li>
+</ul>
+<h2 id="quiz-vi" data-section-heading="quiz">Câu hỏi tự kiểm tra</h2>
+<ol>
+<li>Vì sao mô hình BoW cơ bản khó phân biệt được hai câu <code>chó cắn người</code> và <code>người cắn chó</code>?</li>
+<li>Điều kiện để hằng số <code>Z</code> không làm thay đổi thứ tự xếp hạng trong cùng một truy vấn là gì?</li>
+<li>Toán tử <code>arg max_Λ E(...)</code> trả về đối tượng gì?</li>
+<li>Cạnh nối giữa các từ truy vấn khác nhau như thế nào giữa phụ thuộc tuần tự và phụ thuộc hoàn toàn?</li>
+<li>Vì sao không được mặc định coi <code>about(...)</code> là hàm có sẵn của XPath tiêu chuẩn?</li>
+<li>Nhận dạng thực thể có tên (NER) khác với xếp hạng thực thể ở điểm nào?</li>
+<li>Vì sao một đoạn văn chứa đầy đủ từ khóa của câu hỏi chưa chắc đã là đáp án đúng trong hệ thống QA?</li>
+<li>Vì sao công nghệ OCR đơn thuần không thể giúp tìm kiếm toàn diện mọi nội dung của một bức ảnh?</li>
+</ol>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><ol>
+<li>Vì tần số xuất hiện của ba từ trong hai câu là như nhau và mô hình đã lược bỏ thông tin thứ tự quyết định chủ ngữ - vị ngữ.</li>
+<li>Với cùng một <code>Q</code> và <code>Λ</code>, giá trị <code>Z</code> được cộng đồng đều như nhau cho mọi tài liệu ứng viên.</li>
+<li>Trả về cấu hình tham số <code>Λ</code> làm cho chỉ số đánh giá đạt giá trị lớn nhất.</li>
+<li>Phụ thuộc tuần tự chỉ nối các cặp từ truy vấn nằm kề nhau, còn phụ thuộc hoàn toàn nối tất cả các cặp từ truy vấn với nhau.</li>
+<li>Vì đó là toán tử tìm kiếm nội dung được định nghĩa riêng trong ngôn ngữ truy vấn IR của slide, không thuộc bộ hàm chuẩn của các công cụ XPath thông thường.</li>
+<li>NER phát hiện vị trí các thực thể xuất hiện trong văn bản, còn xếp hạng thực thể sắp xếp thứ tự các thực thể theo độ liên quan với truy vấn.</li>
+<li>Vì đoạn văn đó có thể chỉ chia sẻ cùng chủ đề từ vựng chứ không trả lời đúng trọng tâm hoặc sai lệch kiểu dữ liệu câu hỏi mong đợi.</li>
+<li>Vì OCR chỉ chuyển đổi phần chữ viết trong ảnh thành văn bản, không biểu diễn được vật thể, màu sắc, bố cục, cảnh quan hay các vùng phi văn bản.</li>
+</ol></div></details>
+
+<h2 id="glossary-vi" data-section-heading="glossary">Bảng thuật ngữ</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>English</th>
+<th>Tiếng Việt</th>
+<th>Ý nghĩa trong chương này</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bag of Words</td>
+<td>Mô hình túi từ</td>
+<td>Phương pháp biểu diễn tài liệu bằng tập hợp hoặc tần số từ, bỏ qua thứ tự</td>
+</tr>
+<tr>
+<td>Feature</td>
+<td>Đặc trưng</td>
+<td>Manh mối số hóa biểu diễn mối quan hệ giữa truy vấn và tài liệu</td>
+</tr>
+<tr>
+<td>Feature function</td>
+<td>Hàm đặc trưng</td>
+<td>Hàm ánh xạ cặp đối tượng thành giá trị đặc trưng số thực</td>
+</tr>
+<tr>
+<td>Parameter vector</td>
+<td>Vector tham số</td>
+<td>Vector <code>Λ</code> chứa các trọng số của từng đặc trưng</td>
+</tr>
+<tr>
+<td>Term dependence</td>
+<td>Phụ thuộc từ</td>
+<td>Mối quan hệ về thứ tự, khoảng cách gần kề hoặc đồng xuất hiện giữa các từ</td>
+</tr>
+<tr>
+<td>Markov Random Field</td>
+<td>Trường ngẫu nhiên Markov (MRF)</td>
+<td>Mô hình đồ thị vô hướng biểu diễn sự phụ thuộc giữa các biến</td>
+</tr>
+<tr>
+<td>Sequential dependence</td>
+<td>Phụ thuộc tuần tự</td>
+<td>Cấu trúc chỉ khai thác sự phụ thuộc giữa các từ truy vấn nằm liền kề</td>
+</tr>
+<tr>
+<td>Proximity</td>
+<td>Tính gần kề</td>
+<td>Mức độ các từ truy vấn xuất hiện gần nhau trong văn bản</td>
+</tr>
+<tr>
+<td>Document structure</td>
+<td>Cấu trúc tài liệu</td>
+<td>Cách tổ chức tài liệu thành tiêu đề, tác giả, đề mục, phần thân</td>
+</tr>
+<tr>
+<td>XML retrieval</td>
+<td>Truy xuất XML</td>
+<td>Tìm kiếm kết hợp đồng thời điều kiện nội dung và điều kiện cấu trúc XML</td>
+</tr>
+<tr>
+<td>CAS query</td>
+<td>Truy vấn nội dung và cấu trúc</td>
+<td>Truy vấn chỉ định đồng thời cả yêu cầu nội dung và vị trí cấu trúc tài liệu</td>
+</tr>
+<tr>
+<td>Named entity recognition</td>
+<td>Nhận dạng thực thể có tên (NER)</td>
+<td>Bước trích xuất tên người, tổ chức, địa danh từ văn bản</td>
+</tr>
+<tr>
+<td>Entity linking</td>
+<td>Liên kết thực thể</td>
+<td>Bước xác định thực thể được nhắc đến tương ứng với thực thể cụ thể nào</td>
+</tr>
+<tr>
+<td>Entity search</td>
+<td>Truy xuất thực thể</td>
+<td>Tìm kiếm trả về danh sách các thực thể được xếp hạng thay vì tài liệu</td>
+</tr>
+<tr>
+<td>Pseudo-document</td>
+<td>Tài liệu giả</td>
+<td>Biểu diễn văn bản nhân tạo gom từ ngữ cảnh xung quanh thực thể</td>
+</tr>
+<tr>
+<td>Question answering</td>
+<td>Hệ thống hỏi đáp (QA)</td>
+<td>Hệ thống trả về câu trả lời trực tiếp và cụ thể cho câu hỏi của người dùng</td>
+</tr>
+<tr>
+<td>Passage retrieval</td>
+<td>Truy xuất đoạn văn</td>
+<td>Bước tìm các câu hoặc đoạn văn có khả năng chứa câu trả lời</td>
+</tr>
+<tr>
+<td>Optical Character Recognition</td>
+<td>Nhận dạng ký tự quang học (OCR)</td>
+<td>Công nghệ chuyển đổi chữ viết trong hình ảnh thành văn bản</td>
+</tr>
+<tr>
+<td>Speech recognition</td>
+<td>Nhận dạng tiếng nói</td>
+<td>Công nghệ chuyển đổi lời nói âm thanh thành văn bản</td>
+</tr>
+<tr>
+<td>Multimedia retrieval</td>
+<td>Truy xuất đa phương tiện</td>
+<td>Tìm kiếm trên các định dạng hình ảnh, video, âm thanh phi văn bản</td>
+</tr>
+</tbody></table></div>
+
+        <footer class="lesson-footer"><span class="lesson-footer__meta"><span>SEG301m / CHƯƠNG 12</span><span class="site-credit">Made by <strong>Marcus</strong></span></span><a href="#top">Về đầu trang ↑</a></footer>
+      </article>
+      <nav class="chapter-pager" aria-label="Chapter navigation"><a class="chapter-pager__previous" href="./chapter-11.html">
+    <span>Chương trước</span>
+    <strong>11 · Tìm kiếm xã hội</strong>
+  </a><span></span></nav>
+    </main>
+  </div>
+</body>
+</html>

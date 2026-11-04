@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163b3c">
+  <meta name="description" content="Tìm hiểu tách token, stopword, stemming, cụm từ, phân tích liên kết, PageRank và trích xuất thông tin.">
+  <title>CHƯƠNG 4 Xử lý văn bản | SEG301m</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=20261104-vi">
+  <link rel="stylesheet" href="../tutor.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/katex/katex.min.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/highlight.css?v=20261104-vi">
+  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang"}</script>
+  <script src="../app.js?v=20261104-vi" defer></script>
+  <script src="../tutor.js?v=20261104-vi" defer></script>
+</head>
+<body data-page="chapter" data-language="vi">
+  <a class="skip-link" href="#learning-goals-vi">Chuyển đến bài học</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
+    <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 4</span>
+    <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
+  </header>
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__line"></span> SEG301m / CHƯƠNG 4</p>
+        <h1 id="page-title">Xử lý<br><em>văn bản</em></h1>
+        <p class="hero__description">Tìm hiểu tách token, stopword, stemming, cụm từ, phân tích liên kết, PageRank và trích xuất thông tin.</p>
+        <a class="start-link" href="#learning-goals-vi">Bắt đầu học <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <span class="orbit orbit--one"></span><span class="orbit orbit--two"></span>
+        <span class="signal signal--one"></span><span class="signal signal--two"></span>
+        <span class="hero__query">NGUỒN <b>04</b></span>
+        <span class="hero__result hero__result--one">01 <b>TÀI LIỆU</b></span>
+        <span class="hero__result hero__result--two">02 <b>CHỈ MỤC</b></span>
+        <span class="hero__result hero__result--three">03 <b>KẾT QUẢ</b></span>
+        <span class="hero__visual-label">TỪ NGUỒN ĐẾN TÌM KIẾM</span>
+      </div>
+    </div>
+    <div class="hero__footer"><span>CHƯƠNG 4</span><span>Nguồn: toàn bộ 29 slide bài giảng</span></div>
+  </section>
+  <div class="page-layout" id="lesson">
+    <nav class="chapter-nav" aria-label="Mục lục"><div class="chapter-nav__sticky">
+      <p class="chapter-nav__label">MỤC LỤC <span>04 / 12</span></p>
+      <div class="chapter-nav__links"><a href="#prerequisites-vi" data-section="prerequisites"><span>01</span>Kiến thức cần chuẩn bị</a>
+<a href="#words-to-terms-vi" data-section="words-to-terms"><span>02</span>4.1 Từ từ ngữ đến từ chỉ mục</a>
+<a href="#text-statistics-vi" data-section="text-statistics"><span>03</span>4.2 Thống kê văn bản</a>
+<a href="#tokenizing-vi" data-section="tokenizing"><span>04</span>4.3 Tách token (Tokenizing)</a>
+<a href="#stopping-and-stemming-vi" data-section="stopping-and-stemming"><span>05</span>4.4 Loại bỏ từ dừng và Rút gọn gốc từ</a>
+<a href="#phrases-and-ngrams-vi" data-section="phrases-and-ngrams"><span>06</span>4.5 Cụm từ và N-gram</a>
+<a href="#document-structure-vi" data-section="document-structure"><span>07</span>4.6 Cấu trúc tài liệu và đánh dấu</a>
+<a href="#anchor-text-vi" data-section="anchor-text"><span>08</span>4.7 Văn bản neo (Anchor text)</a>
+<a href="#pagerank-vi" data-section="pagerank"><span>09</span>4.8 Thuật toán PageRank</a>
+<a href="#link-quality-vi" data-section="link-quality"><span>10</span>4.9 Chất lượng liên kết</a>
+<a href="#information-extraction-vi" data-section="information-extraction"><span>11</span>4.10 Trích xuất thông tin và mô hình HMM</a>
+<a href="#exercise-vi" data-section="exercise"><span>12</span>Bài tập cuối chương</a>
+<a href="#summary-vi" data-section="summary"><span>13</span>Tổng kết</a>
+<a href="#quiz-vi" data-section="quiz"><span>14</span>Câu hỏi tự kiểm tra</a>
+<a href="#glossary-vi" data-section="glossary"><span>15</span>Bảng thuật ngữ</a></div>
+      <div class="chapter-directory">
+    <p class="chapter-directory__label">ĐỦ 12 CHƯƠNG</p>
+    <div class="chapter-directory__links"><a class="chapter-directory__item" href="./chapter-01.html"><b>01</b>Truy xuất thông tin</a>
+<a class="chapter-directory__item" href="./chapter-02.html"><b>02</b>Các thành phần và luồng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-03.html"><b>03</b>Thu thập tài liệu</a>
+<span class="chapter-directory__item is-current" aria-current="page"><b>04</b>Biến từ thành dữ liệu có thể tìm kiếm</span>
+<a class="chapter-directory__item" href="./chapter-05.html"><b>05</b>Từ chỉ mục đến kết quả hàng đầu</a>
+<a class="chapter-directory__item" href="./chapter-06.html"><b>06</b>Biến nhu cầu thành truy vấn</a>
+<a class="chapter-directory__item" href="./chapter-07.html"><b>07</b>Cách tính điểm kết quả</a>
+<a class="chapter-directory__item" href="./chapter-08.html"><b>08</b>Giúp nội dung được tìm thấy</a>
+<a class="chapter-directory__item" href="./chapter-09.html"><b>09</b>Đo chất lượng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-10.html"><b>10</b>Phân loại và sắp xếp tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-11.html"><b>11</b>Dùng con người và mối quan hệ trong tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-12.html"><b>12</b>Khai thác thứ tự, cấu trúc và đa phương tiện</a></div>
+  </div>
+    </div></nav>
+    <main class="lesson-content" id="main-content">
+      <article class="lesson-language" lang="vi-VN" data-lang="vi">
+        <div class="intro-mark"><span>GHI CHÚ HỌC TẬP</span><span>Bản tiếng Việt · Chương 04</span></div>
+        <p><strong>Tài liệu gốc:</strong> Slide bài giảng SEG301m Chương 4, &quot;Processing Text&quot; (29 slide)<br><strong>Cách đọc:</strong> Cùng một câu văn nhưng cách ngắt từ, các từ được giữ lại, cùng cấu trúc và liên kết được khai thác sẽ quyết định trực tiếp tới kết quả tìm kiếm. Chương này giúp bạn nắm bắt từng bước xử lý để chuyển đổi văn bản thô thành các &quot;từ chỉ mục&quot; có thể tìm kiếm được.</p>
+<h2 id="learning-goals-vi" data-section-heading="learning-goals">Mục tiêu của chương</h2>
+<p>Sau khi học xong chương này, bạn có thể giải thích các nội dung sau:</p>
+<ol>
+<li>Trình bày luồng xử lý từ văn bản thô qua phân tích cú pháp, phân tích từ vựng và gán trọng số để tạo thành từ chỉ mục.</li>
+<li>Giải thích định luật Zipf và định luật Heaps mô tả quy luật phân bố tần số từ và tốc độ tăng trưởng vốn từ vựng như thế nào.</li>
+<li>Phân biệt rõ tách token (tokenization), loại bỏ từ dừng (stopping), rút gọn gốc từ (stemming), cụm từ và n-gram.</li>
+<li>Nêu rõ lý do khai thác cấu trúc tài liệu, văn bản neo (anchor text), PageRank và chất lượng liên kết trong tìm kiếm.</li>
+<li>Giải thích các nguyên lý trích xuất thông tin dựa trên luật và dựa trên thống kê, cùng mô hình Hidden Markov Model (HMM).</li>
+</ol>
+<p class="source-note"><span>SLIDE NGUỒN</span> 1-3</p>
+<figure class="chapter-map"><a href="../assets/chapter-04-mindmap.png" target="_blank" rel="noopener"><img src="../assets/chapter-04-mindmap.png" width="1448" height="1086" loading="lazy" alt="Sơ đồ tư duy bằng tiếng Anh cho Chương 4, Xử lý văn bản"></a><figcaption>Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 4. Chọn ảnh để xem kích thước đầy đủ.</figcaption></figure>
+<h2 id="prerequisites-vi" data-section-heading="prerequisites">Kiến thức cần chuẩn bị</h2>
+<ul>
+<li><strong>Tài liệu (Document):</strong> Trang web hoặc tệp tin là đối tượng tìm kiếm.</li>
+<li><strong>Token:</strong> Đơn vị chuỗi ký tự thu được sau khi phân tách văn bản.</li>
+<li><strong>Từ chỉ mục (Index term):</strong> Từ ngữ được chọn lựa, chuẩn hóa và xử lý để đưa vào chỉ mục phục vụ xếp hạng.</li>
+<li><strong>Tần suất từ (Term frequency):</strong> Số lần xuất hiện của một từ trong tài liệu hoặc trong toàn bộ sưu tập.</li>
+<li><strong>Liên kết và văn bản neo:</strong> Tham chiếu từ trang này sang trang khác; phần chữ hiển thị của liên kết gọi là văn bản neo (anchor text).</li>
+</ul>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Giống như người đầu bếp sơ chế nguyên liệu: nhặt rau, rửa sạch, bỏ phần rễ hư, cắt thành khúc vừa miệng trước khi nấu; công cụ tìm kiếm cũng không dùng văn bản thô ngay mà phải làm sạch và gọt giũa thành các đơn vị chuẩn xác để tìm kiếm nhanh chóng.</p></aside>
+<h2 id="words-to-terms-vi" data-section-heading="words-to-terms">4.1 Từ từ ngữ đến từ chỉ mục</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 4</p>
+<p>Slide 4 mô tả quy trình tiền xử lý tiêu chuẩn từ toàn văn tài liệu đến từ chỉ mục:</p>
+<ol>
+<li><strong>Phân tích cú pháp (Parsing):</strong> Đọc và nhận diện cấu trúc phân đoạn của tài liệu.</li>
+<li><strong>Phân tích từ vựng (Lexical analysis):</strong> Phân tích chuỗi ký tự thành các từ và ký hiệu độc lập.</li>
+<li><strong>Loại bỏ từ dừng (Stop-word removal):</strong> Lọc bỏ các từ quá phổ biến mang ít giá trị phân biệt khi cần.</li>
+<li><strong>Phát hiện cụm từ (Phrase detection):</strong> Nhận diện các cụm gồm nhiều từ đi liền nhau.</li>
+<li><strong>Rút gọn gốc từ và Lemmatization:</strong> Đưa các biến thể hình thái về cùng dạng gốc.</li>
+<li><strong>Gán trọng số (Weighting):</strong> Tính toán mức độ quan trọng của từ đối với việc xếp hạng.</li>
+<li><strong>Lập chỉ mục (Indexing):</strong> Lưu trữ vào cấu trúc chỉ mục đảo.</li>
+</ol>
+<p>Không phải tài liệu nào cũng bắt buộc đi qua toàn bộ các bước. Sơ đồ cho thấy hệ thống có thể linh hoạt chuyển thẳng từ toàn văn hoặc từ các khâu trung gian sang chỉ mục tùy thuộc vào yêu cầu của từng dịch vụ tìm kiếm.</p>
+<h3 id="detail-1-vi">Từ phổ biến và Từ đặc trưng</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Phân loại</th>
+<th>Tính chất</th>
+<th>Xu hướng trong tìm kiếm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Từ phổ biến (General words)</td>
+<td>Liên từ, giới từ, từ nối; xuất hiện với tần số rất cao</td>
+<td>Khả năng phân biệt chủ đề giữa các tài liệu rất yếu</td>
+</tr>
+<tr>
+<td>Từ đặc trưng (Content words)</td>
+<td>Tập trung dày đặc trong các chủ đề chuyên biệt</td>
+<td>Khả năng nhận diện và phân biệt tài liệu rất mạnh</td>
+</tr>
+</tbody></table></div>
+<p>Các từ phổ biến thường có tần suất từ trong tài liệu (<strong>term frequency</strong>) rất cao, trong khi các từ đặc trưng thường có tần suất tài liệu (<strong>document frequency</strong>) thấp trên toàn kho dữ liệu.</p>
+<h2 id="text-statistics-vi" data-section-heading="text-statistics">4.2 Thống kê văn bản</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 5-7</p>
+<h3 id="detail-2-vi">Định luật Zipf</h3>
+<p>Slide 5 mô tả mối quan hệ gần như tỉ lệ nghịch giữa thứ bậc tần số <code>r</code> và tần số xuất hiện <code>f</code>:</p>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Nếu thống kê tất cả các từ trong giao tiếp hằng ngày, một nhóm nhỏ các từ như <code>và</code>, <code>là</code>, <code>của</code> xuất hiện liên tục khắp mọi nơi. Ngược lại, có một số lượng khổng lồ các thuật ngữ chuyên môn hoặc tên riêng chỉ xuất hiện đúng một hoặc vài lần. Định luật Zipf mô tả sự mất cân bằng này: &quot;một số ít từ xuất hiện cực kỳ nhiều, còn phần lớn các từ xuất hiện rất ít&quot;.</p></aside>
+<div class="formula-block" role="math" aria-label="rank times frequency is approximately a constant">
+  <span class="formula-main">r · f ≈ k</span>
+  <span class="formula-sub">r · P<sub>r</sub> = c</span>
+</div>
+
+<ul>
+<li><code>r</code>: thứ bậc tần số của từ (từ xuất hiện nhiều nhất có <code>r = 1</code>).</li>
+<li><code>f</code>: tần số xuất hiện thực tế của từ đó.</li>
+<li><code>k</code>: hằng số phụ thuộc vào dung lượng bộ sưu tập tài liệu.</li>
+<li><code>P_r</code>: xác suất xuất hiện của từ đứng ở vị trí thứ bậc <code>r</code>.</li>
+<li><code>c</code>: hằng số trong biểu diễn xác suất (trong tiếng Anh thường xấp xỉ <code>0.1</code>).</li>
+</ul>
+<p><strong>Ví dụ tính toán:</strong> Nếu từ đứng đầu (<code>r = 1</code>) xuất hiện 100.000 lần, ta có <code>r · f ≈ 100.000</code>. Khi đó, từ đứng thứ 10 (<code>r = 10</code>) dự kiến xuất hiện khoảng <code>100.000 / 10 = 10.000</code> lần, và từ đứng thứ 100 (<code>r = 100</code>) xuất hiện khoảng <code>100.000 / 100 = 1.000</code> lần. Dù dữ liệu thực tế không khớp hoàn toàn từng con số, công thức này phản ánh rõ nét xu hướng phân bố: &quot;một số ít từ xuất hiện rất nhiều, còn phần lớn các từ xuất hiện rất ít&quot;.</p>
+<p>Nếu đầu vào là thứ bậc <code>r = 10</code> và hằng số <code>k = 100.000</code>, thì tần suất ước lượng ở đầu ra là <code>f ≈ k / r = 10.000</code>. Đây không phải là công thức nhằm dự đoán chính xác tuyệt đối từng từ đơn lẻ, mà là quy luật thực nghiệm mô tả xu hướng phân bố từ ngữ của toàn bộ kho ngữ liệu.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Vẫn dùng hằng số <code>k = 100.000</code>, ước lượng tần số xuất hiện của từ đứng ở thứ bậc <code>r = 50</code> là bao nhiêu?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Tần số ước tính là <code>f ≈ 100.000 / 50 = 2.000</code> lần. Khi thứ bậc tăng gấp 5 lần (từ 10 lên 50) thì tần số xuất hiện giảm đi 5 lần (từ 10.000 xuống 2.000).</p></div></details>
+
+<h3 id="detail-3-vi">Bảng thống kê bộ sưu tập AP89</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 6</p>
+<p>Trong bộ sưu tập báo chí AP89 ở Slide 6, các từ đứng đầu danh sách là <code>the</code>, <code>of</code>, <code>to</code>, <code>a</code>, <code>and</code>. Ngược lại, nhóm từ có tần số xuất hiện cực thấp gồm các từ như <code>assistant</code>, <code>sewers</code>, <code>toothbrush</code>, <code>hazmat</code>.</p>
+<p>Từ bảng số liệu này, ta rút ra ba kết luận quan trọng:</p>
+<ul>
+<li>Các từ có tần số rất cao tuy quan trọng về mặt ngữ pháp nhưng khó phân biệt được chủ đề tài liệu.</li>
+<li>Các từ có tần số rất thấp mang tính đặc trưng cao, nhưng có thể chứa cả lỗi chính tả hoặc tên riêng chỉ xuất hiện một lần.</li>
+<li>Không thể chỉ dựa đơn thuần vào tần số để xóa từ, mà phải kết hợp với mục tiêu tìm kiếm thực tế.</li>
+</ul>
+<h3 id="detail-4-vi">Định luật Heaps</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 7</p>
+<p>Trên slide tác giả ghi là &quot;Heap&#39;s Law&quot;, nhưng thông thường được gọi là <strong>định luật Heaps (Heaps&#39; law)</strong>. Khi tổng số từ của bộ sưu tập tài liệu tăng lên, số lượng từ phân biệt (vốn từ vựng) cũng tăng theo:</p>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Khi đọc 100 trang sách đầu tiên, bạn sẽ liên tục bắt gặp rất nhiều từ mới. Nhưng khi đọc thêm 100 trang tiếp theo, phần lớn các từ xuất hiện là những từ bạn đã thấy trước đó, nên số lượng từ mới xuất hiện thêm sẽ chậm dần lại. Vốn từ vựng vẫn tiếp tục tăng khi đọc thêm sách, nhưng tốc độ tăng không nhanh bằng tốc độ tăng số trang.</p></aside>
+<div class="formula-block" role="math" aria-label="vocabulary size V equals K times N to the beta">
+  <span class="formula-main">V = KN<sup>β</sup></span>
+</div>
+
+<ul>
+<li><code>V</code>: kích thước vốn từ vựng (số lượng từ phân biệt).</li>
+<li><code>N</code>: tổng số lượng từ (token) trong toàn bộ tài liệu.</li>
+<li><code>K</code>: hằng số thực nghiệm, thường nằm trong khoảng 10 đến 100.</li>
+<li><code>β</code>: số mũ nằm trong khoảng <code>0 &lt; β &lt; 1</code> (slide nêu thường từ 0.4 đến 0.6).</li>
+</ul>
+<p><strong>Ví dụ tính toán:</strong> Với <code>K = 50</code>, <code>β = 0.5</code> và <code>N = 1.000.000</code> token:</p>
+<p><code>V = 50 × √(1.000.000) = 50 × 1.000 = 50.000</code> từ phân biệt.</p>
+<p>Nếu tăng tổng số từ <code>N</code> lên gấp 4 lần (4 triệu token) thì <code>V</code> chỉ tăng lên gấp 2 lần (<code>50 × 2.000 = 100.000</code> từ).</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Ý nghĩa</span><p>Miễn là hệ thống còn tiếp tục thu thập thêm tài liệu mới thì sẽ luôn có các từ vựng mới xuất hiện. Bộ nhớ từ điển và bảng chỉ mục tuyệt đối không được thiết kế dưới dạng kích thước cố định cứng nhắc.</p></aside>
+<p>Điều kiện <code>β &lt; 1</code> chính là yếu tố làm tốc độ tăng trưởng chậm lại theo hàm mũ con. Nếu <code>β = 1</code> thì tăng 4 lần dữ liệu sẽ làm từ vựng tăng 4 lần; còn khi <code>β = 0.5</code>, từ vựng chỉ tăng theo căn bậc hai.</p>
+<h2 id="tokenizing-vi" data-section-heading="tokenizing">4.3 Tách token (Tokenizing)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 8-9</p>
+<p><strong>Tách token (tokenizing)</strong> là quá trình phân chia chuỗi ký tự văn bản thành các đơn vị từ độc lập.</p>
+<p>Xét câu văn mẫu:</p>
+<pre><code class="language-text">Bigcorp&#39;s 2007 annual report showed profits rose 10%.
+</code></pre>
+<p>Ngay cả khi tách đơn giản theo khoảng trắng, kỹ sư vẫn phải đưa ra hàng loạt quyết định xử lý:</p>
+<ul>
+<li><code>Bigcorp&#39;s</code> được coi là một từ hay tách thành <code>Bigcorp</code> và dấu sở hữu cách <code>&#39;s</code>?</li>
+<li>Các số như <code>2007</code> hay ký hiệu <code>10%</code> có được giữ lại làm từ tìm kiếm không?</li>
+<li>Cụm có gạch nối <code>annual-report</code> và hai từ rời <code>annual report</code> có được coi là tương đương không?</li>
+<li>Các từ quá ngắn (1-2 ký tự) có bị loại bỏ không?</li>
+<li>Địa chỉ email, liên kết URL, ký hiệu toán học và emoji được xử lý như thế nào?</li>
+</ul>
+<p>Trong tiếng Việt, do chữ viết không dùng khoảng trắng để phân biệt từ đơn hay từ ghép, hệ thống cần sử dụng các bộ tách từ chuyên biệt (như PyVi, VnCoreNLP) để phân đoạn: <code>công cụ_tìm kiếm / của / sinh viên</code>. Quy tắc tách token của khâu lập chỉ mục và khâu truy vấn bắt buộc phải giống hệt nhau thì mới so khớp chính xác được.</p>
+<h2 id="stopping-and-stemming-vi" data-section-heading="stopping-and-stemming">4.4 Loại bỏ từ dừng và Rút gọn gốc từ</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 10-13</p>
+<h3 id="detail-5-vi">Loại bỏ từ dừng (Stopword removal)</h3>
+<p>Slide đưa ra các ví dụ trong tiếng Anh như <code>the</code>, <code>a</code>, <code>an</code>, <code>that</code>, <code>those</code> hoặc các giới từ <code>over</code>, <code>under</code>, <code>above</code>, <code>below</code>. Việc loại bỏ các <strong>từ dừng (stopword)</strong> này giúp giảm dung lượng chỉ mục và tăng tốc độ xử lý.</p>
+<p>Tuy nhiên, việc loại bỏ quá đà sẽ làm hỏng ngữ nghĩa của truy vấn. Ví dụ với các tên riêng hoặc thành ngữ như <code>to be or not to be</code>, <code>The Who</code>, <code>under pressure</code>, các từ dừng chính là thành phần cốt lõi tạo nên ý nghĩa. Ngược lại, nếu không lọc bớt, các từ xuất hiện quá nhiều sẽ chi phối sai lệch kết quả tính điểm xếp hạng.</p>
+<h3 id="detail-6-vi">Rút gọn gốc từ (Stemming)</h3>
+<p><strong>Rút gọn gốc từ (stemming)</strong> đưa các biến thể hình thái của một từ về một dạng gốc chung (word stem):</p>
+<ul>
+<li><code>cakes → cake</code></li>
+<li><code>dogs → dog</code></li>
+<li><code>stresses → stress</code></li>
+<li><code>fished → fish</code></li>
+<li><code>pirating → pirate</code></li>
+</ul>
+<p>Cần lưu ý hai dạng sai sót:</p>
+<ul>
+<li><strong>Âm tính giả (false negative):</strong> Lỗi bỏ sót các từ đáng lẽ phải gom về cùng gốc. Ví dụ: quy tắc cắt đuôi đơn giản không thể nhận diện <code>century</code> và <code>centuries</code> là cùng một gốc.</li>
+<li><strong>Dương tính giả (false positive):</strong> Lỗi gom nhầm các từ mang nghĩa khác nhau về cùng một gốc. Slide cảnh báo nguy cơ nhầm lẫn giữa đại từ <code>I</code> và động từ <code>is</code>.</li>
+</ul>
+<p>Phân biệt giữa <strong>Rút gọn gốc từ (stemming)</strong> và <strong>Chuẩn hóa từ điển (lemmatization)</strong>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Từ đầu vào</th>
+<th>Kết quả của Stemming</th>
+<th>Kết quả của Lemmatization</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>studies</code></td>
+<td><code>studi</code> (cắt đuôi cơ học)</td>
+<td><code>study</code> (dạng từ điển chuẩn)</td>
+</tr>
+<tr>
+<td><code>am</code>, <code>are</code>, <code>is</code></td>
+<td>Giữ nguyên riêng rẽ</td>
+<td><code>be</code> (động từ nguyên thể)</td>
+</tr>
+<tr>
+<td><code>better</code></td>
+<td>Có thể giữ nguyên <code>better</code></td>
+<td><code>good</code> (tính từ gốc dựa trên từ điển)</td>
+</tr>
+</tbody></table></div>
+<p>Stemmer chủ yếu dùng các quy tắc cắt bỏ tiền tố/hậu tố bằng chuỗi ký tự nên gốc từ sinh ra không nhất thiết phải là một từ có nghĩa trong từ điển (như <code>studi</code>). Ngược lại, lemmatizer phân tích từ loại (part-of-speech) và tra cứu từ điển để trả về dạng từ nguyên chính xác, đòi hỏi chi phí tính toán và tri thức ngôn ngữ lớn hơn nhiều.</p>
+<h3 id="detail-7-vi">Quy tắc của thuật toán Stemmer theo luật (Porter Stemmer)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 12</p>
+<p>Các quy tắc xử lý hậu tố tiếng Anh tiêu biểu trên slide:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Quy tắc</th>
+<th>Ví dụ áp dụng</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chuyển đuôi <code>sses</code> thành <code>ss</code></td>
+<td><code>stresses → stress</code></td>
+</tr>
+<tr>
+<td>Xóa đuôi <code>s</code> nếu thỏa mãn điều kiện</td>
+<td><code>gaps → gap</code>, nhưng giữ nguyên <code>gas → gas</code></td>
+</tr>
+<tr>
+<td>Chuyển <code>ied/ies</code> thành <code>i</code> hoặc <code>ie</code></td>
+<td><code>ties → tie</code>, <code>cries → cri</code></td>
+</tr>
+<tr>
+<td>Giữ nguyên đuôi <code>us/ss</code></td>
+<td><code>stress → stress</code></td>
+</tr>
+<tr>
+<td>Chuyển <code>eed/eedly</code> thành <code>ee</code> nếu thỏa điều kiện</td>
+<td><code>agreed → agree</code>, <code>feed → feed</code></td>
+</tr>
+<tr>
+<td>Xóa đuôi <code>ed/edly/ing/ingly</code> nếu thỏa điều kiện</td>
+<td><code>fished → fish</code>, <code>pirating → pirate</code></td>
+</tr>
+</tbody></table></div>
+<p>Thuật ngữ &quot;thỏa mãn điều kiện&quot; nhằm bảo vệ các từ ngắn không bị cắt cụt vô lý: phần gốc phía trước hậu tố phải có độ dài tối thiểu và chứa nguyên âm. Ví dụ quy tắc xóa đuôi <code>s</code> chỉ áp dụng khi trước <code>s</code> có nguyên âm và nguyên âm đó không nằm sát ngay trước <code>s</code>, nhờ đó <code>gaps</code> được đổi thành <code>gap</code> nhưng <code>gas</code> không bị biến dạng.</p>
+<p>Ý niệm &quot;sau vị trí ký tự không phải nguyên âm đầu tiên xuất hiện sau một nguyên âm&quot; trong quy tắc <code>eed</code> là cách mà thuật toán họ Porter xác định vùng an toàn để xử lý hậu tố. Ở đây, thay vì cố gắng học thuộc lòng toàn bộ quy tắc, điểm mấu chốt bạn cần nắm vững là: <strong>dù phần đuôi giống nhau, thuật toán luôn kiểm tra hình thái của phần thân từ trước khi quyết định chuyển đổi</strong>.</p>
+<p>Các quy tắc này áp dụng đặc thù cho cấu trúc hình thái học của tiếng Anh. Tiếng Việt là ngôn ngữ đơn lập, không biến đổi hình thái từ bằng cách thêm tiếp vị ngữ (hậu tố), do đó không áp dụng các quy tắc rút gọn đuôi như vậy.</p>
+<h3 id="detail-8-vi">Stemmer dựa trên từ điển và Krovetz Stemmer</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 13</p>
+<p>Stemmer dựa trên từ điển lưu trữ sẵn các bảng ánh xạ từ vựng đầy đủ. Phương pháp này rất chuẩn xác nhưng không thể tự động xử lý từ mới, từ lóng và làm phình to dung lượng từ điển.</p>
+<p><strong>Krovetz stemmer</strong> là giải pháp lai kết hợp giữa thuật toán cắt đuôi và tra cứu từ điển, vừa đảm bảo tốc độ vừa duy trì độ chính xác cao.</p>
+<h2 id="phrases-and-ngrams-vi" data-section-heading="phrases-and-ngrams">4.5 Cụm từ và N-gram</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 14-16</p>
+<h3 id="detail-9-vi">Cụm danh từ dựa trên từ loại (Part-of-Speech)</h3>
+<p><strong>Cụm danh từ (noun phrase)</strong> được định nghĩa là chuỗi gồm các danh từ liên tiếp hoặc tính từ bổ nghĩa cho danh từ. Slide 14 liệt kê các nhãn từ loại của bộ gán nhãn POS:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Nhãn POS</th>
+<th>Ý nghĩa</th>
+<th>Ví dụ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NN / NNS</td>
+<td>Danh từ số ít / Danh từ số nhiều</td>
+<td>report / reports</td>
+</tr>
+<tr>
+<td>VB / VBD / VBN</td>
+<td>Động từ nguyên mẫu / Quá khứ / Quá khứ phân từ</td>
+<td>use / used / written</td>
+</tr>
+<tr>
+<td>IN</td>
+<td>Giới từ</td>
+<td>in, of</td>
+</tr>
+<tr>
+<td>JJ</td>
+<td>Tính từ</td>
+<td>tropical</td>
+</tr>
+<tr>
+<td>CC</td>
+<td>Liên từ kết hợp</td>
+<td>and, or</td>
+</tr>
+<tr>
+<td>PRP</td>
+<td>Đại từ nhân xưng</td>
+<td>it, they</td>
+</tr>
+<tr>
+<td>MD</td>
+<td>Động từ khuyết thiếu</td>
+<td>can, will</td>
+</tr>
+</tbody></table></div>
+<p>Bằng cách nhận diện các cụm danh từ như <code>market share</code> hay <code>tropical fish</code>, hệ thống nắm bắt được trọn vẹn ngữ nghĩa hơn là việc phân tách các từ đơn lẻ.</p>
+<h3 id="detail-10-vi">Cụm từ phổ biến trong ngữ liệu TREC</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15</p>
+<p>Slide 15 so sánh các cụm danh từ tần số cao giữa dữ liệu tin tức TREC và dữ liệu bằng sáng chế, cho thấy sự khác biệt rõ rệt về từ vựng:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Cụm từ phổ biến trong TREC</th>
+<th>Cụm từ phổ biến trong Bằng sáng chế</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>united states</code></td>
+<td><code>present invention</code></td>
+</tr>
+<tr>
+<td><code>article type</code></td>
+<td><code>u.s. part</code></td>
+</tr>
+<tr>
+<td><code>los angeles</code></td>
+<td><code>preferred embodiment</code></td>
+</tr>
+<tr>
+<td><code>hong kong</code></td>
+<td><code>carbon atoms</code></td>
+</tr>
+<tr>
+<td><code>new york</code></td>
+<td><code>room temperature</code></td>
+</tr>
+</tbody></table></div>
+<p>Mỗi miền dữ liệu có những cụm từ đặc trưng riêng, do đó hệ thống cần thống kê trực tiếp trên kho dữ liệu thực tế thay vì chỉ dựa vào từ điển tổng quát.</p>
+<h3 id="detail-11-vi">Kỹ thuật N-gram</h3>
+<p><strong>N-gram</strong> là chuỗi gồm <code>n</code> từ (hoặc ký tự) xuất hiện liên tiếp nhau trong văn bản.</p>
+<p>Chuỗi bi-gram (2-gram) của câu <code>to be or not to be</code>:</p>
+<pre><code class="language-text">to be | be or | or not | not to | to be
+</code></pre>
+<p>Đưa n-gram vào chỉ mục cho phép hệ thống tìm kiếm cụm từ nhanh chóng mà không cần phân tích cú pháp phức tạp. Tuy nhiên, khi <code>n</code> tăng lên, số lượng n-gram phân biệt sẽ bùng nổ, làm tăng mạnh kích thước chỉ mục.</p>
+<h2 id="document-structure-vi" data-section-heading="document-structure">4.6 Cấu trúc tài liệu và đánh dấu</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 17</p>
+<p>Các trường dữ liệu trong cơ sở dữ liệu và cấu trúc thẻ trong trang Web mang ý nghĩa rất lớn cho việc tìm kiếm. Trong trang web ví dụ <code>Tropical fish</code>, từ <code>tropical fish</code> xuất hiện ở tiêu đề chính (heading) sẽ mang giá trị manh mối mạnh hơn nhiều so với việc chỉ xuất hiện vu vơ ở phần chân trang.</p>
+<p>Hệ thống tìm kiếm gán các trọng số khác nhau cho từng trường (field):</p>
+<ul>
+<li>tiêu đề bài viết (title)</li>
+<li>tiêu đề mục chính (main heading)</li>
+<li>phần thân bài (body)</li>
+<li>tác giả (author)</li>
+<li>văn bản neo (anchor text)</li>
+<li>ngày xuất bản (publication date)</li>
+</ul>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Giống như trong hồ sơ xin việc, tên ứng viên được in to rõ ràng ở trên cùng mang ý nghĩa nhận diện chủ thể, khác hẳn với việc tên đó tình cờ xuất hiện một lần trong phần mô tả dự án. Cấu trúc tài liệu giúp công cụ tìm kiếm phân biệt được sự khác nhau đó.</p></aside>
+<h2 id="anchor-text-vi" data-section-heading="anchor-text">4.7 Văn bản neo (Anchor text)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 18-19</p>
+<p>Các từ ngữ hiển thị chứa liên kết bấm được gọi là <strong>văn bản neo (anchor text)</strong>, thường được phân biệt bằng gạch chân hoặc màu sắc nổi bật.</p>
+<p>Văn bản neo hỗ trợ xếp hạng rất tốt vì hai lý do cốt lõi:</p>
+<ol>
+<li>Thường rất ngắn gọn (chỉ 2-3 từ) và tóm tắt đúng trọng tâm nội dung của trang đích.</li>
+<li>Được viết dưới góc nhìn khách quan của người khác (bên thứ ba) khi giới thiệu về trang, bổ sung từ vựng tự nhiên cho trang đích.</li>
+</ol>
+<p>Phương pháp xếp hạng đơn giản ở Slide 19:</p>
+<ol>
+<li>Quét toàn bộ các liên kết trong bộ sưu tập tài liệu.</li>
+<li>Nếu văn bản neo của một liên kết khớp chính xác với câu truy vấn, cộng 1 điểm cho trang đích.</li>
+<li>Sắp xếp các trang đích theo thứ tự điểm số giảm dần.</li>
+</ol>
+<p>Ví dụ, nếu hàng triệu trang web cùng đặt liên kết chứa chữ <code>eBay</code> trỏ về địa chỉ <code>www.ebay.com</code>, trang web đó sẽ tự động đạt điểm số cực cao cho truy vấn <code>eBay</code>.</p>
+<p><strong>Hạn chế:</strong> So khớp chính xác không xử lý được các từ đồng nghĩa hoặc lỗi chính tả, đồng thời rất dễ bị các thủ thuật thao túng liên kết (link spam) tấn công.</p>
+<h2 id="pagerank-vi" data-section-heading="pagerank">4.8 Thuật toán PageRank</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 20-22</p>
+<h3 id="detail-12-vi">Mô hình người lướt web ngẫu nhiên (Random Surfer)</h3>
+<p>Nếu chỉ đếm số lượng liên kết trỏ đến (inlink), kẻ xấu có thể tạo ra hàng nghìn trang rác rồi đặt liên kết trỏ về trang của mình để thao túng thứ hạng. Thuật toán <strong>PageRank</strong> khắc phục điều này bằng cách xem xét mức độ uy tín của trang đặt liên kết và số lượng liên kết đi ra từ trang đó.</p>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Hãy tưởng tượng mỗi trang web có 1 đồng tiền vàng để chia đều cho các trang mà nó trỏ tới. Nhận được tiền từ một trang uy tín lớn (có nhiều tiền) sẽ giá trị hơn nhiều so với nhận tiền từ một trang vô danh. Nếu trang đó trỏ tới 2 trang thì mỗi trang nhận một nửa; nếu chỉ trỏ tới 1 trang thì trang đó nhận trọn vẹn.</p></aside>
+<p>Hình ảnh ẩn dụ đồng tiền này giúp ta dễ hình dung cơ chế phân phối điểm số. Trong thực tế, PageRank không phải là quá trình con người tự đặt đồng tiền lên các trang, mà là phép tính lặp để tìm &quot;xác suất người dùng đang dừng chân tại một trang cụ thể khi liên tục di chuyển ngẫu nhiên qua các liên kết&quot;.</p>
+<p>Mô hình <strong>người lướt web ngẫu nhiên (random surfer)</strong> giả định một người dùng lướt mạng bằng cách bấm ngẫu nhiên vào các liên kết trên trang. Tuy nhiên, nếu chỉ đi theo liên kết, người đó có thể bị kẹt vĩnh viễn trong một nhóm các trang liên kết vòng tròn khép kín (vòng lặp vô tận). Vì vậy, mô hình bổ sung xác suất người dùng đột ngột chán nản và gõ một địa chỉ URL bất kỳ trong toàn bộ Web để nhảy tới trang mới.</p>
+<h3 id="detail-13-vi">Ví dụ đồ thị 3 trang</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 21</p>
+<ul>
+<li>Trang A đặt liên kết trỏ tới B và C.</li>
+<li>Trang B đặt liên kết trỏ tới C.</li>
+<li>Trang C đặt liên kết trỏ tới A.</li>
+</ul>
+<p>Điểm PageRank của C bằng một nửa điểm của A (vì A chia đều cho B và C) cộng với toàn bộ điểm của B (vì B chỉ trỏ duy nhất tới C):</p>
+<div class="formula-block" role="math" aria-label="PageRank of C equals PageRank of A over 2 plus PageRank of B over 1">
+  <span class="formula-main">PR(C) = PR(A)/2 + PR(B)/1</span>
+</div>
+
+<p>Công thức tổng quát:</p>
+<div class="formula-block" role="math" aria-label="PageRank of u equals sum over pages v linking to u of PageRank v divided by outgoing links from v">
+  <span class="formula-main">PR(u) = Σ<sub>v ∈ B<sub>u</sub></sub> PR(v) / L<sub>v</sub></span>
+</div>
+
+<ul>
+<li><code>B_u</code>: tập hợp các trang có liên kết trỏ tới trang <code>u</code>.</li>
+<li><code>L_v</code>: số lượng liên kết đi ra (outlink) của trang <code>v</code>.</li>
+</ul>
+<p><strong>Tính toán vòng lặp đầu tiên:</strong> Khởi tạo điểm ban đầu của A, B, C đều bằng <code>1/3</code>:</p>
+<ul>
+<li><code>PR(A) = PR(C) / 1 = 1/3</code></li>
+<li><code>PR(B) = PR(A) / 2 = 1/6</code></li>
+<li><code>PR(C) = PR(A) / 2 + PR(B) / 1 = 1/6 + 1/3 = 1/2</code></li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Trang</th>
+<th align="right">Giá trị vòng trước</th>
+<th align="right">Giá trị sau vòng 1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td align="right"><code>1/3</code></td>
+<td align="right"><code>1/3</code></td>
+</tr>
+<tr>
+<td>B</td>
+<td align="right"><code>1/3</code></td>
+<td align="right"><code>1/6</code></td>
+</tr>
+<tr>
+<td>C</td>
+<td align="right"><code>1/3</code></td>
+<td align="right"><code>1/2</code></td>
+</tr>
+</tbody></table></div>
+<p>Lưu ý rằng giá trị mới của cả 3 trang đều được tính dựa trên giá trị của vòng trước (<code>1/3</code>), sau đó được cập nhật đồng thời (synchronous update).</p>
+<p>Nếu chỉ áp dụng công thức đơn giản này, giá trị điểm số có thể dao động hoặc không hội tụ. Do đó, thuật toán lặp thực tế bổ sung thêm xác suất người dùng không đi theo liên kết mà nhảy ngẫu nhiên đến một trang bất kỳ.</p>
+<h3 id="detail-14-vi">Thuật toán lặp có bước nhảy ngẫu nhiên (Slide 22)</h3>
+<p>Gọi số lượng trang là <code>|P|</code>, xác suất nhảy ngẫu nhiên là <code>λ</code>:</p>
+<ol>
+<li>Gán giá trị ban đầu cho mỗi trang là <code>1 / |P|</code>.</li>
+<li>Khởi tạo mảng giá trị mới với điểm cơ sở từ bước nhảy ngẫu nhiên: mỗi trang nhận <code>λ / |P|</code>.</li>
+<li>Nếu trang <code>p</code> có tập liên kết ra <code>Q</code>, chia đều phần điểm theo liên kết <code>(1 - λ)I_p / |Q|</code> cho các trang đích.</li>
+<li>Nếu trang <code>p</code> không có liên kết ra nào (dangling page), chia đều <code>(1 - λ)I_p / |P|</code> cho tất cả các trang trong toàn mạng.</li>
+<li>Lặp lại cho đến khi vector điểm số hội tụ.</li>
+</ol>
+<ul>
+<li><code>I_p</code>: xác suất người dùng đang ở trang <code>p</code> ở vòng trước.</li>
+<li><code>R_q</code>: xác suất tích lũy mới cho trang <code>q</code> ở vòng này.</li>
+<li><code>λ</code>: xác suất người dùng không bấm liên kết mà nhảy ngẫu nhiên tới một trang bất kỳ.</li>
+<li><code>1 - λ</code>: xác suất người dùng bấm vào một liên kết trên trang hiện tại.</li>
+</ul>
+<p>Trong một số tài liệu khác, người ta gọi hệ số suy giảm (damping factor) là <code>d = 0.85</code>, tương ứng với <code>1 - λ = 0.85</code> (tức <code>λ = 0.15</code>).</p>
+<p><strong>Bổ sung (tính toán chi tiết để hiểu Slide 22):</strong> Với <code>λ = 0.15</code>, khởi tạo mỗi trang nhận <code>1/3</code>, điểm ngẫu nhiên cơ sở là <code>λ / 3 = 0.05</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Trang</th>
+<th align="right">Điểm vòng trước</th>
+<th align="right">Điểm ngẫu nhiên</th>
+<th align="right">Điểm nhận từ liên kết</th>
+<th align="right">Điểm vòng mới</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td align="right"><code>1/3</code></td>
+<td align="right">0.05</td>
+<td align="right">Nhận từ C: <code>0.85 × (1/3) = 0.2833</code></td>
+<td align="right"><strong>0.3333</strong></td>
+</tr>
+<tr>
+<td>B</td>
+<td align="right"><code>1/3</code></td>
+<td align="right">0.05</td>
+<td align="right">Nhận từ A: <code>0.85 × (1/3) / 2 = 0.1417</code></td>
+<td align="right"><strong>0.1917</strong></td>
+</tr>
+<tr>
+<td>C</td>
+<td align="right"><code>1/3</code></td>
+<td align="right">0.05</td>
+<td align="right">Nhận từ A (<code>0.1417</code>) + nhận từ B (<code>0.2833</code>)</td>
+<td align="right"><strong>0.4750</strong></td>
+</tr>
+</tbody></table></div>
+<p>Tổng xác suất mới: <code>0.3333 + 0.1917 + 0.4750 = 1.0000</code>. Tổng xác suất vẫn bảo toàn bằng 1 ngay cả với giá trị chính xác trước khi làm tròn. Tại đây cũng vậy, tất cả các phép tính ở vòng này đều dùng giá trị của vòng trước, sau đó đồng thời cập nhật <code>I ← R</code>.</p>
+<p>Trang không có liên kết ra (dangling page) giống như ngõ cụt; việc phân phối đều điểm của nó ra toàn mạng giúp bảo toàn tổng xác suất không bị tiêu biến.</p>
+<p>Trạng thái <strong>hội tụ (convergence)</strong> đạt được khi độ biến thiên điểm số giữa hai vòng lặp liên tiếp nhỏ hơn một ngưỡng sai số rất nhỏ ấn định trước.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Vì sao điểm liên kết mà B nhận được từ A chỉ là <code>0.85 × (1/3) / 2</code> chứ không phải toàn bộ <code>0.85 × 1/3</code>?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Vì trang A có 2 liên kết đi ra (trỏ tới B và C). Lượng điểm truyền qua liên kết <code>0.85 × (1/3)</code> được chia đều cho cả 2 liên kết, do đó lượng điểm B nhận được từ A là <code>0.85 × (1/3) / 2 = 0.1417</code>.</p></div></details>
+
+<h2 id="link-quality-vi" data-section-heading="link-quality">4.9 Chất lượng liên kết</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 23-24</p>
+<p>Slide 23 minh họa trường hợp blog A trích dẫn bài viết của blog B, sau đó blog B tự động tạo liên kết trackback trỏ ngược lại A. Trên đồ thị, đây là liên kết hai chiều, khiến thuật toán khó phân biệt ai mới thực sự là nguồn phát thông tin gốc.</p>
+<p>Ngoài ra, mục bình luận trên các trang web thường bị kẻ xấu lợi dụng để chèn liên kết rác nhằm thao túng thứ hạng tìm kiếm (link spam).</p>
+<p>Slide 24 giới thiệu thuộc tính <code>rel=&quot;nofollow&quot;</code> được thêm vào thẻ liên kết:</p>
+<pre><code class="language-html">&lt;a rel=&quot;nofollow&quot; href=&quot;https://www.page.com&quot;&gt;web page&lt;/a&gt;
+</code></pre>
+<p>Thuộc tính này báo cho công cụ tìm kiếm biết rằng chủ sở hữu trang web không bảo chứng cho liên kết này, giúp ngăn chặn hành vi spam liên kết thao túng xếp hạng.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Lưu ý</span><p>Cách thức xử lý thuộc tính <code>nofollow</code> có thể có sự khác biệt tùy theo từng công cụ tìm kiếm và theo từng thời kỳ; điều quan trọng cần nắm ở đây là nguyên lý mà slide đề cập: phân biệt giữa liên kết do người dùng tự tạo với các liên kết đề xuất thông thường của trang web.</p></aside>
+<h2 id="information-extraction-vi" data-section-heading="information-extraction">4.10 Trích xuất thông tin và mô hình HMM</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 25-27</p>
+<h3 id="detail-15-vi">Rút trích cấu trúc từ văn bản tự nhiên</h3>
+<p><strong>Trích xuất thông tin (information extraction)</strong> tự động rút ra các thực thể như tên người, địa chỉ, tổ chức từ các câu văn tự nhiên và lưu trữ dưới dạng có cấu trúc.</p>
+<p>Ví dụ ở Slide 25 biến câu văn:</p>
+<pre><code class="language-text">Fred Smith, who lives at 10 Water Street, Springfield, MA, is a long-time collector of tropical fish.
+</code></pre>
+<p>thành cấu trúc XML rõ ràng:</p>
+<pre><code class="language-xml">&lt;PersonName&gt;&lt;GivenName&gt;Fred&lt;/GivenName&gt;&lt;Sn&gt;Smith&lt;/Sn&gt;&lt;/PersonName&gt;
+&lt;address&gt;&lt;Street&gt;10 Water Street&lt;/Street&gt;&lt;City&gt;Springfield&lt;/City&gt;&lt;State&gt;MA&lt;/State&gt;&lt;/address&gt;
+</code></pre>
+<h3 id="detail-16-vi">Phương pháp dựa trên luật và dựa trên thống kê</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 26</p>
+<ul>
+<li><strong>Dựa trên luật (Rule-based):</strong> Sử dụng từ điển tên riêng, địa danh kết hợp với các mẫu biểu thức chính quy ngữ pháp xung quanh.</li>
+<li><strong>Dựa trên thống kê (Statistical-based):</strong> Sử dụng mô hình xác suất học từ ngữ cảnh. Slide lấy ví dụ mô hình Hidden Markov Model (HMM).</li>
+</ul>
+<p>Từ điển nhận diện rất tốt các tên đã biết nhưng bó tay trước tên mới; mô hình thống kê tuy cần dữ liệu huấn luyện nhưng có khả năng suy luận ngữ cảnh rất linh hoạt.</p>
+<h3 id="detail-17-vi">Mô hình Hidden Markov Model (HMM)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 27</p>
+<p>Từ <code>Marathon</code> có thể là cuộc thi chạy bộ hoặc tên địa danh Hy Lạp, không thể chỉ nhìn mặt chữ để kết luận. Mô hình HMM giả định đằng sau chuỗi từ quan sát được tồn tại một chuỗi các <strong>trạng thái ẩn (hidden state)</strong> như <code>Tên người</code>, <code>Địa danh</code>, <code>Tổ chức</code>, <code>Từ thông thường</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Vị trí</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Từ quan sát</td>
+<td><code>Apple</code></td>
+<td><code>opened</code></td>
+<td><code>stores</code></td>
+</tr>
+<tr>
+<td>Trạng thái ẩn</td>
+<td>Tổ chức</td>
+<td>Từ thông thường</td>
+<td>Từ thông thường</td>
+</tr>
+</tbody></table></div>
+<p>Người dùng chỉ nhìn thấy chuỗi chữ <code>Apple opened stores</code>. Nhãn <code>Tổ chức</code> không được in sẵn trên mặt chữ mà là thông tin ẩn cần suy luận.</p>
+<p>Trên sơ đồ trạng thái ở slide, quá trình bắt đầu từ trạng thái <code>start</code>, chuyển qua các trạng thái ẩn dọc theo chuỗi từ, và cuối cùng kết thúc ở trạng thái <code>end</code>. HMM sử dụng hai loại xác suất cốt lõi:</p>
+<ul>
+<li><strong>Xác suất chuyển trạng thái (transition probability):</strong> Xác suất chuyển từ trạng thái ẩn này sang trạng thái ẩn tiếp theo (ví dụ xác suất sau <code>Tổ chức</code> là <code>Từ thông thường</code>).</li>
+<li><strong>Xác suất phát xạ (emission probability):</strong> Xác suất một trạng thái ẩn phát sinh ra một từ quan sát cụ thể (ví dụ xác suất trạng thái <code>Tổ chức</code> sinh ra chữ <code>Apple</code>).</li>
+</ul>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Xác suất chuyển trạng thái đo xem loại nhãn nào thường đi liền sau loại nhãn nào; xác suất phát xạ đo xem loại nhãn đó thường biểu hiện thành từ ngữ nào. Mô hình tìm chuỗi nhãn ẩn tối ưu sao cho tích hai loại xác suất này đạt giá trị lớn nhất.</p></aside>
+<p><strong>Bổ sung (ví dụ giả định để làm rõ cơ chế tính toán):</strong> Các con số dưới đây được giả định nhằm mục đích giải thích cách tính, không phải là giá trị học từ dữ liệu thực tế hay lấy nguyên văn từ slide.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Xác suất giả định</th>
+<th align="right">Giá trị</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>`P(Tổ chức</td>
+<td align="right">start)`</td>
+</tr>
+<tr>
+<td>`P(Từ thông thường</td>
+<td align="right">start)`</td>
+</tr>
+<tr>
+<td>`P(Apple</td>
+<td align="right">Tổ chức)`</td>
+</tr>
+<tr>
+<td>`P(Apple</td>
+<td align="right">Từ thông thường)`</td>
+</tr>
+<tr>
+<td>`P(Từ thông thường</td>
+<td align="right">Tổ chức)`</td>
+</tr>
+<tr>
+<td>`P(Từ thông thường</td>
+<td align="right">Từ thông thường)`</td>
+</tr>
+<tr>
+<td>`P(opened</td>
+<td align="right">Từ thông thường)`</td>
+</tr>
+<tr>
+<td>`P(stores</td>
+<td align="right">Từ thông thường)`</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li>Xác suất chuỗi coi <code>Apple</code> là <code>Tổ chức</code>: <code>0.30 × 0.40 × 0.70 × 0.10 × 0.80 × 0.05 = 0.000336</code>.</li>
+<li>Xác suất chuỗi coi <code>Apple</code> là <code>Từ thông thường</code>: <code>0.70 × 0.01 × 0.80 × 0.10 × 0.80 × 0.05 = 0.0000224</code>.</li>
+</ul>
+<p>Trường hợp coi <code>Apple</code> là tổ chức có xác suất cao gấp 15 lần, do đó hệ thống chọn nhãn <code>Tổ chức</code>.</p>
+<p>Giả định Markov bậc 1 cơ bản quy định trạng thái ẩn tiếp theo chỉ phụ thuộc vào trạng thái ẩn ngay trước nó, chứ không phụ thuộc vào toàn bộ lịch sử trạng thái trong quá khứ. Ngoài ra, mỗi từ quan sát được giả định chỉ phát sinh từ trạng thái ẩn tại thời điểm hiện tại. Do đó, HMM không thể tự do khai thác ngữ cảnh một cách vô hạn; tầm ảnh hưởng của ngữ cảnh xa chỉ được truyền gián tiếp thông qua chuỗi trạng thái.</p>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Trong câu &quot;Apple released a phone&quot; thì &quot;Apple&quot; là tổ chức, nhưng trong &quot;I ate an apple&quot; thì nó lại là trái cây. Các từ ngữ bao quanh chính là manh mối sống còn để mô hình suy luận nhãn ẩn phía sau.</p></aside>
+<p><strong>Hạn chế:</strong> Mô hình HMM trên slide là mô hình cơ bản. Trong thực tế, nó có thể gặp khó khăn khi cần biểu diễn ngữ cảnh dài hoặc các mối phụ thuộc phức tạp trong ngôn ngữ tự nhiên.</p>
+<h2 id="exercise-vi" data-section-heading="exercise">Bài tập cuối chương</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 28</p>
+<p>Thu thập một số trang từ Wikipedia và thực hiện tách token cho bộ sưu tập. Yêu cầu bài tập gốc: giữ lại các token chỉ gồm các chữ cái, bỏ qua các thẻ đánh dấu và token chứa ký tự phi ASCII.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Gợi ý thực hiện</span><p>Lưu lại kết quả theo các bước trung gian để dễ kiểm tra:</p></aside>
+<ol>
+<li>Tệp HTML gốc tải về.</li>
+<li>Văn bản sau khi loại bỏ thẻ HTML.</li>
+<li>Chuỗi token sau khi tách từ.</li>
+<li>Danh sách token hoàn thiện chỉ chứa chữ cái.</li>
+<li>Thống kê 20 từ xuất hiện nhiều nhất và danh sách các từ bị loại bỏ.</li>
+</ol>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Lưu ý</span><p>Điều kiện loại bỏ ký tự phi ASCII là quy định riêng của bài tập thực hành nhằm tập trung vào việc học tách token cho tiếng Anh, chứ không phải là yêu cầu chung cho mọi hệ thống tìm kiếm thực tế (đặc biệt khi xử lý tiếng Việt hoặc dữ liệu đa ngôn ngữ).</p></aside>
+<h2 id="summary-vi" data-section-heading="summary">Tổng kết</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 29 (và toàn bộ slide 1-28)</p>
+<ul>
+<li>Tài liệu văn bản trải qua phân tích cú pháp, phân tích từ vựng, phát hiện cụm từ, chuẩn hóa hình thái và gán trọng số để trở thành từ chỉ mục.</li>
+<li>Định luật Zipf mô tả sự phân bố mất cân bằng của tần số từ; định luật Heaps mô tả tốc độ tăng trưởng vốn từ vựng theo quy mô ngữ liệu.</li>
+<li>Việc lựa chọn bộ tách token, danh sách stopword, thuật toán stemmer, cụm từ và n-gram ảnh hưởng trực tiếp tới chất lượng kết quả tìm kiếm.</li>
+<li>Cấu trúc tài liệu và văn bản neo bổ sung các manh mối giá trị về vị trí xuất hiện và góc nhìn của bên thứ ba vào khâu xếp hạng.</li>
+<li>PageRank đánh giá độ uy tín của trang dựa trên đồ thị liên kết có hướng kết hợp bước nhảy ngẫu nhiên để đảm bảo tính hội tụ.</li>
+<li>Trích xuất thông tin rút trích các thực thể có cấu trúc từ văn bản tự nhiên, trong đó mô hình HMM suy luận chuỗi nhãn ẩn từ ngữ cảnh.</li>
+</ul>
+<h2 id="quiz-vi" data-section-heading="quiz">Câu hỏi tự kiểm tra</h2>
+<ol>
+<li>Token và từ chỉ mục (index term) có hoàn toàn đồng nhất với nhau không?</li>
+<li>Định luật Zipf cho biết điều gì về mối quan hệ giữa từ có tần số cao và từ có tần số thấp?</li>
+<li>Việc số mũ <code>β &lt; 1</code> trong định luật Heaps mang ý nghĩa gì đối với tốc độ tăng vốn từ vựng?</li>
+<li>Nêu một ví dụ thực tế cho thấy việc xóa bỏ stopword sẽ làm sai lệch nghiêm trọng ý định tìm kiếm.</li>
+<li>Giải thích hiện tượng false negative và false positive trong bài toán rút gọn gốc từ (stemming).</li>
+<li>Cách tạo lập cụm danh từ (noun phrase) và n-gram khác nhau như thế nào?</li>
+<li>Vì sao văn bản neo (anchor text) lại chứa đựng thông tin khác biệt so với nội dung trong chính trang đích?</li>
+<li>Vì sao trong công thức PageRank lại phải chia cho số lượng liên kết đi ra <code>L_v</code> của trang nguồn?</li>
+<li>Thuộc tính <code>rel=&quot;nofollow&quot;</code> được tạo ra nhằm hạn chế vấn đề tiêu cực nào trên Web?</li>
+<li>Trạng thái ẩn (hidden state) trong mô hình HMM đại diện cho đối tượng gì?</li>
+<li>Phân biệt xác suất chuyển trạng thái (transition probability) và xác suất phát xạ (emission probability) trong HMM.</li>
+</ol>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><ol>
+<li>Không hoàn toàn đồng nhất. Token là kết quả thô sau khi cắt chuỗi văn bản; từ chỉ mục là biểu diễn đã qua chuẩn hóa, chọn lọc và gán trọng số để phục vụ tìm kiếm.</li>
+<li>Một số lượng rất ít các từ đứng đầu xuất hiện với tần số cực lớn, còn phần lớn các từ còn lại có tần số giảm dần theo quy luật gần như tỉ lệ nghịch với thứ bậc.</li>
+<li>Nghĩa là quy mô văn bản càng mở rộng thì vốn từ vựng càng tăng thêm, nhưng tốc độ tăng trưởng sẽ chậm dần lại chứ không tăng tuyến tính.</li>
+<li>Trong các truy vấn như <code>to be or not to be</code> hay tên ban nhạc <code>The Who</code>, các từ dừng chính là thành phần cốt lõi tạo nên định danh của truy vấn.</li>
+<li>False negative là bỏ sót không gom các từ cùng gốc lại với nhau; false positive là gom nhầm các từ khác nghĩa về cùng một gốc từ.</li>
+<li>Cụm danh từ dựa vào phân tích ngữ pháp và từ loại (POS); n-gram chỉ đơn thuần cắt liên tiếp <code>n</code> từ cạnh nhau không cần biết từ loại.</li>
+<li>Vì văn bản neo được viết bởi tác giả của trang khác, đóng vai trò là lời tóm tắt khách quan dưới góc nhìn của bên thứ ba về trang đích.</li>
+<li>Để chia đều lượng điểm uy tín của trang nguồn cho tất cả các liên kết mà trang đó trỏ tới, tránh việc một trang tự ý nhân bản điểm bằng cách đặt vô số liên kết.</li>
+<li>Hạn chế tình trạng spam liên kết trên các diễn đàn và mục bình luận nhằm thao túng thứ bậc công cụ tìm kiếm.</li>
+<li>Đại diện cho các nhãn phân loại ngữ nghĩa mà con người muốn xác định (như tên người, địa danh, tổ chức, từ thông thường) không hiển thị trực tiếp trên mặt chữ.</li>
+<li>Xác suất chuyển trạng thái đo lường khả năng chuyển đổi giữa hai nhãn ẩn liên tiếp; xác suất phát xạ đo lường khả năng một nhãn ẩn sinh ra một từ ngữ quan sát cụ thể.</li>
+</ol></div></details>
+
+<h2 id="glossary-vi" data-section-heading="glossary">Bảng thuật ngữ</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>English</th>
+<th>Tiếng Việt</th>
+<th>Ý nghĩa trong chương này</th>
+<th>Slide nguồn</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Index term</td>
+<td>Từ chỉ mục</td>
+<td>Biểu diễn từ ngữ dùng trong cấu trúc chỉ mục và xếp hạng</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Lexical analysis</td>
+<td>Phân tích từ vựng</td>
+<td>Quá trình phân tích chuỗi ký tự thành các đơn vị từ và ký hiệu</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Lemmatization</td>
+<td>Chuẩn hóa từ điển (Lemmatization)</td>
+<td>Quá trình chuẩn hóa từ về dạng nguyên thể chuẩn trong từ điển</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Discriminative power</td>
+<td>Khả năng phân biệt</td>
+<td>Mức độ hữu ích của từ trong việc phân biệt rõ ràng giữa các tài liệu khác nhau</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Term frequency</td>
+<td>Tần suất từ</td>
+<td>Số lần một từ xuất hiện trong một tài liệu cụ thể</td>
+<td>4–6</td>
+</tr>
+<tr>
+<td>Document frequency</td>
+<td>Tần suất tài liệu</td>
+<td>Số lượng tài liệu trong bộ sưu tập có chứa từ đó</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Zipf&#39;s law</td>
+<td>Định luật Zipf</td>
+<td>Quy luật thực nghiệm: thứ bậc và tần số từ tỉ lệ nghịch với nhau</td>
+<td>5–6</td>
+</tr>
+<tr>
+<td>Heaps&#39; law</td>
+<td>Định luật Heaps</td>
+<td>Quy luật mô tả tốc độ tăng trưởng vốn từ vựng theo dung lượng văn bản</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Tokenization</td>
+<td>Tách token</td>
+<td>Khâu phân chia chuỗi văn bản thành các token độc lập</td>
+<td>8–9</td>
+</tr>
+<tr>
+<td>Stopword</td>
+<td>Từ dừng</td>
+<td>Các từ quá phổ biến mang ít giá trị phân biệt nội dung</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Stemmer</td>
+<td>Bộ stemmer / Bộ rút gọn gốc từ</td>
+<td>Chương trình cắt gọt các biến thể từ về cùng một dạng gốc</td>
+<td>11–13</td>
+</tr>
+<tr>
+<td>False negative</td>
+<td>Âm tính giả (False negative)</td>
+<td>Lỗi bỏ sót các từ đáng lẽ phải được gom về cùng gốc</td>
+<td>11</td>
+</tr>
+<tr>
+<td>False positive</td>
+<td>Dương tính giả (False positive)</td>
+<td>Lỗi gom nhầm các từ mang nghĩa khác nhau về cùng một gốc</td>
+<td>11</td>
+</tr>
+<tr>
+<td>Krovetz stemmer</td>
+<td>Bộ stemmer Krovetz</td>
+<td>Thuật toán stemmer kết hợp giữa quy tắc cắt đuôi và từ điển</td>
+<td>13</td>
+</tr>
+<tr>
+<td>Part-of-speech tagger</td>
+<td>Bộ gắn thẻ từ loại (POS tagger)</td>
+<td>Công cụ tự động xác định danh từ, động từ, tính từ trong câu</td>
+<td>14</td>
+</tr>
+<tr>
+<td>Noun phrase</td>
+<td>Cụm danh từ</td>
+<td>Cụm từ có thành phần cốt lõi là danh từ</td>
+<td>14–15</td>
+</tr>
+<tr>
+<td>N-gram</td>
+<td>N-gram</td>
+<td>Chuỗi gồm n từ hoặc n ký tự liên tiếp nhau</td>
+<td>16</td>
+</tr>
+<tr>
+<td>Field</td>
+<td>Trường dữ liệu</td>
+<td>Vùng thông tin có cấu trúc trong tài liệu như title hay body</td>
+<td>17</td>
+</tr>
+<tr>
+<td>Anchor text</td>
+<td>Văn bản neo</td>
+<td>Đoạn chữ chứa liên kết siêu văn bản trỏ tới trang khác</td>
+<td>17–19</td>
+</tr>
+<tr>
+<td>Inlink</td>
+<td>Liên kết trỏ đến (Inlink)</td>
+<td>Liên kết từ các trang bên ngoài trỏ về trang đang xét</td>
+<td>20–21</td>
+</tr>
+<tr>
+<td>Outlink</td>
+<td>Liên kết trỏ ra (Outlink)</td>
+<td>Liên kết xuất phát từ trang đang xét trỏ sang trang khác</td>
+<td>21–22</td>
+</tr>
+<tr>
+<td>PageRank</td>
+<td>Thuật toán PageRank</td>
+<td>Thuật toán đo độ uy tín của trang dựa trên xác suất duyệt đồ thị</td>
+<td>20–22</td>
+</tr>
+<tr>
+<td>Random surfer</td>
+<td>Người lướt web ngẫu nhiên</td>
+<td>Mô hình giả định người dùng bấm liên kết ngẫu nhiên kết hợp bước nhảy</td>
+<td>20, 22</td>
+</tr>
+<tr>
+<td>Convergence</td>
+<td>Sự hội tụ (Convergence)</td>
+<td>Trạng thái mà các giá trị lặp hầu như không còn đổi khác</td>
+<td>22</td>
+</tr>
+<tr>
+<td>Link spam</td>
+<td>Spam liên kết</td>
+<td>Hành vi thao túng liên kết nhân tạo nhằm tăng điểm xếp hạng bất chính</td>
+<td>23–24</td>
+</tr>
+<tr>
+<td>nofollow</td>
+<td>Thuộc tính nofollow</td>
+<td>Thuộc tính HTML báo cho công cụ tìm kiếm không coi liên kết là bảo chứng</td>
+<td>24</td>
+</tr>
+<tr>
+<td>Named entity</td>
+<td>Thực thể định danh (Named entity)</td>
+<td>Đối tượng cụ thể có tên riêng như người, địa danh, tên tổ chức</td>
+<td>25–27</td>
+</tr>
+<tr>
+<td>Hidden Markov Model</td>
+<td>Mô hình Markov ẩn (HMM)</td>
+<td>Mô hình xác suất suy luận chuỗi trạng thái ẩn từ chuỗi quan sát</td>
+<td>26–27</td>
+</tr>
+<tr>
+<td>Markov property</td>
+<td>Tính chất Markov</td>
+<td>Giả định trạng thái tiếp theo chỉ phụ thuộc vào trạng thái hiện tại</td>
+<td>27</td>
+</tr>
+</tbody></table></div>
+
+        <footer class="lesson-footer"><span class="lesson-footer__meta"><span>SEG301m / CHƯƠNG 4</span><span class="site-credit">Made by <strong>Marcus</strong></span></span><a href="#top">Về đầu trang ↑</a></footer>
+      </article>
+      <nav class="chapter-pager" aria-label="Chapter navigation"><a class="chapter-pager__previous" href="./chapter-03.html">
+    <span>Chương trước</span>
+    <strong>03 · Thu thập dữ liệu và nguồn cấp</strong>
+  </a><a class="chapter-pager__next" href="./chapter-05.html">
+    <span>Chương sau</span>
+    <strong>05 · Xếp hạng với chỉ mục</strong>
+  </a></nav>
+    </main>
+  </div>
+</body>
+</html>

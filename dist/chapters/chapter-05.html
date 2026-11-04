@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163b3c">
+  <meta name="description" content="Tìm hiểu chỉ mục đảo, nén, xây dựng, phân tán và xử lý truy vấn top-k hiệu quả.">
+  <title>CHƯƠNG 5 Xếp hạng với chỉ mục | SEG301m</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=20261104-vi">
+  <link rel="stylesheet" href="../tutor.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/katex/katex.min.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/highlight.css?v=20261104-vi">
+  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang"}</script>
+  <script src="../app.js?v=20261104-vi" defer></script>
+  <script src="../tutor.js?v=20261104-vi" defer></script>
+</head>
+<body data-page="chapter" data-language="vi">
+  <a class="skip-link" href="#learning-goals-vi">Chuyển đến bài học</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
+    <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 5</span>
+    <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
+  </header>
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__line"></span> SEG301m / CHƯƠNG 5</p>
+        <h1 id="page-title">Xếp hạng với<br><em>chỉ mục</em></h1>
+        <p class="hero__description">Tìm hiểu chỉ mục đảo, nén, xây dựng, phân tán và xử lý truy vấn top-k hiệu quả.</p>
+        <a class="start-link" href="#learning-goals-vi">Bắt đầu học <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <span class="orbit orbit--one"></span><span class="orbit orbit--two"></span>
+        <span class="signal signal--one"></span><span class="signal signal--two"></span>
+        <span class="hero__query">NGUỒN <b>05</b></span>
+        <span class="hero__result hero__result--one">01 <b>TÀI LIỆU</b></span>
+        <span class="hero__result hero__result--two">02 <b>CHỈ MỤC</b></span>
+        <span class="hero__result hero__result--three">03 <b>KẾT QUẢ</b></span>
+        <span class="hero__visual-label">TỪ NGUỒN ĐẾN TÌM KIẾM</span>
+      </div>
+    </div>
+    <div class="hero__footer"><span>CHƯƠNG 5</span><span>Nguồn: toàn bộ 43 slide bài giảng</span></div>
+  </section>
+  <div class="page-layout" id="lesson">
+    <nav class="chapter-nav" aria-label="Mục lục"><div class="chapter-nav__sticky">
+      <p class="chapter-nav__label">MỤC LỤC <span>05 / 12</span></p>
+      <div class="chapter-nav__links"><a href="#prerequisites-vi" data-section="prerequisites"><span>01</span>Kiến thức cần chuẩn bị</a>
+<a href="#system-position-vi" data-section="system-position"><span>02</span>Vị trí trong hệ thống tìm kiếm</a>
+<a href="#abstract-ranking-model-vi" data-section="abstract-ranking-model"><span>03</span>5.1 Mô hình trừu tượng của xếp hạng</a>
+<a href="#inverted-indexes-vi" data-section="inverted-indexes"><span>04</span>5.2 Chỉ mục đảo (Inverted Index)</a>
+<a href="#compression-vi" data-section="compression"><span>05</span>5.3 Nén chỉ mục (Compression)</a>
+<a href="#auxiliary-structures-vi" data-section="auxiliary-structures"><span>06</span>5.4 Các cấu trúc phụ trợ</a>
+<a href="#index-construction-vi" data-section="index-construction"><span>07</span>5.5 Xây dựng, hợp nhất, phân tán và cập nhật chỉ mục</a>
+<a href="#query-processing-vi" data-section="query-processing"><span>08</span>5.6 Xử lý truy vấn (Query Processing)</a>
+<a href="#exercise-vi" data-section="exercise"><span>09</span>Bài tập cuối chương</a>
+<a href="#summary-vi" data-section="summary"><span>10</span>Tổng kết</a>
+<a href="#quiz-vi" data-section="quiz"><span>11</span>Câu hỏi tự kiểm tra</a>
+<a href="#next-chapter-vi" data-section="next-chapter"><span>12</span>Chuyển tiếp sang chương sau</a>
+<a href="#glossary-vi" data-section="glossary"><span>13</span>Bảng thuật ngữ</a></div>
+      <div class="chapter-directory">
+    <p class="chapter-directory__label">ĐỦ 12 CHƯƠNG</p>
+    <div class="chapter-directory__links"><a class="chapter-directory__item" href="./chapter-01.html"><b>01</b>Truy xuất thông tin</a>
+<a class="chapter-directory__item" href="./chapter-02.html"><b>02</b>Các thành phần và luồng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-03.html"><b>03</b>Thu thập tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-04.html"><b>04</b>Biến từ thành dữ liệu có thể tìm kiếm</a>
+<span class="chapter-directory__item is-current" aria-current="page"><b>05</b>Từ chỉ mục đến kết quả hàng đầu</span>
+<a class="chapter-directory__item" href="./chapter-06.html"><b>06</b>Biến nhu cầu thành truy vấn</a>
+<a class="chapter-directory__item" href="./chapter-07.html"><b>07</b>Cách tính điểm kết quả</a>
+<a class="chapter-directory__item" href="./chapter-08.html"><b>08</b>Giúp nội dung được tìm thấy</a>
+<a class="chapter-directory__item" href="./chapter-09.html"><b>09</b>Đo chất lượng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-10.html"><b>10</b>Phân loại và sắp xếp tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-11.html"><b>11</b>Dùng con người và mối quan hệ trong tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-12.html"><b>12</b>Khai thác thứ tự, cấu trúc và đa phương tiện</a></div>
+  </div>
+    </div></nav>
+    <main class="lesson-content" id="main-content">
+      <article class="lesson-language" lang="vi-VN" data-lang="vi">
+        <div class="intro-mark"><span>GHI CHÚ HỌC TẬP</span><span>Bản tiếng Việt · Chương 05</span></div>
+        <p><strong>Tài liệu gốc:</strong> Slide bài giảng SEG301m Chương 5, &quot;Ranking with Indexes&quot; (43 slide)<br><strong>Cách đọc:</strong> Chương này theo dõi một chu trình khép kín: tìm kiếm ứng viên mà không cần đọc lại tài liệu, sử dụng thống kê tối thiểu để tính điểm số, và xếp hạng trả về kết quả hàng đầu. Đề mục của slide gốc có sự nhảy cóc từ 5.4 sang 5.6; tài liệu này bám sát slide Mục lục (Contents) để chuẩn hóa: Mục 5.5 là Xây dựng chỉ mục, Mục 5.6 là Xử lý truy vấn.</p>
+<h2 id="learning-goals-vi" data-section-heading="learning-goals">Mục tiêu của chương</h2>
+<p>Sau khi học xong chương này, bạn có thể giải thích và thực hiện các nội dung sau:</p>
+<ol>
+<li>Trình bày mối quan hệ giữa đầu vào, đặc trưng, điểm số và đầu ra của mô hình xếp hạng.</li>
+<li>Từ văn bản thô, xây dựng chỉ mục đảo kèm tần số từ và thông tin vị trí; thực hiện truy vấn AND, OR và tìm kiếm cụm từ chính xác.</li>
+<li>Chuyển đổi dãy mã tài liệu thành dãy khoảng cách (d-gap), mã hóa và giải mã bằng mã tiền tố (prefix code), mã đơn phân (unary code) và mã byte biến thiên (variable-byte code).</li>
+<li>Giải thích quy trình xây dựng, hợp nhất (merge), phân tán và cập nhật chỉ mục quy mô lớn.</li>
+<li>Tính toán điểm số đồng nhất giữa hai phương pháp duyệt theo từ (TAAT) và duyệt theo tài liệu (DAAT); giải thích cơ chế tìm kiếm top-k và cắt tỉa an toàn (safe pruning).</li>
+</ol>
+<p class="source-note"><span>SLIDE NGUỒN</span> 1-3</p>
+<figure class="chapter-map"><a href="../assets/chapter-05-mindmap.png" target="_blank" rel="noopener"><img src="../assets/chapter-05-mindmap.png" width="1448" height="1086" loading="lazy" alt="Sơ đồ tư duy bằng tiếng Anh cho Chương 5, Xếp hạng với chỉ mục"></a><figcaption>Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 5. Chọn ảnh để xem kích thước đầy đủ.</figcaption></figure>
+<h2 id="prerequisites-vi" data-section-heading="prerequisites">Kiến thức cần chuẩn bị</h2>
+<ul>
+<li><strong>Tài liệu (Document):</strong> Trang web hoặc tệp tin là đối tượng tìm kiếm.</li>
+<li><strong>Token:</strong> Đơn vị chuỗi ký tự thu được sau khi phân tách văn bản.</li>
+<li><strong>Từ chỉ mục (Index term):</strong> Từ ngữ được chuẩn hóa đưa vào bảng chỉ mục.</li>
+<li><strong>Tần số từ (Term frequency - tf):</strong> Số lần xuất hiện của từ trong một tài liệu cụ thể.</li>
+<li><strong>Tần số tài liệu (Document frequency - df):</strong> Số lượng tài liệu có chứa từ đó.</li>
+<li><strong>Xếp hạng (Ranking):</strong> Quá trình tính điểm và sắp xếp các tài liệu ứng viên theo thứ tự ưu tiên.</li>
+</ul>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Vào thư viện tìm &quot;sách về các loài cá&quot;, nếu phải lật từng trang của mọi cuốn sách để đọc thì quá chậm. Nếu có sẵn bảng tra cứu &quot;từ &#39;fish&#39; nằm ở sách số 1, 2, 4&quot;, thủ thư sẽ đến thẳng các cuốn sách đó. Chỉ mục đảo của công cụ tìm kiếm hoạt động theo đúng cơ chế này.</p></aside>
+<h2 id="system-position-vi" data-section-heading="system-position">Vị trí trong hệ thống tìm kiếm</h2>
+<p>Ở Chương 4, chúng ta đã biến đổi văn bản thô thành các token và từ chỉ mục. Chương này hướng dẫn cách lưu trữ và tra cứu cực nhanh các từ chỉ mục đó:</p>
+<pre><code class="language-text">Tài liệu gốc
+  ↓ Tách token và chuẩn hóa
+Từ chỉ mục và vị trí trong tài liệu
+  ↓ Đảo chỉ mục
+Chỉ mục đảo (Inverted index)
+  ↓ Tính d-gap, nén dữ liệu, phân tán
+Danh sách posting được lưu trữ
+  ↓ Xử lý truy vấn (TAAT / DAAT)
+Tài liệu ứng viên và điểm số
+  ↓ Chọn lọc top-k
+Kết quả xếp hạng cuối cùng
+</code></pre>
+<p>Chương 6 tiếp theo sẽ nghiên cứu cách giao tiếp với người dùng và hiển thị đoạn trích (snippet). Chương 7 sẽ đi sâu vào các mô hình toán học tính điểm truy xuất.</p>
+<h2 id="abstract-ranking-model-vi" data-section-heading="abstract-ranking-model">5.1 Mô hình trừu tượng của xếp hạng</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 4-5</p>
+<p>Khâu xếp hạng tiếp nhận truy vấn <code>Q</code> và tài liệu <code>D</code>, tính toán và trả về điểm số tài liệu <code>R(Q, D)</code>. Slide biểu diễn mô hình tổng quát kết hợp giữa đặc trưng của tài liệu và trọng số của truy vấn:</p>
+<div class="formula-block" role="math" aria-label="R of Q D equals the sum of g sub i of Q times f sub i of D">
+  <span class="formula-main">R(Q,D) = Σ<sub>i</sub> g<sub>i</sub>(Q) f<sub>i</sub>(D)</span>
+</div>
+
+<ul>
+<li><code>f_i(D)</code>: đặc trưng thứ <code>i</code> trích xuất từ tài liệu (tần số từ, số liên kết trỏ đến, độ mới).</li>
+<li><code>g_i(Q)</code>: hàm trọng số thể hiện mức độ truy vấn coi trọng đặc trưng thứ <code>i</code>.</li>
+<li><code>R(Q,D)</code>: điểm số phục vụ sắp xếp thứ tự; không nhất thiết là xác suất chuẩn hóa.</li>
+</ul>
+<p><strong>Ví dụ minh họa:</strong> Truy vấn là <code>tropical fish</code>, trọng số truy vấn là <code>tropical = 2</code>, <code>fish = 1</code>. Tài liệu chứa 1 từ <code>tropical</code> và 2 từ <code>fish</code>. Điểm tần số từ đơn giản là <code>2×1 + 1×2 = 4</code>. Các mô hình thực tế sẽ kết hợp thêm độ dài tài liệu và chỉ số df, nhưng khung kiến trúc &quot;kết hợp đặc trưng tài liệu với trọng số truy vấn&quot; là không đổi.</p>
+<p>Kết quả cuối cùng được sắp xếp theo điểm số giảm dần. Quy tắc hòa điểm (ví dụ xếp theo docID tăng dần) cần được quy định rõ để đảm bảo tính tái lập kết quả.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Một tài liệu đạt điểm số <code>R(Q, D)</code> rất cao thì có chắc chắn người dùng sẽ hoàn toàn hài lòng với tài liệu đó không?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Không chắc chắn. Điểm số chỉ là giá trị ước lượng dựa trên các đặc trưng mà mô hình thu thập được. Nếu câu truy vấn của người dùng chưa diễn đạt đúng nhu cầu thực tế, hoặc mô hình bị thiên lệch đặc trưng, tài liệu điểm cao vẫn có thể không hữu ích cho người dùng.</p></div></details>
+
+<h2 id="inverted-indexes-vi" data-section-heading="inverted-indexes">5.2 Chỉ mục đảo (Inverted Index)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 6-14</p>
+<h3 id="detail-1-vi">Phân biệt các thuật ngữ cốt lõi</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Thuật ngữ</th>
+<th>Ý nghĩa</th>
+<th>Ví dụ trong chương</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>document</td>
+<td>Đơn vị tài liệu cần tìm kiếm</td>
+<td><code>D1</code> đến <code>D4</code></td>
+</tr>
+<tr>
+<td>document ID</td>
+<td>Mã định danh số của tài liệu</td>
+<td><code>1</code>, <code>2</code>, <code>3</code>, <code>4</code></td>
+</tr>
+<tr>
+<td>dictionary / vocabulary</td>
+<td>Tập hợp các từ chỉ mục phân biệt</td>
+<td><code>fish</code>, <code>tropical</code></td>
+</tr>
+<tr>
+<td>posting</td>
+<td>Bản ghi về sự xuất hiện của từ trong 1 tài liệu</td>
+<td><code>(D4, tf=2, pos=[2,5])</code></td>
+</tr>
+<tr>
+<td>posting list</td>
+<td>Danh sách các posting của cùng một từ</td>
+<td><code>fish → D1, D2, D3, D4</code></td>
+</tr>
+<tr>
+<td>tf</td>
+<td>Số lần từ xuất hiện trong tài liệu</td>
+<td><code>tf(fish, D4) = 2</code></td>
+</tr>
+<tr>
+<td>df</td>
+<td>Số lượng tài liệu có chứa từ</td>
+<td><code>df(fish) = 4</code></td>
+</tr>
+<tr>
+<td>position</td>
+<td>Vị trí offset của token trong bài</td>
+<td><code>fish</code> trong <code>D4</code> nằm ở vị trí 2 và 5</td>
+</tr>
+</tbody></table></div>
+<h3 id="detail-2-vi">Xây dựng posting list từ tài liệu</h3>
+<p><strong>Ví dụ minh họa:</strong> Xét bộ sưu tập gồm 4 tài liệu tiếng Anh, đánh số vị trí từ 1, giữ nguyên từ dừng để theo dõi vị trí:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Văn bản gốc</th>
+<th>Chuỗi token</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1</td>
+<td><code>tropical fish swim</code></td>
+<td><code>1:tropical 2:fish 3:swim</code></td>
+</tr>
+<tr>
+<td>D2</td>
+<td><code>fish live in tropical water</code></td>
+<td><code>1:fish 2:live 3:in 4:tropical 5:water</code></td>
+</tr>
+<tr>
+<td>D3</td>
+<td><code>tropical aquarium fish</code></td>
+<td><code>1:tropical 2:aquarium 3:fish</code></td>
+</tr>
+<tr>
+<td>D4</td>
+<td><code>freshwater fish and tropical fish</code></td>
+<td><code>1:freshwater 2:fish 3:and 4:tropical 5:fish</code></td>
+</tr>
+</tbody></table></div>
+<p>Bước 1: Trích xuất các bộ ba <code>(term, docID, position)</code>:</p>
+<pre><code class="language-text">(tropical,D1,1) (fish,D1,2) (swim,D1,3)
+(fish,D2,1) (live,D2,2) (in,D2,3) (tropical,D2,4) (water,D2,5)
+(tropical,D3,1) (aquarium,D3,2) (fish,D3,3)
+(freshwater,D4,1) (fish,D4,2) (and,D4,3) (tropical,D4,4) (fish,D4,5)
+</code></pre>
+<p>Bước 2: Gom nhóm theo từ, sắp xếp theo docID và ghi nhận vị trí:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Từ</th>
+<th align="right">df</th>
+<th>Danh sách bản ghi vị trí (positional postings)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>aquarium</code></td>
+<td align="right">1</td>
+<td><code>D3: tf=1, [2]</code></td>
+</tr>
+<tr>
+<td><code>fish</code></td>
+<td align="right">4</td>
+<td><code>D1:1,[2] · D2:1,[1] · D3:1,[3] · D4:2,[2,5]</code></td>
+</tr>
+<tr>
+<td><code>tropical</code></td>
+<td align="right">4</td>
+<td><code>D1:1,[1] · D2:1,[4] · D3:1,[1] · D4:1,[4]</code></td>
+</tr>
+</tbody></table></div>
+<p>Đây là cấu trúc &quot;từ trỏ tới tài liệu&quot;, giúp hệ thống chỉ cần đọc danh sách posting của các từ có trong truy vấn mà không phải duyệt qua toàn bộ các tài liệu không liên quan.</p>
+<h3 id="detail-3-vi">Tìm kiếm Boolean: AND, OR và Tìm kiếm cụm từ</h3>
+<ul>
+<li><code>tropical AND fish</code>: Giao của hai posting list → <code>{D1, D2, D3, D4}</code>.</li>
+<li><code>aquarium OR freshwater</code>: Hợp của hai posting list → <code>{D3, D4}</code>.</li>
+<li><code>tropical AND NOT aquarium</code>: Lấy tập <code>tropical</code> trừ đi tập <code>aquarium</code> → <code>{D1, D2, D4}</code>.</li>
+</ul>
+<p>Đối với tìm kiếm cụm từ chính xác <code>&quot;tropical fish&quot;</code>, chỉ có cùng tài liệu là chưa đủ mà vị trí của <code>fish</code> phải đứng ngay sau <code>tropical</code> (<code>pos(fish) = pos(tropical) + 1</code>):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tài liệu</th>
+<th>Vị trí <code>tropical</code></th>
+<th>Vị trí <code>fish</code></th>
+<th>Có tạo thành cụm từ liền nhau?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1</td>
+<td><code>[1]</code></td>
+<td><code>[2]</code></td>
+<td>Đúng, <code>1 + 1 = 2</code></td>
+</tr>
+<tr>
+<td>D2</td>
+<td><code>[4]</code></td>
+<td><code>[1]</code></td>
+<td>Sai, <code>fish</code> đứng trước <code>tropical</code></td>
+</tr>
+<tr>
+<td>D3</td>
+<td><code>[1]</code></td>
+<td><code>[3]</code></td>
+<td>Sai, bị xen giữa bởi từ <code>aquarium</code> (vị trí 2)</td>
+</tr>
+<tr>
+<td>D4</td>
+<td><code>[4]</code></td>
+<td><code>[2, 5]</code></td>
+<td>Đúng, <code>4 + 1 = 5</code></td>
+</tr>
+</tbody></table></div>
+<p>Kết quả của cụm từ <code>&quot;tropical fish&quot;</code> là <code>{D1, D4}</code>. Nếu chỉ mục không lưu thông tin vị trí (positional index) thì không thể thực hiện chính xác phép kiểm tra cụm từ này.</p>
+<h3 id="detail-4-vi">Trường dữ liệu, Extent và Điểm số tính sẵn</h3>
+<ul>
+<li><strong>Trường (Field):</strong> Vùng dữ liệu có ngữ nghĩa như tiêu đề (title), thân bài (body), người gửi.</li>
+<li><strong>Extent:</strong> Khoảng vị trí liên tục được biểu diễn dưới dạng nửa mở <code>[start, end)</code>. Ví dụ <code>[5, 9)</code> chứa các vị trí 5, 6, 7, 8.</li>
+</ul>
+<p>Lưu trữ sẵn tf, vị trí, trường và các đặc trưng tính trước vào posting giúp giảm tải tính toán khi có truy vấn. Tuy nhiên, việc lưu quá nhiều thông tin phụ sẽ làm phình to kích thước chỉ mục và giảm tính linh hoạt nếu sau này muốn thay đổi công thức xếp hạng.</p>
+<p>Ngoài thứ tự sắp xếp theo docID, hệ thống có thể duy trì thêm danh sách phụ sắp xếp theo trọng số giảm dần để phục vụ lấy nhanh top kết quả, nhưng thứ tự theo docID vẫn là bắt buộc đối với các phép toán Boolean AND và thuật toán DAAT.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Tài liệu <code>D3</code> chứa cả hai từ <code>tropical</code> và <code>fish</code>. Vì sao <code>D3</code> lại bị loại khỏi kết quả của truy vấn cụm từ <code>&quot;tropical fish&quot;</code>?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Vì vị trí của hai từ trong D3 lần lượt là <code>tropical = 1</code> và <code>fish = 3</code>. Ở giữa hai từ này bị chèn từ <code>aquarium</code> (vị trí 2), không thỏa mãn điều kiện vị trí đứng liền kề nhau (<code>pos(fish) = pos(tropical) + 1</code>).</p></div></details>
+
+<h2 id="compression-vi" data-section-heading="compression">5.3 Nén chỉ mục (Compression)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15-23</p>
+<h3 id="detail-5-vi">Vì sao nén dữ liệu giúp tăng tốc độ xử lý</h3>
+<p>Nén chỉ mục không chỉ để tiết kiệm dung lượng ổ đĩa. Giả sử bộ vi xử lý có thể xử lý <code>p</code> bản ghi mỗi giây, nhưng băng thông bộ nhớ chỉ cung cấp được <code>m</code> bản ghi mỗi giây. Khi đó thông lượng thực tế bị giới hạn bởi nút cổ chai <code>min(m, p)</code>:</p>
+<ul>
+<li>Nếu <code>p &gt; m</code>, CPU phải ngồi chờ nạp dữ liệu từ bộ nhớ. Bằng cách nén dữ liệu theo tỷ lệ <code>r</code>, lượng dữ liệu nạp qua cùng một băng thông tăng lên thành <code>m × r</code>. Dù tốn thêm chút thời gian giải nén (hạ tốc độ CPU xuống còn <code>d × p</code>), thông lượng mới <code>min(m × r, d × p)</code> vẫn cao hơn đáng kể so với trước khi nén.</li>
+<li>Nếu <code>p &lt; m</code>, nút cổ chai nằm ở tốc độ tính toán của CPU, khi đó thuật toán giải nén quá nặng nề có thể phản tác dụng.</li>
+</ul>
+<h3 id="detail-6-vi">Biến đổi d-gap tách biệt với khâu mã hóa bit</h3>
+<p>Khi danh sách docID được sắp xếp tăng dần, thay vì lưu các số nguyên docID rất lớn, hệ thống lưu hiệu số chênh lệch giữa hai docID liên tiếp (<strong>d-gap</strong>):</p>
+<pre><code class="language-text">Dãy docID gốc:  1,  5,  9, 18, 23, 24, 30, 44, 45, 48
+Dãy d-gap:      1,  4,  4,  9,  5,  1,  6, 14,  1,  3
+</code></pre>
+<p>Khi đọc dữ liệu, hệ thống chỉ cần tính mảng cộng dồn: <code>1</code>, <code>1+4=5</code>, <code>5+4=9</code>, <code>9+9=18</code>. Biến đổi d-gap là bước toán học thu nhỏ độ lớn của các số nguyên; bước mã hóa tiếp theo mới chuyển các số nguyên nhỏ này thành chuỗi bit tối ưu.</p>
+<h3 id="detail-7-vi">Mã tiền tố (Prefix Code)</h3>
+<p>Slide 17 minh họa nếu ghép tùy tiện các mã có độ dài khác nhau mà không có dấu phân tách thì bên giải mã sẽ không biết từ mã kết thúc ở đâu. <strong>Mã tiền tố (prefix code)</strong> bảo đảm không có từ mã nào là tiền tố của một từ mã khác, cho phép giải mã tức thì từ trái sang phải mà không cần ký tự phân cách:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="right">Giá trị</th>
+<th>Từ mã (code)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">0</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td align="right">1</td>
+<td><code>101</code></td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td><code>110</code></td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td><code>111</code></td>
+</tr>
+</tbody></table></div>
+<p>Chuỗi giá trị <code>0, 1, 0, 3, 0, 2, 0</code> được mã hóa thành <code>0 101 0 111 0 110 0</code> (tổng cộng 13 bit) và được phân tách duy nhất khi giải mã.</p>
+<h3 id="detail-8-vi">Mã đơn phân (Unary Code)</h3>
+<p>Mã đơn phân biểu diễn số nguyên <code>k</code> bằng <code>k</code> số 1 liên tiếp kết thúc bằng một số 0:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="right">Giá trị k</th>
+<th>Từ mã unary</th>
+<th align="right">Số lượng bit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">0</td>
+<td><code>0</code></td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="right">1</td>
+<td><code>10</code></td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td><code>110</code></td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td align="right">5</td>
+<td><code>111110</code></td>
+<td align="right">6</td>
+</tr>
+</tbody></table></div>
+<p>Mã đơn phân cực kỳ gọn cho các số rất nhỏ (gap = 1 chỉ tốn 2 bit), nhưng với số lớn thì độ dài <code>k + 1</code> bit trở nên quá cồng kềnh. Mã đơn phân là mã canh hàng theo bit (bit-aligned), nghĩa là điểm bắt đầu của một từ mã không cần phải nằm đúng ở đầu của một byte.</p>
+<p><strong>Ví dụ minh họa:</strong> Mã hóa dãy gap <code>2, 1, 3</code> thành chuỗi bit <code>110 | 10 | 1110</code> → <code>110101110</code> (tổng cộng 9 bit). Từ mã thứ hai bắt đầu ở bit thứ 4 của byte đầu, từ mã thứ ba vắt ngang qua ranh giới giữa byte 1 và byte 2.</p>
+<h3 id="detail-9-vi">Mã byte biến thiên (Variable-byte Code)</h3>
+<p>Slide 21 chia mỗi byte thành 1 bit báo hiệu kết thúc và 7 bit dữ liệu tải (payload). Quy ước trong slide: bit cao nhất của byte cuối cùng nhận giá trị <code>1</code>, các byte phía trước nhận giá trị <code>0</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Giá trị</th>
+<th>Nhóm 7-bit</th>
+<th>Chuỗi byte nhị phân</th>
+<th>Mã Hex</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>1</code></td>
+<td><code>10000001</code></td>
+<td><code>81</code></td>
+</tr>
+<tr>
+<td>127</td>
+<td><code>1111111</code></td>
+<td><code>11111111</code></td>
+<td><code>FF</code></td>
+</tr>
+<tr>
+<td>128</td>
+<td><code>1, 0</code></td>
+<td><code>00000001 10000000</code></td>
+<td><code>01 80</code></td>
+</tr>
+<tr>
+<td>130</td>
+<td><code>1, 2</code></td>
+<td><code>00000001 10000010</code></td>
+<td><code>01 82</code></td>
+</tr>
+<tr>
+<td>20.000</td>
+<td><code>1, 28, 32</code></td>
+<td><code>00000001 00011100 10100000</code></td>
+<td><code>01 1C A0</code></td>
+</tr>
+</tbody></table></div>
+<p>Giải mã chuỗi <code>01 1C A0</code>: payload gồm 3 nhóm <code>1, 28, 32</code>:
+<code>((1 × 128) + 28) × 128 + 32 = 20.000</code>.</p>
+<p>Mã byte biến thiên thao tác trên các byte tròn trĩnh nên tốc độ giải mã của CPU rất nhanh, dù có tốn thêm một chút overhead so với các phương pháp nén tinh vi cấp độ bit.</p>
+<h3 id="detail-10-vi">Con trỏ nhảy (Skip Pointer)</h3>
+<p>Trong danh sách posting dài, hệ thống đặt các con trỏ nhảy (<strong>skip pointer</strong>) để bỏ qua các đoạn không cần thiết khi thực hiện phép giao AND. Nếu docID hiện tại nhỏ hơn docID của danh sách kia và đích nhảy tới vẫn nhỏ hơn hoặc bằng docID mục tiêu, con trỏ có thể nhảy vọt một đoạn an toàn mà không sợ bỏ sót kết quả.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Dãy docID <code>3, 10, 11, 30</code> có dãy gap tương ứng là gì và cách khôi phục lại dãy gốc như thế nào?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Dãy gap là <code>3, 7, 1, 19</code> (với <code>10 - 3 = 7</code>, <code>11 - 10 = 1</code>, <code>30 - 11 = 19</code>). Khôi phục bằng phép cộng dồn: phần tử đầu là <code>3</code>, tiếp theo <code>3 + 7 = 10</code>, <code>10 + 1 = 11</code>, <code>11 + 19 = 30</code>.</p></div></details>
+
+<h2 id="auxiliary-structures-vi" data-section-heading="auxiliary-structures">5.4 Các cấu trúc phụ trợ</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 24</p>
+<p>Chỉ mục đảo đơn thuần không thể cung cấp toàn bộ thông tin để hiển thị một trang kết quả tìm kiếm hoàn chỉnh:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Cấu trúc phụ trợ</th>
+<th>Nội dung lưu trữ</th>
+<th>Thao tác được tăng tốc</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Từ điển từ vựng (Vocabulary)</td>
+<td>Danh sách từ, vị trí con trỏ tới posting list, df</td>
+<td>Tìm nhanh vị trí posting list của từ truy vấn</td>
+</tr>
+<tr>
+<td>Thống kê bộ sưu tập</td>
+<td>Tổng số tài liệu, độ dài tài liệu trung bình</td>
+<td>Phục vụ tính điểm mô hình BM25, idf</td>
+</tr>
+<tr>
+<td>Bảng tài liệu (Document table)</td>
+<td>docID, URL, tiêu đề, độ dài văn bản</td>
+<td>Lấy metadata của tài liệu sau khi có top kết quả</td>
+</tr>
+<tr>
+<td>Dữ liệu tạo snippet</td>
+<td>Văn bản gốc, vị trí câu, vị trí từ</td>
+<td>Trích xuất nhanh đoạn văn xung quanh từ khóa</td>
+</tr>
+</tbody></table></div>
+<p>Từ điển hỗ trợ ánh xạ <code>từ → posting list</code>, còn bảng tài liệu hỗ trợ ánh xạ ngược lại <code>docID → thông tin hiển thị</code>.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Muốn hiển thị tiêu đề và URL của kết quả tìm kiếm từ <code>fish</code>, chỉ dùng riêng posting list có đủ không?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Không đủ. Posting list chỉ cung cấp mã định danh docID và tần số/vị trí từ. Hệ thống phải dùng mã docID đó để tra cứu vào bảng tài liệu (document table) hoặc kho dữ liệu tài liệu thì mới lấy được tiêu đề và đường dẫn URL hiển thị.</p></div></details>
+
+<h2 id="index-construction-vi" data-section-heading="index-construction">5.5 Xây dựng, hợp nhất, phân tán và cập nhật chỉ mục</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 25-31</p>
+<h3 id="detail-11-vi">Quy trình xây dựng cơ bản</h3>
+<p>Slide 25 mô tả thuật toán lập chỉ mục cơ bản: gán số định danh cho tài liệu, phân tích từ ngữ và gom nhóm theo từ:</p>
+<pre><code class="language-text">Đọc văn bản tài liệu
+  → Gán mã định danh docID
+  → Tách chuỗi thành các token
+  → Tạo các bản ghi bộ ba (term, docID, position)
+  → Sắp xếp theo thứ tự từ, sau đó theo docID
+  → Gom các bản ghi có cùng từ lại với nhau
+  → Ghi ra đĩa danh sách posting list hoàn chỉnh
+</code></pre>
+<h3 id="detail-12-vi">Hợp nhất từng khối khi dữ liệu vượt quá RAM (Block Merge)</h3>
+<p>Khi số lượng tài liệu quá lớn không thể sắp xếp toàn bộ trong bộ nhớ RAM, hệ thống chia nhỏ thành các khối (block) vừa vặn với RAM, sắp xếp cục bộ rồi ghi tạm ra đĩa, sau đó dùng thuật toán hợp nhất nhiều luồng (k-way merge) để tạo thành chỉ mục hoàn chỉnh.</p>
+<p><strong>Ví dụ minh họa:</strong> Hợp nhất hai chỉ mục thành phần:</p>
+<pre><code class="language-text">Chỉ mục A: aardvark → [2, 3, 4, 5]   apple → [2, 4]
+Chỉ mục B: aardvark → [6, 9]         actor → [15, 42, 68]
+</code></pre>
+<p>Duyệt theo thứ tự bảng chữ cái: từ <code>aardvark</code> xuất hiện ở cả hai bên sẽ được nối danh sách posting lại với nhau; các từ còn lại giữ đúng thứ tự:</p>
+<pre><code class="language-text">aardvark → [2, 3, 4, 5, 6, 9]
+actor    → [15, 42, 68]
+apple    → [2, 4]
+</code></pre>
+<h3 id="detail-13-vi">Mô hình MapReduce và Phân bổ dữ liệu</h3>
+<p>Trong hệ thống phân tán, các nút Mapper đọc dữ liệu và phát ra các cặp <code>(key, value)</code>. Giai đoạn shuffle gom toàn bộ các giá trị có cùng key về cùng một nút Reducer để tổng hợp. Trong bài toán xây dựng chỉ mục, từ chỉ mục đóng vai trò là <code>key</code>, còn thông tin vị trí tài liệu chính là <code>value</code>.</p>
+<h3 id="detail-14-vi">Phân hoạch theo tài liệu và Phân hoạch theo từ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Phương thức</th>
+<th>Nội dung mỗi máy chủ nắm giữ</th>
+<th>Luồng xử lý truy vấn</th>
+<th>Cách hợp nhất kết quả</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Phân hoạch theo tài liệu (Document partition)</td>
+<td>Một tập hợp tài liệu con, lưu đủ mọi từ của tập đó</td>
+<td>Máy môi giới gửi cùng một truy vấn tới toàn bộ các shard</td>
+<td>Hợp nhất danh sách top-k của các shard theo điểm số</td>
+</tr>
+<tr>
+<td>Phân hoạch theo từ (Term partition)</td>
+<td>Một dải từ vựng nhất định, lưu đủ posting của từ đó trên toàn bộ tài liệu</td>
+<td>Chỉ gửi truy vấn tới các máy chủ phụ trách các từ đó</td>
+<td>Các máy trao đổi posting hoặc điểm bộ phận để hợp nhất</td>
+</tr>
+</tbody></table></div>
+<p>Với truy vấn <code>tropical fish</code>, trong mô hình phân hoạch theo tài liệu, máy chủ A, B, C độc lập chấm điểm các tài liệu của mình, sau đó bộ môi giới (broker) gộp các danh sách ứng viên để chọn ra top-k toàn cục. Trong mô hình phân hoạch theo từ, máy chủ quản lý từ <code>tropical</code> và máy chủ quản lý từ <code>fish</code> phải truyền dữ liệu cho nhau qua mạng để tìm các tài liệu chung.</p>
+<h3 id="detail-15-vi">Cập nhật chỉ mục</h3>
+<p>Có hai chiến lược chính để xử lý tài liệu mới cập nhật:</p>
+<ul>
+<li><strong>Hợp nhất chỉ mục (Index merging):</strong> Tạo các chỉ mục phụ kích thước nhỏ cho tài liệu mới, sau đó định kỳ hợp nhất vào chỉ mục chính (base index).</li>
+<li><strong>Hợp nhất kết quả (Result merging):</strong> Giữ riêng chỉ mục chính và chỉ mục phụ; khi có truy vấn thì tìm kiếm trên cả hai chỉ mục và gộp kết quả tại thời điểm tìm kiếm.</li>
+</ul>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Trong hệ thống phân hoạch theo tài liệu, để lấy được top 10 tài liệu toàn cục, có đủ không nếu mỗi shard chỉ gửi về đúng 1 tài liệu có điểm cao nhất của mình?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Không đủ. Hoàn toàn có thể xảy ra trường hợp cả 10 tài liệu tốt nhất của toàn bộ hệ thống đều tình cờ nằm tập trung trên cùng một shard duy nhất. Vì vậy, theo nguyên tắc an toàn, mỗi shard phải gửi về ít nhất đủ số lượng top-k (10 tài liệu) của riêng mình thì máy môi giới mới có thể chọn ra đúng top-k toàn cục.</p></div></details>
+
+<h2 id="query-processing-vi" data-section-heading="query-processing">5.6 Xử lý truy vấn (Query Processing)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 32-41</p>
+<h3 id="detail-16-vi">Áp dụng cùng một công thức tính điểm</h3>
+<p>Xét 4 tài liệu ở Mục 5.2, trọng số truy vấn: <code>tropical = 2</code>, <code>fish = 1</code>, <code>aquarium = 3</code>. Công thức tính điểm cộng dồn:</p>
+<div class="formula-block" role="math" aria-label="score of D equals the sum of query weight times term frequency">
+  <span class="formula-main">score(D) = Σ<sub>t∈Q</sub> w<sub>t</sub> · tf(t,D)</span>
+</div>
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tài liệu</th>
+<th align="right">Điểm từ <code>tropical</code></th>
+<th align="right">Điểm từ <code>fish</code></th>
+<th align="right">Điểm từ <code>aquarium</code></th>
+<th align="right">Tổng điểm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1</td>
+<td align="right"><code>2 × 1 = 2</code></td>
+<td align="right"><code>1 × 1 = 1</code></td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>D2</td>
+<td align="right"><code>2 × 1 = 2</code></td>
+<td align="right"><code>1 × 1 = 1</code></td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>D3</td>
+<td align="right"><code>2 × 1 = 2</code></td>
+<td align="right"><code>1 × 1 = 1</code></td>
+<td align="right"><code>3 × 1 = 3</code></td>
+<td align="right">6</td>
+</tr>
+<tr>
+<td>D4</td>
+<td align="right"><code>2 × 1 = 2</code></td>
+<td align="right"><code>1 × 2 = 2</code></td>
+<td align="right">0</td>
+<td align="right">4</td>
+</tr>
+</tbody></table></div>
+<p>Top 2 tài liệu dẫn đầu là <code>D3 (6 điểm)</code> và <code>D4 (4 điểm)</code>. Với quy tắc hòa điểm ưu tiên docID nhỏ hơn, thứ tự toàn bộ là <code>D3, D4, D1, D2</code>.</p>
+<h3 id="detail-17-vi">Xử lý theo từng từ (Term-at-a-time - TAAT)</h3>
+<p>Phương pháp TAAT đọc trọn vẹn từng posting list của từng từ truy vấn và cộng dồn điểm vào mảng tích lũy (accumulator):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Sau khi duyệt xong từ</th>
+<th align="right">Điểm tích lũy D1</th>
+<th align="right">Điểm tích lũy D2</th>
+<th align="right">Điểm tích lũy D3</th>
+<th align="right">Điểm tích lũy D4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Duyệt xong <code>tropical</code></td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>Duyệt xong <code>fish</code></td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">4</td>
+</tr>
+<tr>
+<td>Duyệt xong <code>aquarium</code></td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">6</td>
+<td align="right">4</td>
+</tr>
+</tbody></table></div>
+<p>Ưu điểm của TAAT là đọc tuần tự rất nhanh từng danh sách posting trên đĩa, nhưng nhược điểm là phải tốn bộ nhớ duy trì mảng tích lũy cho hàng triệu tài liệu tiềm năng.</p>
+<h3 id="detail-18-vi">Xử lý theo từng tài liệu (Document-at-a-time - DAAT)</h3>
+<p>Phương pháp DAAT mở đồng thời tất cả các posting list của các từ truy vấn, duyệt theo thứ tự docID nhỏ nhất và chốt điểm dứt điểm cho từng tài liệu:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="right">docID đang xét</th>
+<th align="right">Điểm từ <code>tropical</code></th>
+<th align="right">Điểm từ <code>fish</code></th>
+<th align="right">Điểm từ <code>aquarium</code></th>
+<th align="right">Điểm hoàn chỉnh</th>
+<th>Thao tác con trỏ tiếp theo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">1</td>
+<td align="right">tf=1 (2đ)</td>
+<td align="right">tf=1 (1đ)</td>
+<td align="right">không có</td>
+<td align="right">3</td>
+<td>Đẩy con trỏ của docID 1</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td align="right">tf=1 (2đ)</td>
+<td align="right">tf=1 (1đ)</td>
+<td align="right">không có</td>
+<td align="right">3</td>
+<td>Đẩy con trỏ của docID 2</td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td align="right">tf=1 (2đ)</td>
+<td align="right">tf=1 (1đ)</td>
+<td align="right">tf=1 (3đ)</td>
+<td align="right">6</td>
+<td>Đẩy con trỏ của docID 3</td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td align="right">tf=1 (2đ)</td>
+<td align="right">tf=2 (2đ)</td>
+<td align="right">không có</td>
+<td align="right">4</td>
+<td>Đẩy con trỏ của docID 4</td>
+</tr>
+</tbody></table></div>
+<p>Vì cùng áp dụng chung dữ liệu posting và công thức tính điểm nên kết quả cuối cùng của TAAT và DAAT hoàn toàn trùng khớp nhau.</p>
+<h3 id="detail-19-vi">Tìm kiếm top-k, Ngưỡng điểm và Cắt tỉa (Pruning)</h3>
+<p>Trong bài toán truy xuất top-k, hệ thống duy trì một hàng đợi ưu tiên (priority queue) chứa <code>k</code> tài liệu điểm cao nhất hiện tại. <strong>Chỉ sau khi đã thu thập đủ <code>k</code> tài liệu đầu tiên</strong>, điểm số của tài liệu đứng thứ <code>k</code> mới được dùng làm <strong>ngưỡng điểm (score threshold)</strong> để loại trừ các ứng viên phía sau.</p>
+<p>Gọi cận trên (upper bound) điểm số tiềm năng của một tài liệu là &quot;điểm tích lũy hiện tại + điểm tối đa mà các từ chưa xử lý có thể đóng góp thêm&quot;. Điều kiện cắt tỉa an toàn (safe pruning):</p>
+<ul>
+<li>Nếu <code>upper bound &lt; threshold</code>: Tài liệu này chắc chắn không thể đạt đủ điểm để lọt vào top-k, do đó có thể loại bỏ an toàn ngay lập tức.</li>
+<li>Nếu <code>upper bound = threshold</code>: Tài liệu vẫn có cơ hội lọt vào top-k nhờ quy tắc giải quyết hòa điểm (ví dụ có docID nhỏ hơn), do đó tuyệt đối không được loại bỏ chỉ dựa vào điểm số.</li>
+</ul>
+<p><strong>Phản ví dụ về trường hợp hòa điểm:</strong> Xét bài toán tìm <code>k = 1</code>, kết quả tạm thời tốt nhất đang giữ là <code>D9</code> với điểm số <code>4</code>. Tài liệu <code>D2</code> hiện có điểm số <code>2</code> và phần còn lại có thể đóng góp tối đa <code>2</code>, suy ra cận trên của <code>D2</code> là <code>2 + 2 = 4</code>. Cuối cùng <code>D2</code> sẽ đạt điểm 4 bằng với <code>D9</code>, và vì có docID nhỏ hơn (<code>2 &lt; 9</code>) nên <code>D2</code> phải là người giành vị trí số 1. Nếu áp dụng điều kiện ngây thơ <code>upper bound ≤ 4</code> để loại <code>D2</code> thì hệ thống sẽ trả về kết quả sai hoàn toàn.</p>
+<p>Cắt tỉa chuẩn xác (exact early termination) bảo đảm không làm rơi rớt bất kỳ tài liệu nào của top-k thực sự; còn cắt tỉa xấp xỉ (approximate early termination) chấp nhận bỏ qua một số ứng viên nghi ngờ để tối đa hóa tốc độ với cái giá là chất lượng có thể suy giảm nhẹ.</p>
+<h3 id="detail-20-vi">Cây thực thi truy vấn có cấu trúc</h3>
+<p>Slide 39 biểu diễn truy vấn dạng cấu trúc của Galago dưới dạng cây:</p>
+<pre><code class="language-text">#combine
+  ├─ #od:1(tropical fish)
+  ├─ #od:1(aquarium fish)
+  └─ fish
+</code></pre>
+<p>Các nút lá đọc dữ liệu từ posting list, <code>#od:1</code> là điều kiện xuất hiện sát nhau theo thứ tự, và nút gốc <code>#combine</code> thực hiện kết hợp điểm số của các nhánh con.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Nếu kết quả điểm số tính ra giữa TAAT và DAAT bị lệch nhau, kỹ sư cần kiểm tra điều gì đầu tiên?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Cần kiểm tra xem cả hai phương pháp có đang sử dụng cùng một bộ dữ liệu posting, cùng tần số tf, cùng trọng số truy vấn và cùng công thức toán học hay không. Về mặt lý thuyết, TAAT và DAAT chỉ là hai cách tổ chức thứ tự duyệt khác nhau, nếu cùng tính toán đầy đủ trên cùng dữ liệu thì kết quả luôn phải trùng khớp 100%. Ngoài ra, cần kiểm tra sự khác biệt về sai số làm tròn số thực và các điều kiện cắt tỉa sớm.</p></div></details>
+
+<h2 id="exercise-vi" data-section-heading="exercise">Bài tập cuối chương</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 42</p>
+<h3 id="detail-21-vi">Bài tập 1: Bài tập gốc trong slide 42</h3>
+<p>Cho hai tài liệu sau, xử lý cùng một quy tắc tách token chữ thường:</p>
+<pre><code class="language-text">Document 1: Football is a family of team sports that involve, to varying degrees, kicking a ball to score a goal.
+Document 2: A football team is a group of players selected to play together in the various team sports known as football.
+</code></pre>
+<ol>
+<li>Xây dựng chỉ mục đảo cho các từ.</li>
+<li>Viết hàm tra cứu trả về toàn bộ docID chứa từ <code>sports</code>.</li>
+<li>Nêu rõ quy tắc chuẩn hóa chữ hoa/thường và dấu câu đã áp dụng.</li>
+</ol>
+<details class="answer-key"><summary>Xem hướng dẫn giải</summary><div class="answer-key__body"><p>Chuyển toàn bộ về chữ thường, tách từ theo chuỗi ký tự chữ cái tiếng Anh: từ <code>sports</code> xuất hiện ở cả hai tài liệu (mỗi tài liệu 1 lần). Danh sách posting tương ứng: <code>sports → [(D1, tf=1), (D2, tf=1)]</code>. Khi tra cứu, hệ thống tìm từ <code>sports</code> trong từ điển và trả về danh sách <code>{D1, D2}</code>.</p></div></details>
+
+<h3 id="detail-22-vi">Bài tập 2: Tính d-gap và mã hóa Variable-byte</h3>
+<p>Danh sách docID của một posting list là <code>5, 130, 260</code>. Hãy chuyển thành dãy gap và mã hóa từng số bằng mã byte biến thiên theo quy ước của Slide 21.</p>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Dãy gap tương ứng là <code>5, 125, 130</code> (với <code>130 - 5 = 125</code>, <code>260 - 130 = 130</code>). Mã hóa: số <code>5</code> thành byte <code>85</code>; số <code>125</code> thành byte <code>FD</code>; số <code>130</code> (lớn hơn 127) thành 2 byte <code>01 82</code>. Toàn bộ chuỗi mã hóa tốn đúng 4 byte: <code>85 FD 01 82</code>.</p></div></details>
+
+<h3 id="detail-23-vi">Bài tập 3: Quyết định kiến trúc trong vận hành thực tế</h3>
+<p>Xét hệ thống tìm kiếm tin tức với hàng trăm bản tin mới đổ về mỗi giây đồng thời phục vụ lượng truy vấn tìm kiếm khổng lồ. Hãy so sánh phương án &quot;mỗi lần có tin mới thì dựng lại toàn bộ chỉ mục chính&quot; với phương án &quot;tạo chỉ mục phụ nhỏ cho tin mới và gộp kết quả tại thời điểm tìm kiếm&quot;.</p>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Dựng lại toàn bộ chỉ mục cho mỗi bản tin là bất khả thi vì chi phí ghi đĩa và tính toán quá lớn. Phương án dùng chỉ mục phụ trong bộ nhớ (in-memory index) cho phép bài viết mới có thể tìm kiếm được ngay lập tức; khi có truy vấn, hệ thống tìm trên cả chỉ mục chính và chỉ mục phụ rồi hợp nhất kết quả. Khi chỉ mục phụ đạt dung lượng nhất định, hệ thống sẽ chạy tiến trình ngầm để hợp nhất vào chỉ mục chính.</p></div></details>
+
+<h2 id="summary-vi" data-section-heading="summary">Tổng kết</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 43</p>
+<ul>
+<li>Khâu xếp hạng kết hợp đặc trưng tài liệu <code>f_i(D)</code> với trọng số truy vấn <code>g_i(Q)</code> để tạo điểm số so sánh.</li>
+<li>Chỉ mục đảo cho phép tra cứu nhanh docID, tần số tf, vị trí xuất hiện và các trường dữ liệu từ từ vựng.</li>
+<li>Tìm kiếm cụm từ bắt buộc phải sử dụng chỉ mục vị trí (positional index) để kiểm tra thứ tự và khoảng cách giữa các từ.</li>
+<li>Biến đổi d-gap thu nhỏ giá trị số nguyên; các mã prefix, unary, variable-byte mã hóa các khoảng cách gap thành chuỗi bit/byte tối ưu.</li>
+<li>Chỉ mục quy mô lớn được xây dựng bằng thuật toán sắp xếp từng khối (block merge), xử lý phân tán MapReduce và phân hoạch theo tài liệu hoặc theo từ.</li>
+<li>TAAT và DAAT cho cùng một kết quả điểm số nhưng khác nhau về quản lý bộ nhớ. Cắt tỉa an toàn top-k đòi hỏi phải chứng minh ứng viên không thể vượt qua ngưỡng điểm ngay cả khi có trường hợp hòa điểm.</li>
+</ul>
+<h2 id="quiz-vi" data-section-heading="quiz">Câu hỏi tự kiểm tra</h2>
+<ol>
+<li>Chỉ số <code>df</code> và <code>tf</code> lần lượt đếm đại lượng gì?</li>
+<li>Vì sao việc chuyển đổi docID sang dạng d-gap lại giúp nén dữ liệu hiệu quả hơn?</li>
+<li>Bit kết thúc (termination bit) trong mã byte biến thiên của slide đại diện cho điều gì?</li>
+<li>Trong kiến trúc phân hoạch theo tài liệu, kết quả tìm kiếm được hợp nhất ở đâu?</li>
+<li>Sự khác biệt giữa cắt tỉa chính xác (exact early termination) và cắt tỉa xấp xỉ (approximate) là gì?</li>
+<li>Khi tìm <code>k = 1</code> và kết quả hiện tại là <code>D9</code> (điểm 4), vì sao ứng viên <code>D2</code> có cận trên điểm số bằng 4 lại không được phép cắt tỉa?</li>
+</ol>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><ol>
+<li><code>tf</code> đếm số lần xuất hiện của từ trong một tài liệu; <code>df</code> đếm số lượng tài liệu có chứa từ đó.</li>
+<li>Vì các số nguyên docID liên tiếp có khoảng cách chênh lệch (gap) nhỏ hơn rất nhiều so với giá trị tuyệt đối của docID, giúp mã hóa được bằng ít bit hơn.</li>
+<li>Bit cao nhất nhận giá trị <code>1</code> báo hiệu đây là byte cuối cùng của số nguyên; bit <code>0</code> báo hiệu vẫn còn các byte phía sau.</li>
+<li>Được hợp nhất tại máy chủ môi giới truy vấn (query broker) hoặc nút điều phối trung tâm.</li>
+<li>Cắt tỉa chính xác bảo đảm top-k không thay đổi so với tính toán đầy đủ; cắt tỉa xấp xỉ chấp nhận rủi ro bỏ sót tài liệu tốt để tối đa hóa tốc độ.</li>
+<li>Vì nếu đạt cùng điểm 4, quy tắc hòa điểm ưu tiên docID nhỏ hơn sẽ đưa <code>D2</code> lên xếp trên <code>D9</code>. Chỉ có thể loại bỏ khi cận trên strictly nhỏ hơn ngưỡng điểm (<code>upper bound &lt; threshold</code>).</li>
+</ol></div></details>
+
+<h2 id="next-chapter-vi" data-section-heading="next-chapter">Chuyển tiếp sang chương sau</h2>
+<p>Chương này đã hoàn thiện cơ chế tra cứu posting và tính điểm khi đã có câu truy vấn. Tuy nhiên, xâu ký tự người dùng gõ vào ô tìm kiếm không phải lúc nào cũng thể hiện hoàn hảo điều họ muốn. Chương 6 tiếp theo sẽ nghiên cứu cách hiểu nhu cầu thông tin, sửa lỗi chính tả, mở rộng truy vấn và trình bày kết quả dễ đọc.</p>
+<h2 id="glossary-vi" data-section-heading="glossary">Bảng thuật ngữ</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>English</th>
+<th>Tiếng Việt</th>
+<th>Ý nghĩa trong chương này</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Inverted index</td>
+<td>Chỉ mục đảo</td>
+<td>Cấu trúc dữ liệu tra cứu danh sách tài liệu từ từ ngữ</td>
+</tr>
+<tr>
+<td>Posting / posting list</td>
+<td>Bản ghi vị trí / Danh sách bản ghi</td>
+<td>Bản ghi một tài liệu / Danh sách các bản ghi của cùng một từ</td>
+</tr>
+<tr>
+<td>Positional index</td>
+<td>Chỉ mục vị trí</td>
+<td>Chỉ mục đảo lưu trữ vị trí offset của token trong văn bản</td>
+</tr>
+<tr>
+<td>Field / extent</td>
+<td>Trường dữ liệu / Extent</td>
+<td>Vùng dữ liệu có ngữ nghĩa / Khoảng vị trí liên tục</td>
+</tr>
+<tr>
+<td>Gap encoding</td>
+<td>Mã hóa khoảng cách (d-gap)</td>
+<td>Chuyển dãy docID tăng dần thành dãy hiệu số liền kề</td>
+</tr>
+<tr>
+<td>Prefix code</td>
+<td>Mã tiền tố</td>
+<td>Bộ mã không có từ mã nào là tiền tố của từ mã khác</td>
+</tr>
+<tr>
+<td>Unary code</td>
+<td>Mã đơn phân</td>
+<td>Mã hóa số nguyên k bằng k bit 1 kết thúc bằng bit 0</td>
+</tr>
+<tr>
+<td>Variable-byte code</td>
+<td>Mã byte biến thiên</td>
+<td>Mã nén theo byte gồm 7 bit dữ liệu và 1 bit cờ kết thúc</td>
+</tr>
+<tr>
+<td>Skip pointer</td>
+<td>Con trỏ nhảy</td>
+<td>Tham chiếu cho phép nhảy cóc qua một đoạn trong posting list</td>
+</tr>
+<tr>
+<td>Index merging</td>
+<td>Hợp nhất chỉ mục</td>
+<td>Quá trình gộp nhiều chỉ mục đã sắp xếp thành một chỉ mục lớn</td>
+</tr>
+<tr>
+<td>Document partition</td>
+<td>Phân hoạch theo tài liệu</td>
+<td>Chia bộ sưu tập thành các shard độc lập chứa trọn bộ từ vựng</td>
+</tr>
+<tr>
+<td>Term partition</td>
+<td>Phân hoạch theo từ</td>
+<td>Chia từ vựng cho các máy chủ quản lý toàn bộ posting của từ đó</td>
+</tr>
+<tr>
+<td>TAAT</td>
+<td>Duyệt theo từng từ (TAAT)</td>
+<td>Duyệt trọn vẹn từng posting list để cộng dồn điểm tài liệu</td>
+</tr>
+<tr>
+<td>DAAT</td>
+<td>Duyệt theo từng tài liệu (DAAT)</td>
+<td>Duyệt đồng thời các posting list theo thứ tự mã tài liệu</td>
+</tr>
+<tr>
+<td>Top-k</td>
+<td>Top-k kết quả</td>
+<td>Tập hợp k tài liệu có điểm số cao nhất trả về cho người dùng</td>
+</tr>
+<tr>
+<td>Score threshold</td>
+<td>Ngưỡng điểm số</td>
+<td>Điểm số của tài liệu đứng thứ k dùng để loại trừ ứng viên</td>
+</tr>
+</tbody></table></div>
+
+        <footer class="lesson-footer"><span class="lesson-footer__meta"><span>SEG301m / CHƯƠNG 5</span><span class="site-credit">Made by <strong>Marcus</strong></span></span><a href="#top">Về đầu trang ↑</a></footer>
+      </article>
+      <nav class="chapter-pager" aria-label="Chapter navigation"><a class="chapter-pager__previous" href="./chapter-04.html">
+    <span>Chương trước</span>
+    <strong>04 · Xử lý văn bản</strong>
+  </a><a class="chapter-pager__next" href="./chapter-06.html">
+    <span>Chương sau</span>
+    <strong>06 · Truy vấn và giao diện</strong>
+  </a></nav>
+    </main>
+  </div>
+</body>
+</html>

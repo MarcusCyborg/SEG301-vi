@@ -1,0 +1,908 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163b3c">
+  <meta name="description" content="Tìm hiểu SEO qua crawling, cải thiện trang, dữ liệu có cấu trúc và đo lường hiệu quả.">
+  <title>CHƯƠNG 8 Tối ưu hóa công cụ tìm kiếm (SEO) | SEG301m</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=20261104-vi">
+  <link rel="stylesheet" href="../tutor.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/katex/katex.min.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/highlight.css?v=20261104-vi">
+  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang"}</script>
+  <script src="../app.js?v=20261104-vi" defer></script>
+  <script src="../tutor.js?v=20261104-vi" defer></script>
+</head>
+<body data-page="chapter" data-language="vi">
+  <a class="skip-link" href="#learning-goals-vi">Chuyển đến bài học</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
+    <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 8</span>
+    <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
+  </header>
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__line"></span> SEG301m / CHƯƠNG 8</p>
+        <h1 id="page-title">Tối ưu hóa công<br><em>cụ tìm kiếm (SEO)</em></h1>
+        <p class="hero__description">Tìm hiểu SEO qua crawling, cải thiện trang, dữ liệu có cấu trúc và đo lường hiệu quả.</p>
+        <a class="start-link" href="#learning-goals-vi">Bắt đầu học <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <span class="orbit orbit--one"></span><span class="orbit orbit--two"></span>
+        <span class="signal signal--one"></span><span class="signal signal--two"></span>
+        <span class="hero__query">NGUỒN <b>08</b></span>
+        <span class="hero__result hero__result--one">01 <b>TÀI LIỆU</b></span>
+        <span class="hero__result hero__result--two">02 <b>CHỈ MỤC</b></span>
+        <span class="hero__result hero__result--three">03 <b>KẾT QUẢ</b></span>
+        <span class="hero__visual-label">TỪ NGUỒN ĐẾN TÌM KIẾM</span>
+      </div>
+    </div>
+    <div class="hero__footer"><span>CHƯƠNG 8</span><span>Nguồn: toàn bộ 26 slide bài giảng</span></div>
+  </section>
+  <div class="page-layout" id="lesson">
+    <nav class="chapter-nav" aria-label="Mục lục"><div class="chapter-nav__sticky">
+      <p class="chapter-nav__label">MỤC LỤC <span>08 / 12</span></p>
+      <div class="chapter-nav__links"><a href="#prerequisites-vi" data-section="prerequisites"><span>01</span>Kiến thức cần chuẩn bị</a>
+<a href="#seo-introduction-vi" data-section="seo-introduction"><span>02</span>8.1 SEO giải quyết vấn đề gì</a>
+<a href="#search-engine-algorithms-vi" data-section="search-engine-algorithms"><span>03</span>8.2 Hiểu về thuật toán của công cụ tìm kiếm như thế nào</a>
+<a href="#ranking-model-vi" data-section="ranking-model"><span>04</span>8.3 Mô hình giáo khoa về xếp hạng tổng trọng số</a>
+<a href="#on-page-seo-vi" data-section="on-page-seo"><span>05</span>8.4 On-page SEO</a>
+<a href="#off-page-seo-vi" data-section="off-page-seo"><span>06</span>8.5 Off-page SEO</a>
+<a href="#technical-seo-vi" data-section="technical-seo"><span>07</span>8.6 Technical SEO</a>
+<a href="#measuring-seo-vi" data-section="measuring-seo"><span>08</span>8.7 Đo lường và đánh giá hiệu quả SEO</a>
+<a href="#analytics-practice-vi" data-section="analytics-practice"><span>09</span>Bài tập gốc: Phân tích lưu lượng SEO bằng Google Analytics</a>
+<a href="#exercise-vi" data-section="exercise"><span>10</span>Bài tập cuối chương</a>
+<a href="#summary-vi" data-section="summary"><span>11</span>Tổng kết</a>
+<a href="#quiz-vi" data-section="quiz"><span>12</span>Câu hỏi tự kiểm tra</a>
+<a href="#next-chapter-vi" data-section="next-chapter"><span>13</span>Chuyển tiếp sang chương sau</a>
+<a href="#glossary-vi" data-section="glossary"><span>14</span>Bảng thuật ngữ</a></div>
+      <div class="chapter-directory">
+    <p class="chapter-directory__label">ĐỦ 12 CHƯƠNG</p>
+    <div class="chapter-directory__links"><a class="chapter-directory__item" href="./chapter-01.html"><b>01</b>Truy xuất thông tin</a>
+<a class="chapter-directory__item" href="./chapter-02.html"><b>02</b>Các thành phần và luồng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-03.html"><b>03</b>Thu thập tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-04.html"><b>04</b>Biến từ thành dữ liệu có thể tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-05.html"><b>05</b>Từ chỉ mục đến kết quả hàng đầu</a>
+<a class="chapter-directory__item" href="./chapter-06.html"><b>06</b>Biến nhu cầu thành truy vấn</a>
+<a class="chapter-directory__item" href="./chapter-07.html"><b>07</b>Cách tính điểm kết quả</a>
+<span class="chapter-directory__item is-current" aria-current="page"><b>08</b>Giúp nội dung được tìm thấy</span>
+<a class="chapter-directory__item" href="./chapter-09.html"><b>09</b>Đo chất lượng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-10.html"><b>10</b>Phân loại và sắp xếp tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-11.html"><b>11</b>Dùng con người và mối quan hệ trong tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-12.html"><b>12</b>Khai thác thứ tự, cấu trúc và đa phương tiện</a></div>
+  </div>
+    </div></nav>
+    <main class="lesson-content" id="main-content">
+      <article class="lesson-language" lang="vi-VN" data-lang="vi">
+        <div class="intro-mark"><span>GHI CHÚ HỌC TẬP</span><span>Bản tiếng Việt · Chương 08</span></div>
+        <p><strong>Tài liệu gốc:</strong> Slide bài giảng SEG301m Chương 8, &quot;Search Engine Optimization&quot; (26 slide)<br><strong>Cách đọc:</strong> Lấy ví dụ một trang web công thức món ăn sáng, chương này theo dõi chu trình hoàn chỉnh: từ nhu cầu thông tin của người dùng, quy trình thu thập - lập chỉ mục - xếp hạng của máy tìm kiếm, cải thiện trang, đến đo lường hiệu quả. Các tên sản phẩm, thuật toán và Analytics API trong slide gốc phản ánh thời điểm biên soạn; các cập nhật đối chiếu với tài liệu chính thức năm 2026 được phân định rõ ràng.</p>
+<h2 id="learning-goals-vi" data-section-heading="learning-goals">Mục tiêu của chương</h2>
+<p>Sau khi học xong chương này, bạn có thể giải thích và thực hiện các nội dung sau:</p>
+<ol>
+<li>Giải thích bài toán SEO cần giải quyết và sự khác biệt giữa kết quả tìm kiếm tự nhiên (organic results) và quảng cáo trả phí (paid ads).</li>
+<li>Phân biệt rõ ba công đoạn: thu thập (crawl), lập chỉ mục (indexing) và xếp hạng (ranking), cùng vai trò của SEO trong từng khâu.</li>
+<li>Tính toán và tái hiện thứ tự xếp hạng của nhiều trang web dựa trên mô hình tổng trọng số giáo khoa.</li>
+<li>Phân biệt on-page SEO, off-page SEO, technical SEO; xây dựng các ví dụ cải tiến HTML và dữ liệu có cấu trúc JSON-LD.</li>
+<li>Tính toán và diễn giải các chỉ số: lượt hiển thị (impressions), lượt nhấp (clicks), tỷ lệ nhấp (CTR), lưu lượng tự nhiên (organic traffic) và thứ hạng hiển thị.</li>
+<li>Xử lý bài tập thực hành Analytics bằng kiến trúc Google Analytics 4 (GA4 Data API) hiện đại kết hợp phân tích trên dữ liệu mẫu offline.</li>
+</ol>
+<p class="source-note"><span>SLIDE NGUỒN</span> 1-3</p>
+<figure class="chapter-map"><a href="../assets/chapter-08-mindmap.png" target="_blank" rel="noopener"><img src="../assets/chapter-08-mindmap.png" width="1536" height="1024" loading="lazy" alt="Sơ đồ tư duy bằng tiếng Anh cho Chương 8, Tối ưu hóa công cụ tìm kiếm (SEO)"></a><figcaption>Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 8. Chọn ảnh để xem kích thước đầy đủ.</figcaption></figure>
+<h2 id="prerequisites-vi" data-section-heading="prerequisites">Kiến thức cần chuẩn bị</h2>
+<ul>
+<li>Thu thập (crawl) ở Chương 3 là công đoạn phát hiện và tải trang web về hệ thống.</li>
+<li>Chỉ mục (index) ở Chương 5 là cấu trúc giúp tra cứu nhanh tài liệu từ từ vựng.</li>
+<li>Xếp hạng (ranking) ở Chương 7 tính toán điểm số so sánh từ các đặc trưng của truy vấn và tài liệu.</li>
+<li>Điểm số chỉ là giá trị ước lượng nội bộ của công cụ tìm kiếm, không đảm bảo chắc chắn sự hài lòng của người dùng.</li>
+</ul>
+<p>Tình huống thực tế xuyên suốt: Một trang web chuyên chia sẻ công thức bữa sáng cho sinh viên bận rộn. Người dùng tìm kiếm &quot;bữa sáng giàu đạm nấu trong 10 phút&quot;. Chủ trang web muốn công cụ tìm kiếm phát hiện được trang, hiểu đúng nội dung và hiển thị nổi bật để người dùng lựa chọn.</p>
+<h2 id="seo-introduction-vi" data-section-heading="seo-introduction">8.1 SEO giải quyết vấn đề gì</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 4-5</p>
+<p>Tối ưu hóa công cụ tìm kiếm (Search Engine Optimization - SEO) là tập hợp các hoạt động cải thiện giúp công cụ tìm kiếm và người dùng dễ dàng phát hiện, hiểu rõ cấu trúc và đánh giá đúng giá trị của trang web. Mục tiêu cốt lõi là nâng cao khả năng trang xuất hiện ở các vị trí tự nhiên hàng đầu cho những nhu cầu thông tin liên quan, tiếp cận đúng đối tượng độc giả mục tiêu.</p>
+<h3 id="detail-1-vi">Kết quả tự nhiên và Quảng cáo trả phí</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Phân loại</th>
+<th>Cơ chế hiển thị</th>
+<th>Chi phí</th>
+<th>Mối quan hệ với SEO</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kết quả tự nhiên (Organic results)</td>
+<td>Công cụ tìm kiếm tự xếp hạng dựa trên độ liên quan và chất lượng</td>
+<td>Không tốn phí cho mỗi lượt nhấp chuột</td>
+<td>Đối tượng trọng tâm của SEO</td>
+</tr>
+<tr>
+<td>Quảng cáo trả phí (Paid ads)</td>
+<td>Hệ thống quảng cáo đấu thầu từ khóa và nhắm mục tiêu hiển thị</td>
+<td>Tính phí theo lượt nhấp (CPC) hoặc lượt xem</td>
+<td>Kênh tách biệt độc lập với SEO</td>
+</tr>
+</tbody></table></div>
+<p>Việc chạy quảng cáo không làm tăng trực tiếp thứ hạng tự nhiên, và làm SEO giỏi cũng không giúp trang tự động xuất hiện ở các vị trí dành riêng cho quảng cáo. Trên trang kết quả tìm kiếm (SERP), cả hai có thể cùng xuất hiện nhưng có nhãn phân biệt và cơ chế lựa chọn hoàn toàn độc lập.</p>
+<h3 id="detail-2-vi">Thu thập, Lập chỉ mục và Xếp hạng</h3>
+<pre><code class="language-text">Phát hiện URL mới
+  ↓ Thu thập (Crawl)
+Tải nội dung trang web về
+  ↓ Bóc tách cấu trúc, kiểm tra thẻ chuẩn tắc (canonical)
+Lưu trữ biểu diễn phục vụ tìm kiếm
+  ↓ Lập chỉ mục (Indexing)
+Tính điểm các ứng viên phù hợp với truy vấn
+  ↓ Xếp hạng (Ranking)
+Hiển thị danh sách kết quả lên trang SERP
+</code></pre>
+<ul>
+<li><strong>Thu thập (Crawl):</strong> Tìm thấy URL và kết nối tải trang web về.</li>
+<li><strong>Lập chỉ mục (Indexing):</strong> Phân tích nội dung và quyết định có đưa trang vào cơ sở dữ liệu tìm kiếm hay không.</li>
+<li><strong>Xếp hạng (Ranking):</strong> Chấm điểm các trang ứng viên cho từng truy vấn cụ thể và sắp xếp thứ tự hiển thị.</li>
+</ul>
+<p>Ngay cả khi làm technical SEO giúp bot thu thập trang dễ dàng, điều đó vẫn không đảm bảo trang sẽ được lập chỉ mục hay được xếp thứ hạng cao. Trang có thể bị bỏ qua nếu nội dung trùng lặp, chất lượng sơ sài, bị coi là biến thể của URL khác hoặc không khớp với ý định người dùng.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Thêm một URL vào sơ đồ sitemap thì trang web đó có chắc chắn đạt vị trí top 1 tìm kiếm không?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Không chắc chắn. Sitemap chỉ hỗ trợ crawler phát hiện sự tồn tại của URL nhanh hơn; việc bot có thu thập hay không, có chấp nhận lập chỉ mục hay không và thuật toán xếp hạng ở vị trí nào là các quyết định hoàn toàn độc lập phía sau.</p></div></details>
+
+<h2 id="search-engine-algorithms-vi" data-section-heading="search-engine-algorithms">8.2 Hiểu về thuật toán của công cụ tìm kiếm như thế nào</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 6-7</p>
+<p>Thuật toán công cụ tìm kiếm kết hợp hàng trăm quy tắc, mô hình thống kê và học máy để ước lượng chất lượng và độ liên quan của trang web: nội dung văn bản, đồ thị liên kết, ngôn ngữ, vị trí địa lý, độ tươi mới, tính thân thiện trên thiết bị di động và các bộ lọc chống spam.</p>
+<p>Slide 7 nhắc đến các bản cập nhật lịch sử của Google như Panda, Penguin, Hummingbird để giải thích các giai đoạn tiến hóa của thuật toán:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Thuật ngữ trong slide</th>
+<th>Trọng tâm lịch sử giải quyết</th>
+<th>Lưu ý khi học tập</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Panda</td>
+<td>Xử lý các trang nội dung sơ sài, chất lượng kém, nhồi nhét từ khóa</td>
+<td>Tránh coi đây là thuật toán đơn lẻ độc lập ở hiện tại</td>
+</tr>
+<tr>
+<td>Penguin</td>
+<td>Xử lý các hành vi thao túng liên kết nhân tạo (mua bán backlink rác)</td>
+<td>Phân biệt liên kết tự nhiên với việc chạy theo số lượng</td>
+</tr>
+<tr>
+<td>Hummingbird</td>
+<td>Nâng cao khả năng hiểu ý định ngữ nghĩa thay vì chỉ so khớp từng chữ</td>
+<td>Không có nghĩa là công cụ tìm kiếm bỏ qua khớp từ</td>
+</tr>
+</tbody></table></div>
+<p><strong>Cập nhật chính thức (2026):</strong> Tài liệu Google Search Central khuyến nghị xây dựng nội dung hữu ích hướng tới người dùng (people-first content), đảm bảo liên kết có thể thu thập được và tiêu đề rõ ràng, thay vì cố gắng tìm mẹo thao túng các công thức mật không bao giờ được công bố công khai.</p>
+<h2 id="ranking-model-vi" data-section-heading="ranking-model">8.3 Mô hình giáo khoa về xếp hạng tổng trọng số</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 8-11</p>
+<p>Slide 8 đơn giản hóa bài toán xếp hạng bằng mô hình tổng trọng số tuyến tính:</p>
+<div class="formula-block" role="math" aria-label="ranking score equals the sum of weight i times factor i">
+  <span class="formula-main">score(d) = Σ<sub>i=1</sub><sup>m</sup> w<sub>i</sub>x<sub>i,d</sub></span>
+</div>
+
+<ul>
+<li><code>d</code>: trang web cần chấm điểm.</li>
+<li><code>m</code>: số lượng đặc trưng sử dụng.</li>
+<li><code>x_i,d</code>: giá trị đặc trưng thứ <code>i</code> của trang <code>d</code>, được chuẩn hóa trong khoảng từ 0 đến 1.</li>
+<li><code>w_i</code>: trọng số của đặc trưng thứ <code>i</code> (<code>w_i ≥ 0</code> và tổng các trọng số bằng 1).</li>
+<li><code>score(d)</code>: điểm số xếp hạng dùng để so sánh giữa các trang trong cùng một mô hình.</li>
+</ul>
+<p>Slide 9-10 liệt kê các nhóm đặc trưng tiêu biểu: độ liên quan nội dung, độ uy tín chất lượng, tương tác người dùng, độ tươi mới, trải nghiệm trang, ngữ nghĩa và cấu trúc backlink. Lưu ý rằng không được khẳng định các chỉ số hành vi như tỷ lệ thoát hay thời gian xem trang là yếu tố xếp hạng trực tiếp của Google, vì chúng chịu ảnh hưởng nặng nề bởi vị trí hiển thị và loại truy vấn.</p>
+<h3 id="detail-3-vi">Tái hiện tính toán số liệu ở Slide 11</h3>
+<p>Đoạn mã mẫu dùng ba đặc trưng: Độ liên quan <code>R</code> (Relevance), Độ uy tín <code>A</code> (Authority), Tương tác người dùng <code>E</code> (Engagement):</p>
+<pre><code class="language-text">score = 0.4R + 0.3A + 0.3E
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Trang web</th>
+<th align="right">R</th>
+<th align="right">A</th>
+<th align="right">E</th>
+<th>Phép tính chi tiết</th>
+<th align="right">Điểm số tổng</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Trang A</td>
+<td align="right">0.8</td>
+<td align="right">0.7</td>
+<td align="right">0.6</td>
+<td><code>0.4×0.8 + 0.3×0.7 + 0.3×0.6</code></td>
+<td align="right"><strong>0.71</strong></td>
+</tr>
+<tr>
+<td>Trang B</td>
+<td align="right">0.7</td>
+<td align="right">0.8</td>
+<td align="right">0.8</td>
+<td><code>0.4×0.7 + 0.3×0.8 + 0.3×0.8</code></td>
+<td align="right"><strong>0.76</strong></td>
+</tr>
+<tr>
+<td>Trang C</td>
+<td align="right">0.9</td>
+<td align="right">0.6</td>
+<td align="right">0.5</td>
+<td><code>0.4×0.9 + 0.3×0.6 + 0.3×0.5</code></td>
+<td align="right"><strong>0.69</strong></td>
+</tr>
+<tr>
+<td>Trang D</td>
+<td align="right">0.6</td>
+<td align="right">0.5</td>
+<td align="right">0.7</td>
+<td><code>0.4×0.6 + 0.3×0.5 + 0.3×0.7</code></td>
+<td align="right"><strong>0.60</strong></td>
+</tr>
+</tbody></table></div>
+<p>Thứ tự xếp hạng: <code>Trang B &gt; Trang A &gt; Trang C &gt; Trang D</code>. Mặc dù Trang B có điểm liên quan R thấp hơn C (<code>0.7 &lt; 0.9</code>), nhờ độ uy tín và tương tác vượt trội nên Trang B đã vươn lên dẫn đầu.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Lưu ý</span><p>Công thức và trọng số này chỉ là mô hình giảng dạy nhằm giúp sinh viên hiểu trực quan cơ chế kết hợp đặc trưng, không phản ánh công thức phức tạp thực tế của các công cụ tìm kiếm thương mại.</p></aside>
+<h2 id="on-page-seo-vi" data-section-heading="on-page-seo">8.4 On-page SEO</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 12-14</p>
+<p><strong>On-page SEO</strong> là các hoạt động tối ưu hóa trực tiếp nội dung văn bản, cấu trúc mã HTML và trải nghiệm người dùng ngay bên trong trang web của mình.</p>
+<h3 id="detail-4-vi">Xây dựng nội dung khớp đúng ý định tìm kiếm</h3>
+<p>Với truy vấn <code>bua sang giau dam nhanh gon</code>, nếu chỉ nhồi nhét từ khóa vào tiêu đề mà nội dung bài viết không cung cấp công thức thực tế thì người dùng sẽ thoát ra ngay lập tức. Cần thiết kế theo quy trình:</p>
+<ol>
+<li>Xác định rõ nhu cầu và tiêu chí người dùng quan tâm (thời gian làm, nguyên liệu, hàm lượng đạm).</li>
+<li>Trình bày thông tin đó rõ ràng, mạch lạc ngay trong phần thân bài.</li>
+<li>Tổ chức cấu trúc phân cấp bằng thẻ <code>&lt;title&gt;</code>, các thẻ tiêu đề đề mục <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code> và liên kết nội bộ.</li>
+<li>Sử dụng ngôn từ tự nhiên, không lặp lại từ khóa một cách gượng ép.</li>
+</ol>
+<h3 id="detail-5-vi">Ví dụ đối chiếu trước và sau khi tối ưu</h3>
+<p>Trước khi tối ưu: Tiêu đề nhồi nhét từ khóa, nội dung sơ sài:</p>
+<pre><code class="language-html">&lt;title&gt;Breakfast breakfast quick healthy recipe best&lt;/title&gt;
+&lt;h1&gt;Welcome&lt;/h1&gt;
+&lt;p&gt;Try this great meal.&lt;/p&gt;
+</code></pre>
+<p>Sau khi tối ưu: Cấu trúc rõ ràng, cung cấp đúng thông tin người dùng cần:</p>
+<pre><code class="language-html">&lt;head&gt;
+  &lt;title&gt;Công thức bữa sáng giàu đạm nấu trong 10 phút&lt;/title&gt;
+  &lt;meta name=&quot;description&quot;
+        content=&quot;Công thức bữa sáng 10 phút từ trứng và đậu cung cấp 28g đạm. Hướng dẫn chi tiết nguyên liệu, các bước nấu và mẹo thay thế.&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Bữa sáng giàu đạm nấu trong 10 phút&lt;/h1&gt;
+  &lt;h2&gt;Nguyên liệu và Giá trị dinh dưỡng&lt;/h2&gt;
+  &lt;h2&gt;Cách chế biến từng bước&lt;/h2&gt;
+  &lt;a href=&quot;/breakfast/meal-prep/&quot;&gt;Xem thêm các món ăn sáng chuẩn bị trước&lt;/a&gt;
+&lt;/body&gt;
+</code></pre>
+<ul>
+<li>Thẻ <code>&lt;title&gt;</code> là thẻ phần tử tiêu đề trang độc lập, không phải là thẻ <code>&lt;meta&gt;</code>.</li>
+<li><code>meta description</code> đóng vai trò là đoạn tóm tắt gợi ý để công cụ tìm kiếm cân nhắc tạo snippet.</li>
+<li><code>h1</code> và <code>h2</code> phản ánh cấu trúc phân cấp nội dung logic của bài viết.</li>
+<li>Liên kết nội bộ (internal link) kết nối các bài viết liên quan trong cùng trang web, hỗ trợ người dùng khám phá và giúp crawler di chuyển thuận lợi.</li>
+</ul>
+<h2 id="off-page-seo-vi" data-section-heading="off-page-seo">8.5 Off-page SEO</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15-16</p>
+<p><strong>Off-page SEO</strong> là các hoạt động xây dựng độ uy tín, danh tiếng và sự hiện diện của trang web từ các nguồn bên ngoài trang web của mình. Tiêu biểu nhất là xây dựng <strong>backlink</strong> (liên kết từ trang web khác trỏ về).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Loại liên kết</th>
+<th>Hướng trỏ</th>
+<th>Vai trò chính</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Liên kết nội bộ (Internal link)</td>
+<td>Giữa các trang trong cùng một website</td>
+<td>Hỗ trợ điều hướng, cấu trúc trang và giúp bot phát hiện trang mới</td>
+</tr>
+<tr>
+<td>Backlink (Inbound link)</td>
+<td>Từ website bên ngoài trỏ về website của mình</td>
+<td>Tín hiệu tham chiếu chứng thực độ uy tín và thu hút lưu lượng giới thiệu</td>
+</tr>
+</tbody></table></div>
+<p>Một liên kết trích dẫn nguồn công thức từ phòng nghiên cứu dinh dưỡng của trường đại học có giá trị uy tín cao gấp nhiều lần so với hàng trăm liên kết rác mua từ các diễn đàn vô danh. Chất lượng, độ liên quan và ngữ cảnh biên tập của liên kết ngoài luôn quan trọng hơn số lượng.</p>
+<p>Người dùng bấm trực tiếp vào backlink để vào trang được ghi nhận là lưu lượng giới thiệu (referral traffic), khác biệt với lưu lượng đến từ việc bấm vào kết quả tìm kiếm (organic traffic).</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Việc bỏ tiền mua 100 backlink từ các trang web lạ có chắc chắn giúp tăng thứ hạng tốt hơn 10 liên kết tự nhiên từ các trang uy tín cùng ngành không?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Không. Thuật toán chống spam liên kết của các công cụ tìm kiếm hiện đại dễ dàng phát hiện các mô hình mua bán liên kết bất thường và sẽ vô hiệu hóa giá trị của chúng, thậm chí áp dụng hình phạt hạ bậc toàn bộ website. 10 liên kết biên tập tự nhiên từ các nguồn uy tín cùng ngành mang lại giá trị bền vững và an toàn hơn rất nhiều.</p></div></details>
+
+<h2 id="technical-seo-vi" data-section-heading="technical-seo">8.6 Technical SEO</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 17-19</p>
+<p><strong>Technical SEO</strong> là các hoạt động tối ưu hóa hạ tầng kỹ thuật nhằm giúp crawler dễ dàng truy cập, thu thập, phân tích và lập chỉ mục nội dung trang web, đồng thời bảo đảm trải nghiệm tải trang nhanh và ổn định trên thiết bị di động.</p>
+<h3 id="detail-6-vi">Cấu trúc trang web, Tốc độ và Tính thân thiện di động</h3>
+<ul>
+<li><strong>Cấu trúc trang:</strong> Phân cấp danh mục rõ ràng, có thanh điều hướng breadcrumb, hạn chế tối đa các trang mồ côi (trang không có bất kỳ liên kết nội bộ nào trỏ tới).</li>
+<li><strong>Tốc độ tải trang:</strong> Tối ưu hóa kích thước hình ảnh, nén dữ liệu truyền tải, loại bỏ mã JavaScript thừa và cải thiện thời gian phản hồi của máy chủ.</li>
+<li><strong>Tính thân thiện di động:</strong> Thiết kế đáp ứng (responsive design), hiển thị tốt trên màn hình nhỏ từ 320px đến 390px mà không bị tràn khung hay vỡ bố cục.</li>
+</ul>
+<h3 id="detail-7-vi">Dữ liệu có cấu trúc và JSON-LD</h3>
+<p>Dữ liệu có cấu trúc (structured data) biểu diễn nội dung trang dưới dạng các trường thuộc tính mà máy móc có thể hiểu được tường minh. Cần phân biệt: Schema.org là hệ thống từ vựng chuẩn hóa; Microdata là cách nhúng thuộc tính vào thẻ HTML; còn JSON-LD là cú pháp biểu diễn dạng khối JSON đặt trong thẻ <code>&lt;script&gt;</code>.</p>
+<p>Ví dụ mã JSON-LD chuẩn cho trang công thức món ăn:</p>
+<pre><code class="language-html">&lt;script type=&quot;application/ld+json&quot;&gt;
+{
+  &quot;@context&quot;: &quot;https://schema.org&quot;,
+  &quot;@type&quot;: &quot;Recipe&quot;,
+  &quot;name&quot;: &quot;Bữa sáng giàu đạm nấu trong 10 phút&quot;,
+  &quot;description&quot;: &quot;Công thức nấu bữa sáng giàu đạm từ trứng và đậu&quot;,
+  &quot;image&quot;: [&quot;https://example.com/images/protein-breakfast.jpg&quot;],
+  &quot;author&quot;: {
+    &quot;@type&quot;: &quot;Person&quot;,
+    &quot;name&quot;: &quot;Nguyễn Văn A&quot;
+  },
+  &quot;prepTime&quot;: &quot;PT5M&quot;,
+  &quot;cookTime&quot;: &quot;PT5M&quot;,
+  &quot;recipeYield&quot;: &quot;1 người&quot;,
+  &quot;recipeIngredient&quot;: [&quot;Trứng gà 2 quả&quot;, &quot;Đậu luộc 80g&quot;],
+  &quot;recipeInstructions&quot;: [
+    {
+      &quot;@type&quot;: &quot;HowToStep&quot;,
+      &quot;text&quot;: &quot;Đun nóng chảo và xào trứng cùng đậu chín tới.&quot;
+    }
+  ]
+}
+&lt;/script&gt;
+</code></pre>
+<p>Nội dung trong JSON-LD bắt buộc phải trùng khớp với nội dung thực tế người dùng nhìn thấy trên màn hình. Việc thêm JSON-LD không đảm bảo chắc chắn trang sẽ được hiển thị kết quả nhiều định dạng (rich results) hay tăng thứ hạng, nhưng giúp công cụ tìm kiếm hiểu chính xác ngữ nghĩa dữ liệu.</p>
+<h3 id="detail-8-vi">Bổ sung về các công cụ điều khiển thu thập</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Công cụ</th>
+<th>Vai trò thực tế</th>
+<th>Hiểu lầm thường gặp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>robots.txt</code></td>
+<td>Hướng dẫn crawler các vùng không nên quét</td>
+<td>Không phải lệnh bảo mật xóa trang khỏi kết quả tìm kiếm</td>
+</tr>
+<tr>
+<td>Thẻ <code>noindex</code></td>
+<td>Ra lệnh không đưa trang vào chỉ mục</td>
+<td>Nếu bị robots.txt chặn quét thì bot không đọc được thẻ này</td>
+</tr>
+<tr>
+<td>Thẻ <code>canonical</code></td>
+<td>Chỉ định URL đại diện chuẩn tắc khi có trang trùng lặp</td>
+<td>Chỉ là gợi ý mạnh, công cụ tìm kiếm có thể tự chọn URL khác</td>
+</tr>
+<tr>
+<td>Sơ đồ <code>sitemap</code></td>
+<td>Khai báo danh mục URL và thời gian cập nhật cho bot</td>
+<td>Không đảm bảo mọi URL trong sitemap đều được lập chỉ mục</td>
+</tr>
+</tbody></table></div>
+<h2 id="measuring-seo-vi" data-section-heading="measuring-seo">8.7 Đo lường và đánh giá hiệu quả SEO</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 20-22</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Chỉ số</th>
+<th>Định nghĩa</th>
+<th>Ví dụ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Lượt hiển thị (Impressions)</td>
+<td>Số lần liên kết của trang xuất hiện trên kết quả tìm kiếm</td>
+<td>2.000 lượt</td>
+</tr>
+<tr>
+<td>Lượt nhấp chuột (Clicks)</td>
+<td>Số lần người dùng bấm vào kết quả để vào trang</td>
+<td>120 lượt</td>
+</tr>
+<tr>
+<td>Tỷ lệ nhấp (CTR)</td>
+<td>Tỉ lệ phần trăm giữa lượt nhấp và lượt hiển thị: <code>(clicks / impressions) × 100%</code></td>
+<td><code>120 / 2.000 × 100 = 6%</code></td>
+</tr>
+<tr>
+<td>Lưu lượng tự nhiên (Organic traffic)</td>
+<td>Lượng truy cập đến từ việc nhấp vào kết quả tìm kiếm tự nhiên</td>
+<td>Số phiên (sessions) tự nhiên trong kỳ</td>
+</tr>
+<tr>
+<td>Vị trí hiển thị (Position)</td>
+<td>Thứ bậc trung bình của trang trên trang kết quả tìm kiếm</td>
+<td>Vị trí trung bình 3.2</td>
+</tr>
+</tbody></table></div>
+<div class="formula-block" role="math" aria-label="CTR equals clicks divided by impressions times one hundred percent">
+  <span class="formula-main">CTR = clicks / impressions × 100%</span>
+</div>
+
+<p>Nếu lượt hiển thị bằng 0 (<code>impressions = 0</code>), mẫu số bằng 0 nên CTR không xác định; hệ thống hiển thị là <code>N/A</code> thay vì tự gán là 0%.</p>
+<h3 id="detail-9-vi">Người dùng, Phiên truy cập và Lượt nhấp</h3>
+<ul>
+<li><strong>Người dùng (User):</strong> Thực thể cá nhân truy cập được hệ thống nhận diện.</li>
+<li><strong>Phiên (Session):</strong> Chuỗi các tương tác của một người dùng trong một khoảng thời gian liên tục.</li>
+<li><strong>Lượt nhấp (Click):</strong> Hành động bấm vào liên kết trên trang tìm kiếm.</li>
+</ul>
+<p>Một người dùng có thể tạo ra nhiều phiên trong ngày. Một lượt nhấp trên trang tìm kiếm không nhất thiết chuyển hóa thành đúng một phiên đầy đủ trên web (do người dùng tắt trình duyệt trước khi trang tải xong hoặc chặn theo dõi).</p>
+<h3 id="detail-10-vi">Các công cụ đo lường chuyên dụng</h3>
+<ul>
+<li><strong>Google Search Console:</strong> Đo lường tương tác của người dùng trên trang kết quả tìm kiếm Google (lượt hiển thị, lượt nhấp, CTR, vị trí trung bình và các lỗi lập chỉ mục).</li>
+<li><strong>Google Analytics:</strong> Đo lường hành vi của người dùng sau khi đã đặt chân vào trang web (số phiên, thời gian xem, trang đích, kênh chuyển đổi).</li>
+<li><strong>Công cụ của bên thứ ba (Ahrefs, Semrush):</strong> Phân tích ước lượng về backlink, theo dõi từ khóa đối thủ và kiểm tra kỹ thuật.</li>
+</ul>
+<h2 id="analytics-practice-vi" data-section-heading="analytics-practice">Bài tập gốc: Phân tích lưu lượng SEO bằng Google Analytics</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 23-25</p>
+<p>Mục tiêu của bài tập gốc:</p>
+<ol>
+<li>Lấy tổng lưu lượng tự nhiên (organic sessions) trong 7 ngày gần nhất.</li>
+<li>Lấy top 5 trang đích (landing pages) có lượng truy cập tự nhiên cao nhất trong 30 ngày gần nhất.</li>
+<li>Lấy top 5 nguồn truy cập tự nhiên (organic sources) trong 30 ngày gần nhất.</li>
+</ol>
+<h3 id="detail-11-vi">Cập nhật kiến trúc GA4 Data API hiện đại</h3>
+<p>Slide 25 được biên soạn từ thời Universal Analytics (đã chính thức ngừng hoạt động từ tháng 7/2023) sử dụng thư viện cũ <code>googleanalytics</code>. Hiện nay, thư viện chuẩn chính thức là <code>google-analytics-data</code> sử dụng phương thức <code>runReport</code> của GA4 Data API.</p>
+<p>Trong GA4, chỉ số đo lường là <code>sessions</code>, chiều phân loại kênh là <code>sessionDefaultChannelGroup</code> lọc theo giá trị <code>Organic Search</code>. Để tránh dữ liệu chưa hoàn thiện của ngày hiện tại, phạm vi ngày kết thúc luôn ấn định là <code>yesterday</code>. Cần bật tham số <code>keep_empty_rows=True</code> và phân biệt rõ giữa trường hợp phản hồi rỗng (không có dữ liệu) với trường hợp có số liệu bằng 0:</p>
+<pre><code class="language-python">from google.analytics.data_v1beta import BetaAnalyticsDataClient
+from google.analytics.data_v1beta.types import (
+    DateRange, Dimension, Filter, FilterExpression,
+    Metric, OrderBy, RunReportRequest,
+)
+
+PROPERTY_ID = &quot;YOUR_GA4_PROPERTY_ID&quot;
+client = BetaAnalyticsDataClient()
+
+def first_metric_int(response):
+    &quot;&quot;&quot;Trả về giá trị số nguyên của metric đầu tiên. Trả về None nếu không có dòng nào.&quot;&quot;&quot;
+    rows = list(getattr(response, &quot;rows&quot;, ()) or ())
+    if not rows:
+        return None
+    metric_values = list(getattr(rows[0], &quot;metric_values&quot;, ()) or ())
+    if not metric_values or metric_values[0].value in (None, &quot;&quot;):
+        raise ValueError(&quot;Phản hồi GA4 không chứa giá trị metric hợp lệ.&quot;)
+    return int(metric_values[0].value)
+
+def dimension_session_rows(response):
+    &quot;&quot;&quot;Trích xuất danh sách các cặp (tên dimension, số lượng sessions).&quot;&quot;&quot;
+    result = []
+    for row in list(getattr(response, &quot;rows&quot;, ()) or ()):
+        dimensions = list(getattr(row, &quot;dimension_values&quot;, ()) or ())
+        metrics = list(getattr(row, &quot;metric_values&quot;, ()) or ())
+        if not dimensions or not metrics:
+            raise ValueError(&quot;Dòng phản hồi GA4 thiếu dimension hoặc metric.&quot;)
+        result.append((dimensions[0].value, int(metrics[0].value)))
+    return result
+
+def channel_filter(channel_name):
+    return FilterExpression(
+        filter=Filter(
+            field_name=&quot;sessionDefaultChannelGroup&quot;,
+            string_filter=Filter.StringFilter(
+                match_type=Filter.StringFilter.MatchType.EXACT,
+                value=channel_name,
+                case_sensitive=True,
+            ),
+        )
+    )
+
+organic_filter = channel_filter(&quot;Organic Search&quot;)
+
+# 1. Tổng số session tự nhiên trong 7 ngày hoàn chỉnh gần nhất
+total_request = RunReportRequest(
+    property=f&quot;properties/{PROPERTY_ID}&quot;,
+    metrics=[Metric(name=&quot;sessions&quot;)],
+    date_ranges=[DateRange(start_date=&quot;7daysAgo&quot;, end_date=&quot;yesterday&quot;)],
+    dimension_filter=organic_filter,
+    keep_empty_rows=True,
+)
+total_response = client.run_report(total_request)
+total_sessions = first_metric_int(total_response)
+if total_sessions is None:
+    print(&quot;Không có dữ liệu phù hợp. Kiểm tra lại khoảng ngày hoặc bộ lọc.&quot;)
+else:
+    print(&quot;Lưu lượng tự nhiên 7 ngày:&quot;, total_sessions)
+
+def top_sessions(dimension_name, selected_filter):
+    &quot;&quot;&quot;Trả về top 5 mục có số lượng session cao nhất trong 30 ngày hoàn chỉnh.&quot;&quot;&quot;
+    request = RunReportRequest(
+        property=f&quot;properties/{PROPERTY_ID}&quot;,
+        dimensions=[Dimension(name=dimension_name)],
+        metrics=[Metric(name=&quot;sessions&quot;)],
+        date_ranges=[DateRange(start_date=&quot;30daysAgo&quot;, end_date=&quot;yesterday&quot;)],
+        dimension_filter=selected_filter,
+        order_bys=[
+            OrderBy(
+                metric=OrderBy.MetricOrderBy(metric_name=&quot;sessions&quot;),
+                desc=True,
+            ),
+            OrderBy(
+                dimension=OrderBy.DimensionOrderBy(
+                    dimension_name=dimension_name,
+                ),
+                desc=False,
+            ),
+        ],
+        keep_empty_rows=True,
+        limit=5,
+    )
+    return client.run_report(request)
+
+def show_top(label, response):
+    rows = dimension_session_rows(response)
+    if not rows:
+        print(f&quot;{label}: Không có dữ liệu.&quot;)
+        return
+    for name, sessions in rows:
+        print(f&quot;{label}: {name}, {sessions}&quot;)
+
+# 2. Top 5 trang đích trong 30 ngày hoàn chỉnh
+landing_response = top_sessions(
+    &quot;landingPagePlusQueryString&quot;,
+    organic_filter,
+)
+show_top(&quot;Trang đích tự nhiên&quot;, landing_response)
+
+# 3. Top 5 nguồn tìm kiếm tự nhiên trong 30 ngày hoàn chỉnh
+source_response = top_sessions(&quot;sessionSource&quot;, organic_filter)
+show_top(&quot;Nguồn tìm kiếm tự nhiên&quot;, source_response)
+</code></pre>
+<p>Tuyệt đối không dùng khối <code>except</code> rộng bao quanh lời gọi API để tự động trả về 0 khi có lỗi. Lỗi phân quyền, sai cú pháp hay hết quota là lỗi hệ thống cần được thông báo và xử lý đúng bản chất, không được nhầm lẫn với số liệu thống kê bằng 0.</p>
+<p>Nếu muốn phân tích nguồn giới thiệu (referral traffic), chỉ cần truyền bộ lọc kênh <code>Referral</code>:</p>
+<pre><code class="language-python">referral_filter = channel_filter(&quot;Referral&quot;)
+referral_response = top_sessions(&quot;sessionSource&quot;, referral_filter)
+show_top(&quot;Nguồn giới thiệu&quot;, referral_response)
+</code></pre>
+<h3 id="detail-12-vi">Bài thực hành phân tích trên dữ liệu mẫu Offline</h3>
+<p>Để sinh viên có thể tự thực hành và kiểm tra kết quả ngay cả khi không có tài khoản Google Analytics thực tế, dữ liệu mẫu đã tổng hợp theo từng ngày được chuẩn bị với mốc tham chiếu là ngày <code>2026-09-28</code>:</p>
+<ul>
+<li>Cửa sổ 7 ngày hoàn chỉnh: từ <code>2026-09-21</code> đến <code>2026-09-27</code> (đủ 7 ngày).</li>
+<li>Cửa sổ 30 ngày hoàn chỉnh: từ <code>2026-08-29</code> đến <code>2026-09-27</code> (đủ 30 ngày).</li>
+<li>Ngày hiện tại <code>2026-09-28</code> chưa kết thúc nên được loại trừ để đảm bảo tính toàn vẹn.</li>
+</ul>
+<p>Bảng dữ liệu mẫu:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Ngày</th>
+<th>Kênh truy cập</th>
+<th>Nguồn truy cập</th>
+<th>Trang đích</th>
+<th align="right">Số session</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2026-08-28</td>
+<td>Organic Search</td>
+<td>google</td>
+<td><code>/outside/</code></td>
+<td align="right">90</td>
+</tr>
+<tr>
+<td>2026-08-29</td>
+<td>Organic Search</td>
+<td>google</td>
+<td><code>/breakfast/protein/</code></td>
+<td align="right">12</td>
+</tr>
+<tr>
+<td>2026-09-01</td>
+<td>Organic Search</td>
+<td>bing</td>
+<td><code>/breakfast/oats/</code></td>
+<td align="right">10</td>
+</tr>
+<tr>
+<td>2026-09-05</td>
+<td>Organic Search</td>
+<td>duckduckgo</td>
+<td><code>/breakfast/quick/</code></td>
+<td align="right">9</td>
+</tr>
+<tr>
+<td>2026-09-10</td>
+<td>Referral</td>
+<td>campus.example</td>
+<td><code>/breakfast/protein/</code></td>
+<td align="right">30</td>
+</tr>
+<tr>
+<td>2026-09-12</td>
+<td>Organic Search</td>
+<td>yahoo</td>
+<td><code>/breakfast/eggs/</code></td>
+<td align="right">8</td>
+</tr>
+<tr>
+<td>2026-09-15</td>
+<td>Organic Search</td>
+<td>google</td>
+<td><code>/breakfast/protein/</code></td>
+<td align="right">18</td>
+</tr>
+<tr>
+<td>2026-09-18</td>
+<td>Organic Search</td>
+<td>ecosia</td>
+<td><code>/breakfast/smoothie/</code></td>
+<td align="right">8</td>
+</tr>
+<tr>
+<td>2026-09-20</td>
+<td>Organic Search</td>
+<td>brave</td>
+<td><code>/breakfast/toast/</code></td>
+<td align="right">6</td>
+</tr>
+<tr>
+<td>2026-09-21</td>
+<td>Organic Search</td>
+<td>bing</td>
+<td><code>/breakfast/protein/</code></td>
+<td align="right">8</td>
+</tr>
+<tr>
+<td>2026-09-22</td>
+<td>Organic Search</td>
+<td>google</td>
+<td><code>/breakfast/quick/</code></td>
+<td align="right">31</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>Referral</td>
+<td>campus.example</td>
+<td><code>/breakfast/oats/</code></td>
+<td align="right">12</td>
+</tr>
+<tr>
+<td>2026-09-24</td>
+<td>Organic Search</td>
+<td>google</td>
+<td><code>/breakfast/oats/</code></td>
+<td align="right">19</td>
+</tr>
+<tr>
+<td>2026-09-25</td>
+<td>Organic Search</td>
+<td>duckduckgo</td>
+<td><code>/breakfast/eggs/</code></td>
+<td align="right">11</td>
+</tr>
+<tr>
+<td>2026-09-26</td>
+<td>Organic Search</td>
+<td>google</td>
+<td><code>/breakfast/protein/</code></td>
+<td align="right">42</td>
+</tr>
+<tr>
+<td>2026-09-27</td>
+<td>Organic Search</td>
+<td>bing</td>
+<td><code>/breakfast/toast/</code></td>
+<td align="right">15</td>
+</tr>
+<tr>
+<td>2026-09-28</td>
+<td>Organic Search</td>
+<td>google</td>
+<td><code>/breakfast/protein/</code></td>
+<td align="right">99</td>
+</tr>
+</tbody></table></div>
+<p>Đoạn mã Python xử lý dữ liệu chuẩn xác:</p>
+<pre><code class="language-python">from collections import defaultdict
+from datetime import date, timedelta
+
+REFERENCE_DATE = date(2026, 9, 28)
+
+rows = [
+    {&quot;date&quot;: &quot;2026-08-28&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;google&quot;, &quot;landing_page&quot;: &quot;/outside/&quot;, &quot;sessions&quot;: 90},
+    {&quot;date&quot;: &quot;2026-08-29&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;google&quot;, &quot;landing_page&quot;: &quot;/breakfast/protein/&quot;, &quot;sessions&quot;: 12},
+    {&quot;date&quot;: &quot;2026-09-01&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;bing&quot;, &quot;landing_page&quot;: &quot;/breakfast/oats/&quot;, &quot;sessions&quot;: 10},
+    {&quot;date&quot;: &quot;2026-09-05&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;duckduckgo&quot;, &quot;landing_page&quot;: &quot;/breakfast/quick/&quot;, &quot;sessions&quot;: 9},
+    {&quot;date&quot;: &quot;2026-09-10&quot;, &quot;channel&quot;: &quot;Referral&quot;, &quot;source&quot;: &quot;campus.example&quot;, &quot;landing_page&quot;: &quot;/breakfast/protein/&quot;, &quot;sessions&quot;: 30},
+    {&quot;date&quot;: &quot;2026-09-12&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;yahoo&quot;, &quot;landing_page&quot;: &quot;/breakfast/eggs/&quot;, &quot;sessions&quot;: 8},
+    {&quot;date&quot;: &quot;2026-09-15&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;google&quot;, &quot;landing_page&quot;: &quot;/breakfast/protein/&quot;, &quot;sessions&quot;: 18},
+    {&quot;date&quot;: &quot;2026-09-18&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;ecosia&quot;, &quot;landing_page&quot;: &quot;/breakfast/smoothie/&quot;, &quot;sessions&quot;: 8},
+    {&quot;date&quot;: &quot;2026-09-20&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;brave&quot;, &quot;landing_page&quot;: &quot;/breakfast/toast/&quot;, &quot;sessions&quot;: 6},
+    {&quot;date&quot;: &quot;2026-09-21&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;bing&quot;, &quot;landing_page&quot;: &quot;/breakfast/protein/&quot;, &quot;sessions&quot;: 8},
+    {&quot;date&quot;: &quot;2026-09-22&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;google&quot;, &quot;landing_page&quot;: &quot;/breakfast/quick/&quot;, &quot;sessions&quot;: 31},
+    {&quot;date&quot;: &quot;2026-09-23&quot;, &quot;channel&quot;: &quot;Referral&quot;, &quot;source&quot;: &quot;campus.example&quot;, &quot;landing_page&quot;: &quot;/breakfast/oats/&quot;, &quot;sessions&quot;: 12},
+    {&quot;date&quot;: &quot;2026-09-24&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;google&quot;, &quot;landing_page&quot;: &quot;/breakfast/oats/&quot;, &quot;sessions&quot;: 19},
+    {&quot;date&quot;: &quot;2026-09-25&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;duckduckgo&quot;, &quot;landing_page&quot;: &quot;/breakfast/eggs/&quot;, &quot;sessions&quot;: 11},
+    {&quot;date&quot;: &quot;2026-09-26&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;google&quot;, &quot;landing_page&quot;: &quot;/breakfast/protein/&quot;, &quot;sessions&quot;: 42},
+    {&quot;date&quot;: &quot;2026-09-27&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;bing&quot;, &quot;landing_page&quot;: &quot;/breakfast/toast/&quot;, &quot;sessions&quot;: 15},
+    {&quot;date&quot;: &quot;2026-09-28&quot;, &quot;channel&quot;: &quot;Organic Search&quot;, &quot;source&quot;: &quot;google&quot;, &quot;landing_page&quot;: &quot;/breakfast/protein/&quot;, &quot;sessions&quot;: 99},
+]
+
+def completed_window(reference_date, days):
+    end = reference_date - timedelta(days=1)
+    start = end - timedelta(days=days - 1)
+    return start, end
+
+def filtered_rows(records, start, end, channel):
+    return [
+        row for row in records
+        if start &lt;= date.fromisoformat(row[&quot;date&quot;]) &lt;= end
+        and row[&quot;channel&quot;] == channel
+    ]
+
+def total_sessions(records, start, end, channel=&quot;Organic Search&quot;):
+    return sum(row[&quot;sessions&quot;] for row in filtered_rows(records, start, end, channel))
+
+def top_groups(records, start, end, key, channel=&quot;Organic Search&quot;, limit=5):
+    totals = defaultdict(int)
+    for row in filtered_rows(records, start, end, channel):
+        totals[row[key]] += row[&quot;sessions&quot;]
+    return sorted(totals.items(), key=lambda item: (-item[1], item[0]))[:limit]
+
+start_7, end_7 = completed_window(REFERENCE_DATE, 7)
+start_30, end_30 = completed_window(REFERENCE_DATE, 30)
+
+organic_7 = total_sessions(rows, start_7, end_7)
+top_landing_pages = top_groups(rows, start_30, end_30, &quot;landing_page&quot;)
+top_organic_sources = top_groups(rows, start_30, end_30, &quot;source&quot;)
+
+print(&quot;7完了日の自然検索セッション:&quot;, organic_7)
+print(&quot;30完了日の上位ランディングページ:&quot;, top_landing_pages)
+print(&quot;30完了日の上位自然検索流入元:&quot;, top_organic_sources)
+</code></pre>
+<p>Kết quả tính toán:</p>
+<pre><code class="language-text">7完了日の自然検索セッション: 126
+30完了日の上位ランディングページ:
+[(&#39;/breakfast/protein/&#39;, 80), (&#39;/breakfast/quick/&#39;, 40),
+ (&#39;/breakfast/oats/&#39;, 29), (&#39;/breakfast/toast/&#39;, 21),
+ (&#39;/breakfast/eggs/&#39;, 19)]
+30完了日の上位自然検索流入元:
+[(&#39;google&#39;, 122), (&#39;bing&#39;, 33), (&#39;duckduckgo&#39;, 20),
+ (&#39;ecosia&#39;, 8), (&#39;yahoo&#39;, 8)]
+</code></pre>
+<p>Giải thích số liệu:</p>
+<ul>
+<li>Trong 7 ngày hoàn chỉnh (<code>21/09</code> đến <code>27/09</code>), tổng lượng session tìm kiếm tự nhiên là <code>8 + 31 + 19 + 11 + 42 + 15 = 126</code>.</li>
+<li>Trang <code>/breakfast/protein/</code> đạt <code>12 + 18 + 8 + 42 = 80</code> session, đứng đầu danh sách trang đích.</li>
+<li>Nguồn <code>google</code> đạt <code>12 + 18 + 31 + 19 + 42 = 122</code> session, đứng đầu các công cụ tìm kiếm tự nhiên.</li>
+<li>Dữ liệu Referral của <code>campus.example</code> hoàn toàn bị tách rời khỏi báo cáo tìm kiếm tự nhiên.</li>
+</ul>
+<h2 id="exercise-vi" data-section-heading="exercise">Bài tập cuối chương</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 23-25</p>
+<h3 id="detail-13-vi">Bài tập 1: Thiết kế trang web chuẩn SEO</h3>
+<p>Thiết kế các thẻ meta và cấu trúc HTML cho một trang công thức bữa sáng:</p>
+<ul>
+<li>Xác định nhu cầu thông tin mục tiêu.</li>
+<li>Viết thẻ <code>&lt;title&gt;</code>, thẻ <code>&lt;meta name=&quot;description&quot;&gt;</code>, tiêu đề <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code> và các liên kết nội bộ.</li>
+<li>Xây dựng khối mã JSON-LD tương ứng theo từ điển Schema.org Recipe.</li>
+</ul>
+<details class="answer-key"><summary>Xem hướng dẫn giải</summary><div class="answer-key__body"><p>Tiêu đề và <code>&lt;h1&gt;</code> cần chứa từ khóa trọng tâm nhưng phải diễn đạt tự nhiên; các thẻ <code>&lt;h2&gt;</code> phân tách mạch lạc nguyên liệu và cách nấu. Thẻ mô tả tóm tắt giá trị bài viết trong khoảng 150-160 ký tự. Các liên kết nội bộ dẫn tới các bài viết liên quan trong cùng chuyên mục bữa sáng. Khối JSON-LD phải phản ánh đúng dữ liệu đang hiển thị trên trang để tránh bị phạt lỗi cấu trúc.</p></div></details>
+
+<h3 id="detail-14-vi">Bài tập 2: Tính toán và phân tích chỉ số CTR</h3>
+<p>Một trang web đạt 2.400 lượt hiển thị và nhận được 96 lượt nhấp chuột trong tháng. Hãy tính tỷ lệ nhấp (CTR). Nếu sang tháng tiếp theo, tỷ lệ này tăng lên 5.0%, liệu có thể khẳng định chắc chắn rằng dự án SEO đã thành công rực rỡ không?</p>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Tỷ lệ nhấp ban đầu là <code>CTR = (96 / 2.400) × 100% = 4.0%</code>. Việc tăng lên 5.0% chưa đủ cơ sở để khẳng định chắc chắn thành công; cần kiểm tra xem tổng số lượt hiển thị có bị giảm sút hay không (nếu hiển thị ít đi chỉ còn 1.000 lượt mà được 50 nhấp thì CTR là 5.0% nhưng tổng traffic lại giảm từ 96 xuống 50). Ngoài ra, cần đối chiếu với vị trí xếp hạng trung bình và phân tích xem sự gia tăng có đến từ thương hiệu hay không.</p></div></details>
+
+<h2 id="summary-vi" data-section-heading="summary">Tổng kết</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 26</p>
+<ul>
+<li>SEO là quá trình cải tiến kỹ thuật, nội dung và danh tiếng giúp người dùng và công cụ tìm kiếm tìm thấy và đánh giá đúng trang web.</li>
+<li>Thu thập (crawl), lập chỉ mục (index) và xếp hạng (rank) là ba công đoạn độc lập; tối ưu kỹ thuật không đảm bảo việc được lên top.</li>
+<li>Mô hình tổng trọng số giáo khoa giúp hiểu nguyên lý kết hợp đa đặc trưng nhưng không đại diện cho công thức bí mật của công cụ tìm kiếm thực tế.</li>
+<li>On-page SEO tập trung vào nội dung và mã HTML; Off-page SEO tập trung vào liên kết trích dẫn bên ngoài; Technical SEO tập trung vào hạ tầng truy cập, tốc độ và dữ liệu cấu trúc.</li>
+<li>Google Search Console, Google Analytics và công cụ bên thứ ba phục vụ các mục đích quan sát đo lường ở các điểm chạm khác nhau.</li>
+<li>Các bài tập thực hành Analytics cần được cập nhật theo chuẩn GA4 Data API hiện đại và thẩm định trên dữ liệu có đối chứng.</li>
+</ul>
+<h2 id="quiz-vi" data-section-heading="quiz">Câu hỏi tự kiểm tra</h2>
+<ol>
+<li>Kết quả tìm kiếm tự nhiên (organic) khác kết quả quảng cáo trả phí (paid ads) ở điểm mấu chốt nào?</li>
+<li>Một trang web có thể được crawler thu thập thành công thì có chắc chắn sẽ được đưa vào chỉ mục không?</li>
+<li>Vì sao gọi <code>&lt;title&gt;</code> là thẻ meta lại là cách dùng từ thiếu chuẩn xác về mặt kỹ thuật?</li>
+<li>Liên kết nội bộ (internal link) và backlink khác nhau như thế nào về hướng trỏ?</li>
+<li>Khi lượt hiển thị bằng 0 (<code>impressions = 0</code>), tỷ lệ nhấp CTR được xử lý như thế nào?</li>
+<li>Google Search Console và Google Analytics phân chia phạm vi đo lường như thế nào?</li>
+<li>Nhúng dữ liệu có cấu trúc JSON-LD vào mã nguồn có đảm bảo trang web chắc chắn xuất hiện kết quả nhiều định dạng (rich results) không?</li>
+</ol>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><ol>
+<li>Kết quả tự nhiên do thuật toán tìm kiếm tự đánh giá dựa trên độ liên quan và chất lượng mà không mất tiền cho mỗi nhấp chuột; quảng cáo trả phí do hệ thống đấu thầu từ khóa quyết định vị trí và tính tiền theo từng lượt click.</li>
+<li>Không chắc chắn. Crawler chỉ làm nhiệm vụ tải trang; khâu lập chỉ mục phía sau có thể loại bỏ trang nếu phát hiện nội dung sao chép, spam hoặc không có giá trị độc bản.</li>
+<li>Vì <code>&lt;title&gt;</code> là một phần tử HTML độc lập với cú pháp <code>&lt;title&gt;...&lt;/title&gt;</code>, còn thẻ meta có cú pháp hoàn toàn khác <code>&lt;meta name=&quot;...&quot; content=&quot;...&quot;&gt;</code>.</li>
+<li>Liên kết nội bộ kết nối giữa các trang bên trong cùng một website; backlink là liên kết từ một website bên ngoài khác trỏ về website của mình.</li>
+<li>Khi mẫu số bằng 0, phép chia không xác định trong toán học, do đó hệ thống không được gán là 0% mà phải hiển thị là <code>N/A</code> (không áp dụng).</li>
+<li>Search Console đo lường tương tác trên trang kết quả tìm kiếm (SERP) trước khi người dùng vào trang; Google Analytics đo lường hành vi của người dùng sau khi đã đặt chân vào bên trong website.</li>
+<li>Hoàn toàn không đảm bảo. Công cụ tìm kiếm còn xét duyệt tính xác thực của dữ liệu hiển thị, chất lượng tổng thể của trang web và chính sách hiển thị của thuật toán tại thời điểm đó.</li>
+</ol></div></details>
+
+<h2 id="next-chapter-vi" data-section-heading="next-chapter">Chuyển tiếp sang chương sau</h2>
+<p>Để đánh giá một hệ thống tìm kiếm vận hành tốt đến đâu, ta không thể chỉ nhìn vào cảm tính hay một vài truy vấn riêng lẻ. Chương 9 tiếp theo sẽ nghiên cứu các phương pháp đánh giá định lượng khoa học: Precision, Recall, F-measure, MAP, MRR, NDCG cùng các phép kiểm định thống kê có ý nghĩa.</p>
+<h2 id="glossary-vi" data-section-heading="glossary">Bảng thuật ngữ</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>English</th>
+<th>Tiếng Việt</th>
+<th>Ý nghĩa trong chương này</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Search Engine Optimization</td>
+<td>Tối ưu hóa công cụ tìm kiếm (SEO)</td>
+<td>Quá trình tối ưu giúp trang web được tìm thấy và xếp hạng tốt hơn</td>
+</tr>
+<tr>
+<td>SERP</td>
+<td>Trang kết quả tìm kiếm</td>
+<td>Giao diện hiển thị danh sách kết quả tự nhiên và quảng cáo</td>
+</tr>
+<tr>
+<td>Organic result</td>
+<td>Kết quả tự nhiên</td>
+<td>Kết quả xếp hạng khách quan không phải vị trí mua quảng cáo</td>
+</tr>
+<tr>
+<td>On-page SEO</td>
+<td>On-page SEO</td>
+<td>Hoạt động tối ưu hóa trực tiếp nội dung và mã HTML của trang web</td>
+</tr>
+<tr>
+<td>Off-page SEO</td>
+<td>Off-page SEO</td>
+<td>Hoạt động xây dựng danh tiếng và liên kết từ bên ngoài trỏ về</td>
+</tr>
+<tr>
+<td>Technical SEO</td>
+<td>Technical SEO</td>
+<td>Tối ưu hóa hạ tầng kỹ thuật, tốc độ, khả năng thu thập và cấu trúc</td>
+</tr>
+<tr>
+<td>Internal link</td>
+<td>Liên kết nội bộ</td>
+<td>Liên kết giữa các trang bên trong cùng một website</td>
+</tr>
+<tr>
+<td>Backlink</td>
+<td>Backlink</td>
+<td>Liên kết từ website bên ngoài trỏ về trang web của mình</td>
+</tr>
+<tr>
+<td>Structured data</td>
+<td>Dữ liệu có cấu trúc</td>
+<td>Định dạng dữ liệu chuẩn hóa giúp máy móc hiểu ngữ nghĩa trang</td>
+</tr>
+<tr>
+<td>JSON-LD</td>
+<td>JSON-LD</td>
+<td>Cú pháp nhúng dữ liệu có cấu trúc dưới dạng khối JSON trong thẻ script</td>
+</tr>
+<tr>
+<td>Impression</td>
+<td>Lượt hiển thị</td>
+<td>Số lần trang web xuất hiện trên trang kết quả tìm kiếm</td>
+</tr>
+<tr>
+<td>Click-through rate</td>
+<td>Tỷ lệ nhấp (CTR)</td>
+<td>Tỉ lệ phần trăm giữa lượt nhấp chuột và lượt hiển thị</td>
+</tr>
+<tr>
+<td>Organic traffic</td>
+<td>Lưu lượng tự nhiên</td>
+<td>Lượng truy cập đến từ việc nhấp vào kết quả tìm kiếm tự nhiên</td>
+</tr>
+<tr>
+<td>Landing page</td>
+<td>Trang đích</td>
+<td>Trang web đầu tiên mà người dùng đặt chân tới trong một phiên</td>
+</tr>
+<tr>
+<td>Referral traffic</td>
+<td>Lưu lượng giới thiệu</td>
+<td>Lượng truy cập đến từ các liên kết giới thiệu trên trang web khác</td>
+</tr>
+</tbody></table></div>
+
+        <footer class="lesson-footer"><span class="lesson-footer__meta"><span>SEG301m / CHƯƠNG 8</span><span class="site-credit">Made by <strong>Marcus</strong></span></span><a href="#top">Về đầu trang ↑</a></footer>
+      </article>
+      <nav class="chapter-pager" aria-label="Chapter navigation"><a class="chapter-pager__previous" href="./chapter-07.html">
+    <span>Chương trước</span>
+    <strong>07 · Mô hình truy xuất</strong>
+  </a><a class="chapter-pager__next" href="./chapter-09.html">
+    <span>Chương sau</span>
+    <strong>09 · Đánh giá công cụ tìm kiếm</strong>
+  </a></nav>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+node_modules/
+.vercel/
+config/
+data/
+logs/
+releases/
+runtime/
+*.tmp
+
+# Reproducible source-extraction and visual-QA artifacts.
+exported_slides/
+markdown_notes/
+qa_screenshots/
+planning/vi-chapters-02-04-progress.md
+/*_desktop.png
+/*_mobile.png
+/*_mobile_top.png
+/*_top_mobile.png

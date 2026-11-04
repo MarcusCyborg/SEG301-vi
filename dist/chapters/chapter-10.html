@@ -1,0 +1,1027 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163b3c">
+  <meta name="description" content="So sánh Naive Bayes, SVM, chọn đặc trưng, phương pháp phân cấp và K-means.">
+  <title>CHƯƠNG 10 Phân loại và phân cụm | SEG301m</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=20261104-vi">
+  <link rel="stylesheet" href="../tutor.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/katex/katex.min.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/highlight.css?v=20261104-vi">
+  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang"}</script>
+  <script src="../app.js?v=20261104-vi" defer></script>
+  <script src="../tutor.js?v=20261104-vi" defer></script>
+</head>
+<body data-page="chapter" data-language="vi">
+  <a class="skip-link" href="#learning-goals-vi">Chuyển đến bài học</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
+    <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 10</span>
+    <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
+  </header>
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__line"></span> SEG301m / CHƯƠNG 10</p>
+        <h1 id="page-title">Phân loại và<br><em>phân cụm</em></h1>
+        <p class="hero__description">So sánh Naive Bayes, SVM, chọn đặc trưng, phương pháp phân cấp và K-means.</p>
+        <a class="start-link" href="#learning-goals-vi">Bắt đầu học <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <span class="orbit orbit--one"></span><span class="orbit orbit--two"></span>
+        <span class="signal signal--one"></span><span class="signal signal--two"></span>
+        <span class="hero__query">NGUỒN <b>10</b></span>
+        <span class="hero__result hero__result--one">01 <b>TÀI LIỆU</b></span>
+        <span class="hero__result hero__result--two">02 <b>CHỈ MỤC</b></span>
+        <span class="hero__result hero__result--three">03 <b>KẾT QUẢ</b></span>
+        <span class="hero__visual-label">TỪ NGUỒN ĐẾN TÌM KIẾM</span>
+      </div>
+    </div>
+    <div class="hero__footer"><span>CHƯƠNG 10</span><span>Nguồn: toàn bộ 23 slide bài giảng</span></div>
+  </section>
+  <div class="page-layout" id="lesson">
+    <nav class="chapter-nav" aria-label="Mục lục"><div class="chapter-nav__sticky">
+      <p class="chapter-nav__label">MỤC LỤC <span>10 / 12</span></p>
+      <div class="chapter-nav__links"><a href="#prerequisites-vi" data-section="prerequisites"><span>01</span>Kiến thức cần chuẩn bị</a>
+<a href="#classification-vs-clustering-vi" data-section="classification-vs-clustering"><span>02</span>Sự khác biệt giữa phân loại và phân cụm</a>
+<a href="#naive-bayes-vi" data-section="naive-bayes"><span>03</span>10.1 Naive Bayes</a>
+<a href="#support-vector-machine-vi" data-section="support-vector-machine"><span>04</span>10.2 Support Vector Machine</a>
+<a href="#classification-evaluation-vi" data-section="classification-evaluation"><span>05</span>10.3 Đánh giá bộ phân loại</a>
+<a href="#classifier-and-feature-selection-vi" data-section="classifier-and-feature-selection"><span>06</span>10.4 Bộ phân loại và lựa chọn đặc trưng</a>
+<a href="#classification-applications-vi" data-section="classification-applications"><span>07</span>10.5 Ứng dụng: Spam, phân tích cảm xúc và quảng cáo trực tuyến</a>
+<a href="#hierarchical-clustering-vi" data-section="hierarchical-clustering"><span>08</span>10.6 Phân cụm phân cấp (Hierarchical Clustering)</a>
+<a href="#k-means-vi" data-section="k-means"><span>09</span>10.7 K-means</a>
+<a href="#nearest-neighbor-clustering-vi" data-section="nearest-neighbor-clustering"><span>10</span>10.8 Phân cụm láng giềng gần nhất trong slide 18</a>
+<a href="#clustering-evaluation-vi" data-section="clustering-evaluation"><span>11</span>10.9 Đánh giá kết quả phân cụm</a>
+<a href="#choosing-k-and-search-vi" data-section="choosing-k-and-search"><span>12</span>10.10 Lựa chọn K và ứng dụng trong tìm kiếm</a>
+<a href="#k-means-exercise-vi" data-section="k-means-exercise"><span>13</span>Bài tập gốc: Giải trọn vẹn bài toán K-means</a>
+<a href="#exercise-vi" data-section="exercise"><span>14</span>Bài tập cuối chương</a>
+<a href="#summary-vi" data-section="summary"><span>15</span>Tổng kết</a>
+<a href="#quiz-vi" data-section="quiz"><span>16</span>Câu hỏi tự kiểm tra</a>
+<a href="#glossary-vi" data-section="glossary"><span>17</span>Bảng thuật ngữ</a></div>
+      <div class="chapter-directory">
+    <p class="chapter-directory__label">ĐỦ 12 CHƯƠNG</p>
+    <div class="chapter-directory__links"><a class="chapter-directory__item" href="./chapter-01.html"><b>01</b>Truy xuất thông tin</a>
+<a class="chapter-directory__item" href="./chapter-02.html"><b>02</b>Các thành phần và luồng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-03.html"><b>03</b>Thu thập tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-04.html"><b>04</b>Biến từ thành dữ liệu có thể tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-05.html"><b>05</b>Từ chỉ mục đến kết quả hàng đầu</a>
+<a class="chapter-directory__item" href="./chapter-06.html"><b>06</b>Biến nhu cầu thành truy vấn</a>
+<a class="chapter-directory__item" href="./chapter-07.html"><b>07</b>Cách tính điểm kết quả</a>
+<a class="chapter-directory__item" href="./chapter-08.html"><b>08</b>Giúp nội dung được tìm thấy</a>
+<a class="chapter-directory__item" href="./chapter-09.html"><b>09</b>Đo chất lượng tìm kiếm</a>
+<span class="chapter-directory__item is-current" aria-current="page"><b>10</b>Phân loại và sắp xếp tài liệu</span>
+<a class="chapter-directory__item" href="./chapter-11.html"><b>11</b>Dùng con người và mối quan hệ trong tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-12.html"><b>12</b>Khai thác thứ tự, cấu trúc và đa phương tiện</a></div>
+  </div>
+    </div></nav>
+    <main class="lesson-content" id="main-content">
+      <article class="lesson-language" lang="vi-VN" data-lang="vi">
+        <div class="intro-mark"><span>GHI CHÚ HỌC TẬP</span><span>Bản tiếng Việt · Chương 10</span></div>
+        <p><strong>Tài liệu gốc:</strong> Slide bài giảng SEG301m Chương 10, &quot;Classification and Clustering&quot; (23 slide)<br><strong>Cách đọc:</strong> Phân loại dự đoán các nhãn đã biết trước, còn phân cụm tìm kiếm các cấu trúc nhóm tự nhiên trong dữ liệu mà không dùng nhãn mục tiêu. Nửa đầu chương trình bày các phương pháp phân loại văn bản, nửa sau tìm hiểu việc gom nhóm kết quả tìm kiếm, và phần cuối giải trọn vẹn bài tập K-means trong slide gốc cho đến khi hội tụ.</p>
+<h2 id="learning-goals-vi" data-section-heading="learning-goals">Mục tiêu của chương</h2>
+<p>Sau khi học xong chương này, bạn có thể:</p>
+<ol>
+<li>Giải thích sự khác biệt về dữ liệu đầu vào, đầu ra và tín hiệu học tập giữa phân loại (classification) và phân cụm (clustering).</li>
+<li>Huấn luyện mô hình Multinomial Naive Bayes và phân loại câu văn mới bằng kỹ thuật làm mịn (smoothing) kết hợp thang điểm logarit.</li>
+<li>Giải thích siêu phẳng (hyperplane), lề (margin), vector hỗ trợ (support vector), lề cứng (hard margin), lề mềm (soft margin), hàm mất mát hinge (hinge loss) và siêu tham số <code>C</code> trong SVM.</li>
+<li>Tính toán độ chính xác tổng thể (accuracy), độ chính xác (precision), độ bao phủ (recall), F1, trung bình micro và trung bình macro từ ma trận nhầm lẫn (confusion matrix).</li>
+<li>Tính độ giảm độ bất định bằng độ tăng thông tin (information gain) khi một từ xuất hiện hoặc vắng mặt.</li>
+<li>Phân biệt phân cụm phân cấp (hierarchical clustering), K-means và các kỹ thuật gom nhóm dựa trên láng giềng gần nhất.</li>
+<li>Tính độ tinh khiết (purity), giải thích cách chọn số cụm <code>K</code> cùng những giới hạn khi đánh giá phân cụm.</li>
+<li>Phân chia 10 điểm trong bài tập gốc thành 3 cụm, tính toán tọa độ trọng tâm (centroid), đường kính (diameter) và bán kính (radius) của từng cụm.</li>
+</ol>
+<p class="source-note"><span>SLIDE NGUỒN</span> 1–3</p>
+<figure class="chapter-map"><a href="../assets/chapter-10-mindmap.png" target="_blank" rel="noopener"><img src="../assets/chapter-10-mindmap.png" width="1448" height="1086" loading="lazy" alt="Sơ đồ tư duy bằng tiếng Anh cho Chương 10, Phân loại và phân cụm"></a><figcaption>Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 10. Chọn ảnh để xem kích thước đầy đủ.</figcaption></figure>
+<h2 id="prerequisites-vi" data-section-heading="prerequisites">Kiến thức cần chuẩn bị</h2>
+<ul>
+<li>Tách từ (tokenization) và xây dựng đặc trưng trong Chương 4 là bước khởi đầu để biểu diễn tài liệu văn bản thành vector số.</li>
+<li>Các mô hình xác suất, vector không gian và tổng quan về SVM trong Chương 7 là nền tảng trực tiếp cho các bộ phân loại trong chương này.</li>
+<li>Các chỉ số precision, recall và F1 trong Chương 9 tiếp tục được tái sử dụng để đánh giá hiệu năng phân loại văn bản.</li>
+<li>Đối với các thuật toán dựa trên khoảng cách hình học, thang đo của từng đặc trưng và định nghĩa hàm khoảng cách sẽ quyết định trực tiếp cấu trúc phân nhóm cuối cùng.</li>
+</ul>
+<p>Chương này sử dụng ví dụ xuyên suốt: phân loại các bản tin ngắn hoặc công thức nấu ăn vào các danh mục chủ đề, đồng thời gom cụm danh sách kết quả tìm kiếm theo từng nhóm chủ đề tương đồng.</p>
+<h2 id="classification-vs-clustering-vi" data-section-heading="classification-vs-clustering">Sự khác biệt giữa phân loại và phân cụm</h2>
+<p>Hãy xem xét bài toán tổ chức kết quả tìm kiếm tin tức:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Phương pháp</th>
+<th>Dữ liệu đầu vào</th>
+<th>Quá trình học / xử lý</th>
+<th>Dữ liệu đầu ra</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Phân loại (classification)</td>
+<td>Tài liệu kèm nhãn mục tiêu đã biết trước (dữ liệu huấn luyện có giám sát)</td>
+<td>Học quy luật ánh xạ giữa các đặc trưng và nhãn lớp</td>
+<td>Gán nhãn phù hợp (như sports, politics...) cho tài liệu mới</td>
+</tr>
+<tr>
+<td>Phân cụm (clustering)</td>
+<td>Tài liệu và các vector đặc trưng; không sử dụng nhãn mục tiêu (học không giám sát)</td>
+<td>Khám phá cấu trúc tự nhiên dựa trên độ tương đồng hoặc khoảng cách</td>
+<td>Tạo ra các nhóm (cụm) chứa các tài liệu có nội dung gần gũi</td>
+</tr>
+</tbody></table></div>
+<p>Bộ lọc thư rác (spam filter), phân tích cảm xúc (sentiment analysis) hay gắn danh mục quảng cáo là các ví dụ điển hình của bài toán phân loại. Ngược lại, việc tự động gom nhóm danh sách kết quả tìm kiếm theo các chủ đề liên quan là ví dụ của bài toán phân cụm. Dù sau khi phân cụm con người có thể đặt tên cho từng nhóm, nhưng trong suốt quá trình hình thành cụm, thuật toán hoàn toàn không sử dụng bất kỳ nhãn mục tiêu có sẵn nào.</p>
+<h2 id="naive-bayes-vi" data-section-heading="naive-bayes">10.1 Naive Bayes</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 4</p>
+<p>Định lý Bayes biểu diễn xác suất của lớp <code>C</code> sau khi đã quan sát tài liệu <code>D</code>:</p>
+<div class="formula-block" role="math" aria-label="P of class given document equals P of document given class times P of class divided by P of document">
+  <span class="formula-main">P(C|D) = P(D|C)P(C) / P(D)</span>
+</div>
+
+<ul>
+<li><code>P(C)</code>: <strong>Xác suất tiên nghiệm (prior)</strong>, phản ánh tần suất xuất hiện tự nhiên của lớp <code>C</code> trước khi nhìn thấy nội dung tài liệu.</li>
+<li><code>P(D|C)</code>: <strong>Hàm hợp lý (likelihood)</strong>, đo lường khả năng tài liệu <code>D</code> được sinh ra nếu biết trước nó thuộc về lớp <code>C</code>.</li>
+<li><code>P(C|D)</code>: <strong>Xác suất hậu nghiệm (posterior)</strong>, xác suất tài liệu thuộc về lớp <code>C</code> sau khi đã quan sát toàn bộ nội dung của <code>D</code>.</li>
+<li><code>P(D)</code>: Hệ số chuẩn hóa chung cho tất cả các lớp.</li>
+</ul>
+<p>Thuật toán Naive Bayes đưa ra giả định ngây thơ (naive) rằng: khi đã biết lớp của tài liệu, sự xuất hiện của các từ (đặc trưng) là hoàn toàn độc lập có điều kiện với nhau. Dù trong thực tế hai từ <code>quick</code> và <code>breakfast</code> thường đi liền với nhau, giả định này cho phép phân rã xác suất đồng thời thành tích các xác suất thành phần riêng rẽ. Nhờ sự đơn giản hóa này, mô hình có thể huấn luyện cực nhanh và hoạt động ổn định ngay cả trên những tập dữ liệu nhỏ.</p>
+<h3 id="detail-1-vi">Phân tách giai đoạn huấn luyện và dự đoán</h3>
+<ol>
+<li><strong>Huấn luyện (training):</strong> Đếm tần số xuất hiện của các từ trong tập tài liệu huấn luyện để ước lượng xác suất tiên nghiệm và xác suất có điều kiện của từng từ.</li>
+<li><strong>Dự đoán (prediction):</strong> Thay các giá trị xác suất đã học vào tài liệu mới để tính toán và so sánh điểm số giữa các lớp.</li>
+</ol>
+<p>Tuyệt đối không đếm tần số từ vựng trong tập kiểm thử (test data) gộp vào tập huấn luyện, vì điều đó sẽ gây ra hiện tượng rò rỉ thông tin và làm sai lệch kết quả đánh giá.</p>
+<h3 id="detail-2-vi">Ví dụ minh họa Multinomial Naive Bayes</h3>
+<p>Dưới đây là ví dụ bổ sung sử dụng mô hình <strong>Multinomial Naive Bayes</strong> dựa trên số lần xuất hiện của từ. Cần phân biệt rõ với biến thể Bernoulli Naive Bayes (chỉ xét sự hiện diện nhị phân 0 hoặc 1 của từ):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Lớp</th>
+<th>Tài liệu huấn luyện</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Recipe</td>
+<td><code>healthy breakfast recipe</code></td>
+</tr>
+<tr>
+<td>Recipe</td>
+<td><code>quick breakfast smoothie</code></td>
+</tr>
+<tr>
+<td>Sports</td>
+<td><code>football match score</code></td>
+</tr>
+<tr>
+<td>Sports</td>
+<td><code>team football match</code></td>
+</tr>
+</tbody></table></div>
+<p>Từ vựng chung gồm 9 từ duy nhất:</p>
+<pre><code class="language-text">V = {healthy, breakfast, recipe, quick, smoothie,
+     football, match, score, team}
+</code></pre>
+<p>Mỗi lớp có tổng cộng 6 từ (tokens) và 2 tài liệu, do đó xác suất tiên nghiệm của cả hai lớp là <code>2 / 4 = 0.5</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Từ</th>
+<th align="right">Số lần trong Recipe</th>
+<th align="right">Số lần trong Sports</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>breakfast</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>quick</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>recipe</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>football</td>
+<td align="right">0</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>match</td>
+<td align="right">0</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>Các từ còn lại</td>
+<td align="right">Theo bảng tài liệu huấn luyện trên</td>
+<td align="right">Theo bảng tài liệu huấn luyện trên</td>
+</tr>
+</tbody></table></div>
+<p>Sử dụng kỹ thuật làm mịn cộng (additive / Laplace smoothing) với <code>α = 1</code>:</p>
+<div class="formula-block" role="math" aria-label="smoothed word probability equals word count plus alpha divided by total class tokens plus alpha times vocabulary size">
+  <span class="formula-main">P(w|c) = (count(w,c)+α) / (N<sub>c</sub>+α|V|)</span>
+</div>
+
+<ul>
+<li><code>N_c = 6</code>: Tổng số token trong lớp <code>c</code>.</li>
+<li><code>|V| = 9</code>: Kích thước từ vựng của tập huấn luyện.</li>
+<li>Mẫu số chung là <code>6 + 1 × 9 = 15</code>.</li>
+<li>Nhờ <code>α = 1</code>, các từ chưa từng xuất hiện trong lớp cũng nhận được xác suất tối thiểu là <code>1 / 15</code>.</li>
+</ul>
+<p>Xét tài liệu mới cần phân loại là <code>quick breakfast recipe</code>:</p>
+<pre><code class="language-text">score(Recipe)
+= P(Recipe) P(quick|Recipe) P(breakfast|Recipe) P(recipe|Recipe)
+= 0.5 × 2/15 × 3/15 × 2/15
+= 0.0017778
+
+score(Sports)
+= 0.5 × 1/15 × 1/15 × 1/15
+= 0.0001481
+</code></pre>
+<p>Các điểm số trên là giá trị trước khi chuẩn hóa. Vì điểm của lớp Recipe cao gấp 12 lần lớp Sports, tài liệu mới được phân loại vào Recipe. Nếu chuẩn hóa trên không gian 2 lớp, xác suất hậu nghiệm là:</p>
+<pre><code class="language-text">P(Recipe|D) = 0.0017778 / (0.0017778 + 0.0001481)
+            ≈ 0.9231
+</code></pre>
+<p>Nếu không có kỹ thuật làm mịn, phía lớp Sports sẽ chứa xác suất 0 khiến toàn bộ tích điểm số bị triệt tiêu về 0. Đối với các tài liệu dài, tích của nhiều xác suất nhỏ có thể gây ra hiện tượng tràn số dưới (underflow), vì vậy trong thực tế người ta cộng các điểm số logarit:</p>
+<pre><code class="language-text">log score(Recipe) ≈ -6.3324
+log score(Sports) ≈ -8.8173
+</code></pre>
+<p>Hàm logarit đồng biến nên giá trị lớn hơn <code>-6.3324</code> vẫn chỉ ra đúng lớp chiến thắng tương đương như phép nhân xác suất gốc.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giới hạn</span><p>Do bỏ qua hoàn toàn thứ tự từ, hai cụm từ mang ý nghĩa trái ngược như <code>not good</code> và <code>good</code> sẽ có biểu diễn đặc trưng gần như nhau. Để khắc phục, cần bổ sung đặc trưng 2-gram (như <code>not_good</code>) hoặc sử dụng các kiến trúc mạng nơ-ron phức tạp hơn.</p></aside>
+<h2 id="support-vector-machine-vi" data-section-heading="support-vector-machine">10.2 Support Vector Machine</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 5–7</p>
+<p>Mỗi tài liệu được biểu diễn bằng một vector đặc trưng <code>x</code>, và bài toán phân loại nhị phân gán nhãn <code>y ∈ {−1, +1}</code>. Thuật toán Support Vector Machine (SVM) tìm kiếm một siêu phẳng (hyperplane) phân tách không gian:</p>
+<div class="formula-block" role="math" aria-label="decision function f x equals w dot x plus b">
+  <span class="formula-main">f(x) = w·x + b</span>
+</div>
+
+<p>Phương trình <code>f(x) = 0</code> định nghĩa ranh giới quyết định (decision boundary). Nếu <code>f(x) &gt; 0</code>, mô hình dự đoán nhãn <code>+1</code>; nếu <code>f(x) &lt; 0</code>, dự đoán nhãn <code>−1</code>. Vector pháp tuyến <code>w</code> quyết định hướng xoay của siêu phẳng, còn hệ số chặn <code>b</code> quyết định vị trí tịnh tiến. Hai đường biên lề (margin boundaries) được chuẩn hóa tại <code>f(x) = +1</code> và <code>f(x) = −1</code>.</p>
+<p>Ký hiệu <code>||w||</code> biểu thị độ dài hình học của vector <code>w</code>. Khoảng cách vuông góc từ ranh giới quyết định tới mỗi đường biên lề là <code>1 / ||w||</code>, do đó tổng độ rộng của lề giữa hai lớp là <code>2 / ||w||</code>. Vì vậy, bài toán tối đa hóa độ rộng lề tương đương với việc tối thiểu hóa độ dài <code>||w||</code>.</p>
+<h3 id="detail-3-vi">Lề cứng (Hard Margin)</h3>
+<p>Khi dữ liệu hoàn toàn phân tách tuyến tính, SVM tìm kiếm siêu phẳng có lề rộng nhất sao cho mọi điểm dữ liệu huấn luyện đều nằm đúng phía bên ngoài đường biên lề:</p>
+<div class="formula-block" role="math" aria-label="minimize one half norm w squared subject to y i times w dot x i plus b greater than or equal to one">
+  <span class="formula-main">minimize 1/2 ||w||<sup>2</sup></span>
+  <span class="formula-sub">subject to y<sub>i</sub>(w·x<sub>i</sub>+b) ≥ 1</span>
+</div>
+
+<p>Khi đó, những điểm dữ liệu huấn luyện thỏa mãn đẳng thức <code>y_i f(x_i) = 1</code> (nằm chính xác trên hai đường biên lề <code>f(x) = +1</code> hoặc <code>f(x) = −1</code>) được gọi là các <strong>vector hỗ trợ (support vectors)</strong>. Các điểm này đóng vai trò then chốt quyết định vị trí của ranh giới tối ưu; nếu loại bỏ hoặc dịch chuyển các điểm khác nằm xa ngoài lề (<code>y_i f(x_i) &gt; 1</code>), vị trí của siêu phẳng tối ưu hoàn toàn không thay đổi.</p>
+<h3 id="detail-4-vi">Lề mềm, hàm mất mát hinge và siêu tham số C</h3>
+<p>Trong thực tế, dữ liệu văn bản thường bị nhiễu và không thể phân tách tuyến tính hoàn hảo. Do đó, SVM sử dụng cơ chế lề mềm (soft margin), cho phép một số điểm dữ liệu vi phạm điều kiện lề thông qua hàm mất mát hinge:</p>
+<div class="formula-block" role="math" aria-label="hinge loss equals maximum of zero and one minus y times f x">
+  <span class="formula-main">L(x,y) = max(0, 1 − y(w·x+b))</span>
+</div>
+
+<div class="formula-block" role="math" aria-label="soft margin objective equals one half norm w squared plus C times the sum of hinge losses">
+  <span class="formula-main">minimize 1/2||w||<sup>2</sup> + CΣ<sub>i</sub>L(x<sub>i</sub>,y<sub>i</sub>)</span>
+</div>
+
+<p>Mất mát hinge bằng 0 khi <code>y f(x) ≥ 1</code> (điểm nằm đúng phía và ở ngoài lề). Khi <code>0 &lt; y f(x) &lt; 1</code>, điểm nằm đúng phía nhưng rơi vào bên trong vùng lề nên vẫn bị phạt; khi <code>y f(x) &lt; 0</code>, điểm bị phân loại sai hoàn toàn.</p>
+<p>Siêu tham số <code>C</code> điều tiết sự đánh đổi: <code>C</code> càng lớn thì hình phạt cho các điểm vi phạm lề càng nặng, ép mô hình tạo lề hẹp hơn để giảm lỗi huấn luyện; ngược lại, <code>C</code> nhỏ ưu tiên độ rộng lề lớn hơn, chấp nhận nhiều vi phạm hơn để tránh quá khớp (overfitting). Cần chọn <code>C</code> tối ưu dựa trên tập kiểm thực (validation set).</p>
+<p>Trong mô hình lề mềm, không được hiểu một cách máy móc rằng support vector chỉ là &quot;những điểm gần ranh giới quyết định nhất&quot;. Bên cạnh các điểm nằm trên đường biên lề, <strong>các điểm nằm trong margin hoặc bị phân loại sai</strong> cũng có thể là những điểm tác động trực tiếp lên nghiệm tối ưu và trở thành support vector.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích chính xác hơn</span><p>Trong dạng đối ngẫu (dual representation) của bài toán quy hoạch toàn phương SVM, mỗi điểm huấn luyện gắn liền với một nhân tử Lagrange <code>a_i</code>. Điểm mấu chốt là <strong>học xong các điểm có <code>a_i&gt;0</code> sẽ là support vector</strong>. Định nghĩa toán học chuẩn xác này bao quát toàn bộ các điểm nằm trên biên lề cũng như các điểm vi phạm nằm bên trong lề của mô hình lề mềm.</p></aside>
+<h3 id="detail-5-vi">Tính toán giá trị dự đoán và hàm mất mát</h3>
+<p>Giả định một siêu phẳng minh họa với <code>w = (1, 1)</code> và <code>b = -1</code> (đây là ranh giới giả định phục vụ tính toán, chưa phải nghiệm tối ưu sau huấn luyện):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Trường hợp</th>
+<th align="right"><code>y</code></th>
+<th><code>x</code></th>
+<th align="right"><code>f(x)</code></th>
+<th align="right"><code>y f(x)</code></th>
+<th align="right">Mất mát Hinge</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Phân loại đúng, ngoài lề</td>
+<td align="right">+1</td>
+<td><code>(2, 1)</code></td>
+<td align="right"><code>2 + 1 − 1 = 2.0</code></td>
+<td align="right">2.0</td>
+<td align="right"><code>max(0, 1 − 2) = 0</code></td>
+</tr>
+<tr>
+<td>Phân loại đúng, nằm trong lề</td>
+<td align="right">+1</td>
+<td><code>(0.8, 0.6)</code></td>
+<td align="right">0.4</td>
+<td align="right">0.4</td>
+<td align="right"><code>max(0, 1 − 0.4) = 0.6</code></td>
+</tr>
+<tr>
+<td>Phân loại sai</td>
+<td align="right">−1</td>
+<td><code>(1.2, 0.5)</code></td>
+<td align="right">0.7</td>
+<td align="right">-0.7</td>
+<td align="right"><code>max(0, 1 − (-0.7)) = 1.7</code></td>
+</tr>
+</tbody></table></div>
+<p>Trong giai đoạn dự đoán, ta dùng <code>w, b</code> đã biết để tính <code>f(x)</code>. Trong giai đoạn huấn luyện, ta tìm <code>w, b</code> tối thiểu hóa hàm mục tiêu. Cần phân biệt rõ hai giai đoạn này.</p>
+<h2 id="classification-evaluation-vi" data-section-heading="classification-evaluation">10.3 Đánh giá bộ phân loại</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 8</p>
+<p>Ma trận nhầm lẫn (confusion matrix) cho bài toán phân loại nhị phân quy ước hàng là nhãn thực tế (actual) và cột là nhãn dự đoán (predicted):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Thực tế \ Dự đoán</th>
+<th align="right">Positive</th>
+<th align="right">Negative</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Positive</td>
+<td align="right">TP</td>
+<td align="right">FN</td>
+</tr>
+<tr>
+<td>Negative</td>
+<td align="right">FP</td>
+<td align="right">TN</td>
+</tr>
+</tbody></table></div>
+<div class="formula-block" role="math" aria-label="accuracy precision recall and F one formulas">
+  <span class="formula-main">Accuracy = (TP+TN)/(TP+FP+FN+TN)</span>
+  <span class="formula-sub">Precision = TP/(TP+FP), Recall = TP/(TP+FN), F1 = 2PR/(P+R)</span>
+</div>
+
+<p>Giả sử trong tập 100 email có 12 email rác (spam) và 88 email thông thường. Nếu mô hình đạt <code>TP = 8, FN = 4, FP = 2, TN = 86</code>, độ chính xác tổng thể (accuracy) đạt tới 94%, nhưng độ bao phủ (recall) của lớp spam chỉ đạt <code>8 / 12 = 66.7%</code>. Khi dữ liệu bị mất cân bằng lớp nghiêm trọng, chỉ số accuracy sẽ che giấu việc mô hình bỏ sót nhiều mẫu thuộc lớp thiểu số.</p>
+<h3 id="detail-6-vi">Trung bình Micro và trung bình Macro</h3>
+<p>Xét bảng ma trận nhầm lẫn cho bài toán phân loại 3 lớp (A, B, C):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Thực tế \ Dự đoán</th>
+<th align="right">A</th>
+<th align="right">B</th>
+<th align="right">C</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td align="right">45</td>
+<td align="right">3</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>B</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>C</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">5</td>
+</tr>
+</tbody></table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Lớp</th>
+<th align="right">Độ chính xác (Precision)</th>
+<th align="right">Độ bao phủ (Recall)</th>
+<th align="right">Điểm F1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td align="right"><code>45 / (45 + 7) = 0.865</code></td>
+<td align="right"><code>45 / 50 = 0.900</code></td>
+<td align="right">0.882</td>
+</tr>
+<tr>
+<td>B</td>
+<td align="right"><code>4 / (4 + 5) = 0.444</code></td>
+<td align="right"><code>4 / 10 = 0.400</code></td>
+<td align="right">0.421</td>
+</tr>
+<tr>
+<td>C</td>
+<td align="right"><code>5 / (5 + 4) = 0.556</code></td>
+<td align="right"><code>5 / 10 = 0.500</code></td>
+<td align="right">0.526</td>
+</tr>
+</tbody></table></div>
+<p>Chỉ số Macro-F1 tính trung bình cộng số học của các điểm F1 theo từng lớp với trọng số ngang nhau. Mỗi lớp có tiếng nói tương đương nên chỉ số này phản ánh rất nhạy các sai sót trên các lớp nhỏ:</p>
+<pre><code class="language-text">macro-F1 = (0.882 + 0.421 + 0.526) / 3 ≈ 0.610
+</code></pre>
+<p>Ngược lại, trung bình Micro cộng dồn toàn bộ TP, FP, FN trên tất cả các lớp trước khi tính toán. Đối với bài toán phân loại đơn nhãn, micro precision, micro recall và micro-F1 đều bằng độ chính xác tổng thể accuracy: <code>54 / 70 ≈ 0.771</code>. Điểm số micro chịu sự chi phối mạnh của lớp A (chiếm số lượng lớn nhất). Việc macro-F1 thấp hơn nhiều so với micro-F1 cảnh báo rằng hệ thống đang hoạt động kém trên hai lớp thiểu số B và C.</p>
+<h2 id="classifier-and-feature-selection-vi" data-section-heading="classifier-and-feature-selection">10.4 Bộ phân loại và lựa chọn đặc trưng</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 9–12</p>
+<h3 id="detail-7-vi">Mô hình sinh và mô hình phân biệt</h3>
+<ul>
+<li><strong>Mô hình sinh (generative model):</strong> Mô hình hóa quá trình dữ liệu được sinh ra từ các lớp thông qua phân phối xác suất <code>P(c)</code> và <code>P(d|c)</code>. Ví dụ tiêu biểu là Naive Bayes.</li>
+<li><strong>Mô hình phân biệt (discriminative model):</strong> Học trực tiếp ranh giới phân tách hoặc hàm điều kiện <code>P(c|d)</code>. Ví dụ tiêu biểu là SVM.</li>
+</ul>
+<p>Mô hình sinh hữu hiệu khi tập dữ liệu nhỏ nhờ việc đặt ra các giả định về phân phối. Mô hình phân biệt tập trung trực tiếp vào việc tối ưu ranh giới phân lớp nên thường cho độ chính xác cao hơn khi có đủ dữ liệu huấn luyện.</p>
+<h3 id="detail-8-vi">Bộ phân loại láng giềng gần nhất và phương pháp phi tham số</h3>
+<p>Bộ phân loại k láng giềng gần nhất (k-NN classifier) gán nhãn cho điểm dữ liệu mới dựa trên đa số phiếu bầu từ <code>k</code> điểm huấn luyện nằm gần nó nhất trong không gian đặc trưng. Thuật ngữ phi tham số (non-parametric) không có nghĩa là mô hình không cần giả định nào, mà có nghĩa là cấu trúc mô hình không bị đóng khung trong một số lượng tham số phân phối cố định trước; nó vẫn phụ thuộc chặt chẽ vào hàm khoảng cách hình học, cách chuẩn hóa đặc trưng và số lượng láng giềng <code>k</code>.</p>
+<h3 id="detail-9-vi">Độ tăng thông tin (Information Gain)</h3>
+<p>Trong xử lý văn bản, không gian từ vựng có thể lên tới hàng trăm nghìn từ. Kỹ thuật lựa chọn đặc trưng (feature selection) giúp loại bỏ các từ nhiễu để giảm độ phức tạp tính toán và chống quá khớp. Bắt buộc phải chọn đặc trưng trên tập dữ liệu huấn luyện, không được dùng tập kiểm thử.</p>
+<p>Gọi biến ngẫu nhiên nhị phân <code>W ∈ {0, 1}</code> biểu thị việc từ <code>w</code> xuất hiện (<code>W = 1</code>) hay vắng mặt (<code>W = 0</code>) trong tài liệu. Độ hỗn loạn (entropy) đo lường mức độ bất định của phân phối lớp <code>C</code>, tính bằng bit (sử dụng logarit cơ số 2). Độ tăng thông tin (Information Gain, IG) đo lượng bất định giảm đi sau khi biết trạng thái của từ <code>w</code>:</p>
+<div class="formula-block" role="math" aria-label="entropy equals negative sum p log base two p; information gain equals class entropy minus conditional entropy">
+  <span class="formula-main">H(C) = −Σ<sub>c</sub>P(c)log<sub>2</sub>P(c)</span>
+  <span class="formula-sub">IG(w) = H(C) − H(C|W)</span>
+</div>
+
+<p>Xét tập 8 tài liệu gồm 4 email spam và 4 email bình thường (ham). Từ <code>free</code> xuất hiện trong cả 4 email spam và 1 email ham:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Từ <code>free</code></th>
+<th align="right">Spam</th>
+<th align="right">Ham</th>
+<th align="right">Tổng cộng</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Xuất hiện (<code>W = 1</code>)</td>
+<td align="right">4</td>
+<td align="right">1</td>
+<td align="right">5</td>
+</tr>
+<tr>
+<td>Vắng mặt (<code>W = 0</code>)</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">3</td>
+</tr>
+</tbody></table></div>
+<p>Ban đầu số lượng hai lớp bằng nhau nên entropy ban đầu là <code>H(C) = 1 bit</code>.</p>
+<pre><code class="language-text">H(C|W=1) = -(4/5)log2(4/5) - (1/5)log2(1/5)
+         ≈ 0.7219
+
+H(C|W=0) = 0
+
+H(C|W) = (5/8)×0.7219 + (3/8)×0
+       ≈ 0.4512
+
+IG(free) = 1 - 0.4512 = 0.5488 bit
+</code></pre>
+<p>Giá trị IG càng lớn chứng tỏ đặc trưng đó càng mang nhiều thông tin giúp phân biệt các lớp. Trong ví dụ này, việc biết từ <code>free</code> có mặt hay không giúp giảm độ bất định của bài toán đi khoảng 0,5488 bit.</p>
+<h2 id="classification-applications-vi" data-section-heading="classification-applications">10.5 Ứng dụng: Spam, phân tích cảm xúc và quảng cáo trực tuyến</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 13–15</p>
+<h3 id="detail-10-vi">Lọc thư rác (Spam Detection)</h3>
+<p>Slide 13 phân biệt giữa term spam (thao túng tần số từ khóa gượng ép trong văn bản) và link spam (tạo dựng mạng lưới liên kết nhân tạo để thao túng thứ hạng). Bộ phân loại kết hợp các đặc trưng tần số từ vựng, cấu trúc siêu liên kết và thẻ định dạng HTML. Do kẻ spam liên tục thay đổi chiến thuật, các mô hình phân loại cần được liên tục học lại với dữ liệu mới.</p>
+<h3 id="detail-11-vi">Phân tích cảm xúc (Sentiment Analysis)</h3>
+<p>Nếu chỉ sử dụng các từ đơn lẻ (unigram), mô hình rất dễ hiểu sai ngữ cảnh phủ định:</p>
+<pre><code class="language-text">good       → Tín hiệu cảm xúc tích cực
+not good   → Unigram vẫn nhận diện từ good và có thể phân loại nhầm thành tích cực
+</code></pre>
+<p>Việc bổ sung đặc trưng 2-gram (như <code>not_good</code>), xác định phạm vi phủ định, phân tích từ loại (POS tag) và vị trí từ trong câu sẽ giúp cải thiện rõ rệt độ chính xác. Ngôn ngữ châm biếm và các từ ngữ phụ thuộc ngữ cảnh chuyên ngành vẫn là thách thức lớn đối với bài toán này.</p>
+<h3 id="detail-12-vi">Quảng cáo tìm kiếm và so khớp ngữ cảnh</h3>
+<ul>
+<li><strong>Quảng cáo tìm kiếm có tài trợ (sponsored search):</strong> So khớp quảng cáo với câu truy vấn ngắn gọn của người dùng tại thời điểm tìm kiếm.</li>
+<li><strong>Quảng cáo theo ngữ cảnh (content match):</strong> So khớp quảng cáo với toàn bộ nội dung của trang web mà người dùng đang đọc.</li>
+</ul>
+<p>Tùy vào đầu vào là truy vấn ngắn hay bài viết dài mà yêu cầu về tốc độ xử lý và bộ đặc trưng sử dụng sẽ khác nhau. Khi không gian phân loại lên tới hàng nghìn danh mục quảng cáo, người ta thường dùng biểu diễn tf-idf kết hợp độ tương đồng cosine để lọc nhanh các danh mục ứng viên trước khi chạy mô hình phân loại chi tiết.</p>
+<h2 id="hierarchical-clustering-vi" data-section-heading="hierarchical-clustering">10.6 Phân cụm phân cấp (Hierarchical Clustering)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 16</p>
+<p>Phân cụm phân cấp (hierarchical clustering) xây dựng một cấu trúc cây biểu diễn quan hệ bao hàm giữa các cụm. Thay vì chỉ đưa ra một phân hoạch cố định duy nhất, phương pháp này cho phép trực quan hóa toàn bộ quá trình các nhóm nhỏ được kết hợp dần thành các nhóm lớn theo thứ tự thông qua biểu đồ cây (dendrogram).</p>
+<ul>
+<li><strong>Phân cụm tích tụ (agglomerative / bottom-up):</strong> Khởi đầu với mỗi điểm dữ liệu là một cụm riêng biệt, sau đó lặp đi lặp lại việc hợp nhất hai cụm gần nhau nhất cho đến khi toàn bộ dữ liệu nằm chung trong một cụm duy nhất.</li>
+<li><strong>Phân cụm phân chia (divisive / top-down):</strong> Khởi đầu với toàn bộ tập dữ liệu nằm trong một cụm lớn duy nhất, sau đó chia nhỏ dần thành các cụm con.</li>
+</ul>
+<p>Khoảng cách giữa hai điểm đơn lẻ là tường minh, nhưng khoảng cách giữa hai cụm (mỗi cụm chứa nhiều điểm) đòi hỏi phải có quy tắc liên kết (linkage):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Quy tắc liên kết</th>
+<th>Khoảng cách giữa hai cụm</th>
+<th>Xu hướng hình thành cụm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Single linkage</td>
+<td>Khoảng cách giữa cặp điểm gần nhau nhất</td>
+<td>Dễ tạo ra các cụm kéo dài thành chuỗi (hiện tượng chaining)</td>
+</tr>
+<tr>
+<td>Complete linkage</td>
+<td>Khoảng cách giữa cặp điểm xa nhau nhất</td>
+<td>Xu hướng tạo ra các cụm hình cầu tròn trịa, chặt chẽ</td>
+</tr>
+<tr>
+<td>Average linkage</td>
+<td>Khoảng cách trung bình giữa tất cả các cặp điểm</td>
+<td>Tính chất dung hòa giữa single và complete linkage</td>
+</tr>
+</tbody></table></div>
+<p>Ví dụ: nếu cụm A có 2 điểm và cụm B có 2 điểm, single linkage sẽ chọn khoảng cách nhỏ nhất trong 4 cặp khoảng cách, complete linkage chọn khoảng cách lớn nhất, còn average linkage lấy trung bình cộng của cả 4 giá trị. Khi thực hiện phép hợp nhất, cần công bố rõ quy tắc khoảng cách hình học và phương pháp liên kết đã dùng, bởi cùng một tập điểm sẽ tạo ra cây phân cấp khác nhau nếu đổi quy tắc liên kết.</p>
+<h2 id="k-means-vi" data-section-heading="k-means">10.7 K-means</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 17</p>
+<p>Trong thuật toán K-means, <code>K</code> là số lượng cụm được xác định trước. Mỗi điểm dữ liệu được gán vào trọng tâm (centroid) gần nhất, và mỗi trọng tâm được cập nhật bằng tọa độ trung bình của các điểm thuộc về cụm đó. Quá trình gán điểm xác định thành viên của cụm, còn quá trình cập nhật dịch chuyển vị trí đại diện của cụm.</p>
+<div class="formula-block" role="math" aria-label="K means objective is the sum of squared distances from each point to its assigned centroid">
+  <span class="formula-main">J = Σ<sub>k=1</sub><sup>K</sup> Σ<sub>i:A(i)=k</sub> ||x<sub>i</sub>−μ<sub>k</sub>||<sup>2</sup></span>
+</div>
+
+<ol>
+<li>Khởi tạo tọa độ cho <code>K</code> trọng tâm ban đầu.</li>
+<li>Gán mỗi điểm dữ liệu vào trọng tâm gần nó nhất (theo khoảng cách Euclid).</li>
+<li>Tính toán lại tọa độ trọng tâm mới bằng giá trị trung bình tọa độ của các điểm trong cụm.</li>
+<li>Lặp lại bước 2 và 3 cho đến khi sự phân bổ điểm không còn thay đổi hoặc hàm mục tiêu giảm không đáng kể.</li>
+</ol>
+<h3 id="detail-13-vi">Các lưu ý kỹ thuật quan trọng</h3>
+<ul>
+<li>Nghiệm của thuật toán phụ thuộc nhiều vào vị trí khởi tạo ban đầu, dễ rơi vào cực tiểu cục bộ. Nên chạy nhiều lần với các khởi tạo ngẫu nhiên khác nhau hoặc dùng thuật toán khởi tạo K-means++.</li>
+<li>Nếu các đặc trưng có thang đo khác biệt lớn, trục có khoảng giá trị lớn sẽ chi phối toàn bộ phép tính khoảng cách; bắt buộc phải chuẩn hóa đặc trưng (standardization / normalization) trước khi chạy.</li>
+<li>Điểm ngoại lai (outlier) sẽ kéo lệch mạnh tọa độ trung bình của trọng tâm.</li>
+<li>Nếu một cụm bị rỗng (không có điểm nào được gán vào), cần có quy tắc xử lý như tái khởi tạo trọng tâm đó tại điểm nằm xa nhất so với các trọng tâm hiện tại.</li>
+<li>K-means hoạt động rất tốt trên các cụm dạng hình cầu có phương sai tương đồng, nhưng kém hiệu quả trên các cụm có hình dạng phi lồi, uốn lượn hoặc mật độ chênh lệch lớn.</li>
+</ul>
+<h2 id="nearest-neighbor-clustering-vi" data-section-heading="nearest-neighbor-clustering">10.8 Phân cụm láng giềng gần nhất trong slide 18</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 18</p>
+<p>Hình minh họa trong slide 18 hiển thị các điểm gốc màu đen (A, B, C, D), các điểm màu xám mang cùng nhãn, các điểm màu trắng chưa được gán nhãn, kèm chú thích ngắn gọn &quot;nearest neighbor clustering với K=5&quot;. Hình vẽ gợi ý ý tưởng mở rộng nhóm từ mỗi điểm gốc tới 5 điểm láng giềng xung quanh, nhưng slide không định nghĩa rõ hàm khoảng cách, cách chọn điểm mầm (seeds), cách giải quyết khi vùng láng giềng của các điểm mầm chồng lấn nhau, cũng như cách xử lý các điểm trắng còn sót lại. Do đó, hình vẽ này không đủ dữ kiện để khẳng định một thuật toán chuẩn duy nhất.</p>
+<p>Cần phân biệt rõ ba khái niệm sau:</p>
+<ul>
+<li><strong>Phân loại k-NN (k-NN classification):</strong> Bài toán có giám sát, dùng đa số phiếu bầu của <code>k</code> điểm huấn luyện láng giềng để dự đoán nhãn cho điểm mới.</li>
+<li><strong>Phân cụm đồ thị láng giềng gần nhất:</strong> Nối mỗi điểm với các láng giềng gần nhất để tạo thành đồ thị, sau đó tách các thành phần liên thông để tạo cụm.</li>
+<li><strong>K-means:</strong> Tham số <code>K</code> đại diện cho số lượng cụm và sử dụng khoảng cách tới các trọng tâm đại diện.</li>
+</ul>
+<p>Khi xây dựng ví dụ bổ trợ, cần công bố rõ quy tắc, ví dụ: &quot;kết nối mỗi điểm với 5 láng giềng gần nhất, chỉ giữ lại các cạnh nối qua lại hai chiều (mutual nearest neighbors), rồi lấy các thành phần liên thông làm cụm&quot;. Tuyệt đối không nhầm lẫn số lượng láng giềng 5 với số lượng cụm 5.</p>
+<h2 id="clustering-evaluation-vi" data-section-heading="clustering-evaluation">10.9 Đánh giá kết quả phân cụm</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 19</p>
+<p>Thuật ngữ <code>ClusterPrecision</code> trong slide 19 chính là độ tinh khiết (purity), một chỉ số đánh giá ngoài (external evaluation) phổ biến dựa trên nhãn đa số:</p>
+<div class="formula-block" role="math" aria-label="purity equals one over N times the sum over clusters of the largest true class count in each cluster">
+  <span class="formula-main">Purity = (1/N) Σ<sub>k=1</sub><sup>K</sup> max<sub>c</sub>|C<sub>k</sub>∩L<sub>c</sub>|</span>
+</div>
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Cụm</th>
+<th align="right">Nhãn thực A</th>
+<th align="right">Nhãn thực B</th>
+<th align="right">Nhãn thực C</th>
+<th align="right">Số lượng nhãn chiếm đa số</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C1</td>
+<td align="right">4</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">4</td>
+</tr>
+<tr>
+<td>C2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>C3</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">4</td>
+</tr>
+</tbody></table></div>
+<p>Với tổng số <code>N = 15</code> điểm dữ liệu, ta có <code>Purity = (4 + 3 + 4) / 15 = 11 / 15 ≈ 0.733</code>. Nhãn thực tế ở đây chỉ được <strong>dùng sau khi phân cụm để đánh giá chất lượng</strong>, hoàn toàn không được thuật toán sử dụng trong quá trình gom cụm.</p>
+<p>Nếu chia nhỏ dữ liệu thành <code>N</code> cụm (mỗi điểm là một cụm riêng biệt), độ tinh khiết sẽ đạt giá trị tối đa bằng 1. Vì vậy, không thể chỉ dùng độ tinh khiết làm tiêu chí duy nhất để chọn số cụm hoặc đánh giá mô hình; cần kết hợp thêm độ phức tạp của mô hình, tính ổn định và mục tiêu nghiệp vụ thực tế.</p>
+<h2 id="choosing-k-and-search-vi" data-section-heading="choosing-k-and-search">10.10 Lựa chọn K và ứng dụng trong tìm kiếm</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 20–21</p>
+<p>Không có một giá trị <code>K</code> chuẩn mực duy nhất đúng cho mọi tập dữ liệu và mọi bài toán. Giao diện hiển thị kết quả tìm kiếm cần số nhóm nhỏ vừa đủ để người dùng dễ đọc lướt, trong khi phân tích khám phá dữ liệu cần độ chi tiết cao, còn bài toán nén dữ liệu lại quan tâm đến việc giảm thiểu sai số tái lập.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Phương pháp điểm khuỷu tay (elbow method) theo dõi sự suy giảm của tổng bình phương sai số trong cụm (WSS) khi tăng <code>K</code> và chọn điểm uốn mà tại đó mức cải thiện bắt đầu chậm lại rõ rệt. Hệ số bóng (silhouette coefficient) so sánh khoảng cách nội cụm với khoảng cách tới các cụm lân cận. Tuy nhiên, trên nhiều tập dữ liệu thực tế không có điểm khuỷu tay rõ ràng và kết quả phụ thuộc rất nhiều vào thang đo đặc trưng.</p></aside>
+<p>Trong công cụ tìm kiếm, gom cụm các kết quả có cùng câu truy vấn theo chủ đề giúp người dùng nhanh chóng lọc đúng ý định khi câu truy vấn bị đa nghĩa. Trong khi phân loại bị giới hạn bởi các nhãn cố định đã định nghĩa từ trước, phân cụm có ưu thế vượt trội là khám phá được các cấu trúc chủ đề mới phát sinh trong kết quả của chính câu truy vấn đó. Tuy nhiên, nếu thuật toán gán nhãn cho các cụm không đủ rõ ràng, người dùng sẽ cảm thấy bối rối khi chọn lựa.</p>
+<h2 id="k-means-exercise-vi" data-section-heading="k-means-exercise">Bài tập gốc: Giải trọn vẹn bài toán K-means</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 22</p>
+<p>Tập dữ liệu 10 điểm trong mặt phẳng 2 chiều được trích xuất chính xác từ slide:</p>
+<pre><code class="language-text">A=(2,10) B=(4,5) C=(3,2) D=(9,4) E=(3,7)
+F=(5,5)  G=(6,4) H=(1,9) I=(1,2) J=(4,9)
+</code></pre>
+<p>Yêu cầu: <code>K = 3</code>, sử dụng khoảng cách Euclid. Vì slide gốc không chỉ định trọng tâm ban đầu, ta chọn 3 điểm xuất phát để minh họa: <code>μ1 = A = (2, 10)</code>, <code>μ2 = D = (9, 4)</code>, <code>μ3 = I = (1, 2)</code>. So sánh bình phương khoảng cách Euclid cho ra kết quả phân loại tương đương với khoảng cách gốc. Quy tắc phá vỡ thế hòa: nếu bằng khoảng cách thì ưu tiên cụm có số thứ tự nhỏ hơn. Nếu xuất hiện cụm rỗng, điểm nằm xa nhất so với các trọng tâm hiện tại sẽ được chọn làm trọng tâm mới.</p>
+<h3 id="detail-14-vi">Vòng lặp 1: Gán điểm vào các trọng tâm ban đầu</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Điểm</th>
+<th align="right"><code>d²(μ1)</code></th>
+<th align="right"><code>d²(μ2)</code></th>
+<th align="right"><code>d²(μ3)</code></th>
+<th>Cụm được gán</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td align="right">0</td>
+<td align="right">85</td>
+<td align="right">65</td>
+<td>C1</td>
+</tr>
+<tr>
+<td>B</td>
+<td align="right">29</td>
+<td align="right">26</td>
+<td align="right">18</td>
+<td>C3</td>
+</tr>
+<tr>
+<td>C</td>
+<td align="right">65</td>
+<td align="right">40</td>
+<td align="right">4</td>
+<td>C3</td>
+</tr>
+<tr>
+<td>D</td>
+<td align="right">85</td>
+<td align="right">0</td>
+<td align="right">68</td>
+<td>C2</td>
+</tr>
+<tr>
+<td>E</td>
+<td align="right">10</td>
+<td align="right">45</td>
+<td align="right">29</td>
+<td>C1</td>
+</tr>
+<tr>
+<td>F</td>
+<td align="right">34</td>
+<td align="right">17</td>
+<td align="right">25</td>
+<td>C2</td>
+</tr>
+<tr>
+<td>G</td>
+<td align="right">52</td>
+<td align="right">9</td>
+<td align="right">29</td>
+<td>C2</td>
+</tr>
+<tr>
+<td>H</td>
+<td align="right">2</td>
+<td align="right">89</td>
+<td align="right">49</td>
+<td>C1</td>
+</tr>
+<tr>
+<td>I</td>
+<td align="right">65</td>
+<td align="right">68</td>
+<td align="right">0</td>
+<td>C3</td>
+</tr>
+<tr>
+<td>J</td>
+<td align="right">5</td>
+<td align="right">50</td>
+<td align="right">58</td>
+<td>C1</td>
+</tr>
+</tbody></table></div>
+<p>Các cụm mới và tọa độ trọng tâm mới được tính toán lại:</p>
+<pre><code class="language-text">C1 = {A, E, H, J}
+μ1 = ((2+3+1+4)/4, (10+7+9+9)/4) = (2.5, 8.75)
+
+C2 = {D, F, G}
+μ2 = ((9+5+6)/3, (4+5+4)/3) = (6.6667, 4.3333)
+
+C3 = {B, C, I}
+μ3 = ((4+3+1)/3, (5+2+2)/3) = (2.6667, 3.0000)
+</code></pre>
+<h3 id="detail-15-vi">Vòng lặp 2: Gán điểm vào các trọng tâm vừa cập nhật</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Điểm</th>
+<th align="right"><code>d²(μ1)</code></th>
+<th align="right"><code>d²(μ2)</code></th>
+<th align="right"><code>d²(μ3)</code></th>
+<th>Cụm được gán</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td align="right">1.8125</td>
+<td align="right">53.8889</td>
+<td align="right">49.4444</td>
+<td>C1</td>
+</tr>
+<tr>
+<td>B</td>
+<td align="right">16.3125</td>
+<td align="right">7.5556</td>
+<td align="right">5.7778</td>
+<td>C3</td>
+</tr>
+<tr>
+<td>C</td>
+<td align="right">45.8125</td>
+<td align="right">18.8889</td>
+<td align="right">1.1111</td>
+<td>C3</td>
+</tr>
+<tr>
+<td>D</td>
+<td align="right">64.8125</td>
+<td align="right">5.5556</td>
+<td align="right">41.1111</td>
+<td>C2</td>
+</tr>
+<tr>
+<td>E</td>
+<td align="right">3.3125</td>
+<td align="right">20.5556</td>
+<td align="right">16.1111</td>
+<td>C1</td>
+</tr>
+<tr>
+<td>F</td>
+<td align="right">20.3125</td>
+<td align="right">3.2222</td>
+<td align="right">9.4444</td>
+<td>C2</td>
+</tr>
+<tr>
+<td>G</td>
+<td align="right">34.8125</td>
+<td align="right">0.5556</td>
+<td align="right">12.1111</td>
+<td>C2</td>
+</tr>
+<tr>
+<td>H</td>
+<td align="right">2.3125</td>
+<td align="right">53.8889</td>
+<td align="right">38.7778</td>
+<td>C1</td>
+</tr>
+<tr>
+<td>I</td>
+<td align="right">47.8125</td>
+<td align="right">37.5556</td>
+<td align="right">3.7778</td>
+<td>C3</td>
+</tr>
+<tr>
+<td>J</td>
+<td align="right">2.3125</td>
+<td align="right">28.8889</td>
+<td align="right">37.7778</td>
+<td>C1</td>
+</tr>
+</tbody></table></div>
+<p>Sự phân bổ điểm vào các cụm ở vòng lặp 2 hoàn toàn trùng khớp với vòng lặp 1. Thuật toán chính thức <strong>hội tụ và dừng lại</strong>.</p>
+<h3 id="detail-16-vi">Các cụm hội tụ cuối cùng</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Cụm</th>
+<th>Các điểm thành viên</th>
+<th>Tọa độ trọng tâm (Centroid)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C1</td>
+<td>A, E, H, J</td>
+<td><code>(2.5, 8.75)</code></td>
+</tr>
+<tr>
+<td>C2</td>
+<td>D, F, G</td>
+<td><code>(6.6667, 4.3333)</code></td>
+</tr>
+<tr>
+<td>C3</td>
+<td>B, C, I</td>
+<td><code>(2.6667, 3.0000)</code></td>
+</tr>
+</tbody></table></div>
+<h3 id="detail-17-vi">Đường kính và bán kính cụm</h3>
+<p>Slide gốc không đưa ra công thức định nghĩa, vì vậy lời giải chuẩn này áp dụng định nghĩa hình học phổ biến:</p>
+<ul>
+<li><strong>Đường kính (diameter):</strong> Khoảng cách Euclid lớn nhất giữa hai điểm bất kỳ nằm trong cùng một cụm.</li>
+<li><strong>Bán kính (radius):</strong> Khoảng cách Euclid lớn nhất từ trọng tâm của cụm tới một điểm thành viên trong cụm đó.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Cụm</th>
+<th>Cặp điểm tạo đường kính</th>
+<th align="right">Giá trị đường kính</th>
+<th>Điểm tạo bán kính</th>
+<th align="right">Giá trị bán kính</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C1</td>
+<td>A–E</td>
+<td align="right"><code>√10 ≈ 3.1623</code></td>
+<td>E</td>
+<td align="right"><code>√3.3125 ≈ 1.8200</code></td>
+</tr>
+<tr>
+<td>C2</td>
+<td>D–F</td>
+<td align="right"><code>√17 ≈ 4.1231</code></td>
+<td>D</td>
+<td align="right"><code>√5.5556 ≈ 2.3570</code></td>
+</tr>
+<tr>
+<td>C3</td>
+<td>B–I</td>
+<td align="right"><code>√18 ≈ 4.2426</code></td>
+<td>B</td>
+<td align="right"><code>√5.7778 ≈ 2.4037</code></td>
+</tr>
+</tbody></table></div>
+<p>Toàn bộ 10 điểm thuộc về đúng một cụm duy nhất, và mỗi trọng tâm khớp chính xác với giá trị trung bình tọa độ của các thành viên. Đây là kết quả hội tụ ứng với bộ 3 trọng tâm khởi tạo đã chọn. Nếu thay đổi điểm khởi tạo, thuật toán có thể hội tụ về một nghiệm cục bộ khác; ta không khẳng định đây là nghiệm tối ưu toàn cục duy nhất.</p>
+<details class="answer-key"><summary>Xem các tiêu chí kiểm tra khi lập trình</summary><div class="answer-key__body"><ol>
+<li>Kiểm tra ở mỗi vòng lặp mỗi điểm chỉ được gán vào duy nhất một cụm.</li>
+<li>Tính toán lại tọa độ trọng tâm từ đúng các điểm thành viên.</li>
+<li>Dừng vòng lặp khi sự phân bổ cụm không đổi hoặc hàm mục tiêu hội tụ.</li>
+<li>Đo đường kính bằng cách duyệt qua mọi cặp điểm trong cụm; đo bán kính bằng khoảng cách từ trọng tâm tới mọi điểm thành viên.</li>
+<li>Thử nghiệm nhiều bộ khởi tạo ngẫu nhiên để so sánh giá trị hàm mục tiêu.</li>
+</ol></div></details>
+
+<h2 id="exercise-vi" data-section-heading="exercise">Bài tập cuối chương</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 22</p>
+<h3 id="detail-18-vi">Bài tập 1: Naive Bayes</h3>
+<p>Sử dụng tập dữ liệu huấn luyện ở Mục 10.1, hãy phân loại văn bản mới <code>football score</code>. Sử dụng hệ số làm mịn <code>α = 1</code>, trình bày chi tiết điểm số chưa chuẩn hóa và đưa ra kết luận.</p>
+<details class="answer-key"><summary>Xem lời giải gợi ý</summary><div class="answer-key__body"><p>Phía lớp Recipe: <code>0.5 × (1/15) × (1/15) = 0.002222</code>. Phía lớp Sports: <code>0.5 × (3/15) × (2/15) = 0.013333</code>. Điểm số của lớp Sports cao gấp 6 lần lớp Recipe, do đó văn bản được phân loại chính xác vào lớp Sports.</p></div></details>
+
+<h3 id="detail-19-vi">Bài tập 2: Mất mát Hinge</h3>
+<p>Cho siêu phẳng với <code>w = (1, 1)</code> và <code>b = -1</code>. Xét điểm dữ liệu kiểm thử <code>x = (0.2, 0.3)</code> với nhãn thực tế <code>y = -1</code>. Hãy tính giá trị dự đoán <code>f(x)</code> và mất mát hinge tương ứng.</p>
+<details class="answer-key"><summary>Xem lời giải gợi ý</summary><div class="answer-key__body"><p>Ta có <code>f(x) = 0.2 + 0.3 − 1 = -0.5</code>. Vì <code>f(x) &lt; 0</code>, mô hình dự đoán nhãn âm (negative), trùng khớp với nhãn thực tế <code>y = -1</code>. Tuy nhiên, tích <code>y f(x) = (-1)(-0.5) = 0.5 &lt; 1</code>, do đó điểm này rơi vào bên trong vùng lề. Mất mát hinge là <code>max(0, 1 − 0.5) = 0.5</code>. Điểm dữ liệu dù được phân loại đúng nhưng vẫn chịu mất mát do không vượt qua được ranh giới lề an toàn.</p></div></details>
+
+<h3 id="detail-20-vi">Bài tập 3: Khởi tạo K-means</h3>
+<p>Với tập dữ liệu 10 điểm ở Mục 10.11, hãy chọn một bộ 3 trọng tâm khởi tạo khác, tính toán các cụm hội tụ cuối cùng và so sánh giá trị hàm mục tiêu với kết quả trên. Giữ nguyên quy tắc hòa điểm và quy tắc xử lý cụm rỗng.</p>
+<details class="answer-key"><summary>Xem hướng dẫn thực hiện</summary><div class="answer-key__body"><p>Thực hiện thử nghiệm với ít nhất 3 bộ trọng tâm khởi tạo khác nhau, lưu lại lịch sử gán điểm và cập nhật trọng tâm ở từng vòng lặp. Nghiệm nào cho tổng bình phương khoảng cách tới trọng tâm (J) nhỏ hơn sẽ là phân hoạch tốt hơn, nhưng điều đó vẫn không chứng minh được đó là nghiệm tối ưu toàn cục tuyệt đối.</p></div></details>
+
+<h2 id="summary-vi" data-section-heading="summary">Tổng kết</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 23</p>
+<ul>
+<li>Phân loại là bài toán học có giám sát nhằm gán tài liệu vào các nhãn đã biết trước; phân cụm là bài toán học không giám sát nhằm khám phá các nhóm tự nhiên trong dữ liệu.</li>
+<li>Multinomial Naive Bayes học xác suất tiên nghiệm của các lớp và hàm hợp lý của các từ vựng, sử dụng kỹ thuật làm mịn để tránh xác suất 0.</li>
+<li>SVM tìm kiếm siêu phẳng có lề rộng nhất. Trong mô hình lề cứng, support vector là các điểm nằm trên đường biên lề; trong mô hình lề mềm, support vector bao gồm cả các điểm nằm trên biên lề, các điểm nằm trong vùng lề và các điểm bị phân loại sai.</li>
+<li>Khi dữ liệu mất cân bằng lớp, độ chính xác tổng thể (accuracy) dễ gây hiểu lầm; trung bình Macro đối xử với các lớp bình đẳng nên đánh giá khách quan hơn trên các lớp thiểu số.</li>
+<li>Độ tăng thông tin (Information Gain) định lượng mức độ giảm độ hỗn loạn (entropy) của các lớp khi biết sự xuất hiện hay vắng mặt của một từ khóa.</li>
+<li>K-means yêu cầu xác định trước số cụm <code>K</code>, lặp đi lặp lại hai bước gán điểm vào trọng tâm gần nhất và cập nhật tọa độ trọng tâm cho đến khi hội tụ.</li>
+<li>Độ tinh khiết (purity) đánh giá chất lượng phân cụm dựa trên nhãn bên ngoài, nhưng có thể tăng cao giả tạo khi chia nhỏ số lượng cụm.</li>
+</ul>
+<h2 id="quiz-vi" data-section-heading="quiz">Câu hỏi tự kiểm tra</h2>
+<ol>
+<li>Giả định độc lập có điều kiện trong Naive Bayes giúp đơn giản hóa điều gì trong tính toán?</li>
+<li>Điều gì sẽ xảy ra nếu gặp một từ mới chưa từng xuất hiện trong tập huấn luyện khi không sử dụng kỹ thuật làm mịn (smoothing)?</li>
+<li>Trong trường hợp nào một điểm dữ liệu được SVM phân loại đúng nhãn nhưng vẫn phải chịu mất mát hinge? Trong mô hình lề mềm, support vector có phải chỉ gồm các điểm gần ranh giới quyết định nhất không?</li>
+<li>Chỉ số Micro-F1 và Macro-F1 phản ứng như thế nào trước sự mất cân bằng về số lượng mẫu giữa các lớp?</li>
+<li>Tại sao tuyệt đối không được thực hiện việc lựa chọn đặc trưng (feature selection) trên tập dữ liệu kiểm thử?</li>
+<li>Tham số <code>K</code> trong K-means và tham số <code>k</code> trong phân loại k-NN lần lượt đại diện cho điều gì?</li>
+<li>Tại sao một kết quả phân cụm có độ tinh khiết (purity) bằng 1 chưa chắc đã là một mô hình phân cụm tốt trong thực tế?</li>
+</ol>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><ol>
+<li>Giúp phân rã xác suất hợp lý đồng thời của toàn bộ tài liệu thành tích của các xác suất thành phần riêng lẻ của từng từ, giảm mạnh số lượng tham số cần ước lượng.</li>
+<li>Xác suất có điều kiện của từ đó bằng 0, kéo theo toàn bộ tích xác suất của lớp bị triệt tiêu về 0, làm tê liệt khả năng dự đoán của mô hình.</li>
+<li>Khi điểm đó nằm đúng phía nhưng rơi vào bên trong vùng lề (<code>0 &lt; y f(x) &lt; 1</code>). Trong mô hình lề mềm, support vector bao gồm tất cả các điểm có nhân tử Lagrange <code>a_i &gt; 0</code>, tức là không chỉ các điểm trên biên lề mà cả các điểm nằm trong lề và các điểm bị phân loại sai.</li>
+<li>Micro-F1 chịu sự chi phối nặng nề của các lớp có số lượng mẫu áp đảo; Macro-F1 lấy trung bình bình đẳng giữa các lớp nên phản ánh trung thực hiệu năng trên cả những lớp nhỏ.</li>
+<li>Vì làm như vậy sẽ gây ra hiện tượng rò rỉ thông tin từ tập kiểm thử vào quá trình xây dựng mô hình, khiến kết quả đánh giá năng lực khái quát hóa bị thổi phồng giả tạo.</li>
+<li><code>K</code> trong K-means là số lượng cụm cần phân chia; <code>k</code> trong k-NN là số lượng láng giềng gần nhất được tham khảo để bỏ phiếu gán nhãn.</li>
+<li>Vì nếu tách mỗi điểm dữ liệu thành một cụm riêng biệt thì độ tinh khiết sẽ bằng 1 tuyệt đối, nhưng cách phân chia này hoàn toàn vô nghĩa và không phát hiện được cấu trúc nhóm hữu ích nào.</li>
+</ol></div></details>
+
+<h2 id="glossary-vi" data-section-heading="glossary">Bảng thuật ngữ</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>English</th>
+<th>Tiếng Việt</th>
+<th>Ý nghĩa trong chương này</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Classification</td>
+<td>Phân loại</td>
+<td>Gán tài liệu vào các lớp hoặc danh mục đã được định nghĩa từ trước.</td>
+</tr>
+<tr>
+<td>Clustering</td>
+<td>Phân cụm</td>
+<td>Gom nhóm các đối tượng tương đồng mà không cần nhãn mục tiêu cho trước.</td>
+</tr>
+<tr>
+<td>Prior</td>
+<td>Xác suất tiên nghiệm</td>
+<td>Xác suất tự nhiên của lớp trước khi quan sát nội dung tài liệu.</td>
+</tr>
+<tr>
+<td>Likelihood</td>
+<td>Hàm hợp lý</td>
+<td>Độ hợp lý để tài liệu xuất hiện dưới giả định nó thuộc về một lớp cụ thể.</td>
+</tr>
+<tr>
+<td>Posterior</td>
+<td>Xác suất hậu nghiệm</td>
+<td>Xác suất tài liệu thuộc về lớp sau khi đã quan sát toàn bộ nội dung.</td>
+</tr>
+<tr>
+<td>Multinomial Naive Bayes</td>
+<td>Đa thức Naive Bayes</td>
+<td>Biến thể Naive Bayes dựa trên số lần xuất hiện của các từ trong văn bản.</td>
+</tr>
+<tr>
+<td>Support vector</td>
+<td>Vector hỗ trợ</td>
+<td>Các điểm dữ liệu huấn luyện có nhân tử <code>a_i &gt; 0</code>, quyết định trực tiếp vị trí siêu phẳng tối ưu. Trong lề mềm bao gồm cả điểm trong lề và điểm phân loại sai.</td>
+</tr>
+<tr>
+<td>Hyperplane</td>
+<td>Siêu phẳng</td>
+<td>Ranh giới tuyến tính phân tách không gian thành các vùng phân lớp.</td>
+</tr>
+<tr>
+<td>Margin</td>
+<td>Lề</td>
+<td>Khoảng cách hình học giữa hai đường biên của hai lớp (`2 /</td>
+</tr>
+<tr>
+<td>Hinge loss</td>
+<td>Hàm mất mát Hinge</td>
+<td>Hàm đo lường mức độ vi phạm lề, tính bằng <code>max(0, 1 - y f(x))</code>.</td>
+</tr>
+<tr>
+<td>Confusion matrix</td>
+<td>Ma trận nhầm lẫn</td>
+<td>Bảng thống kê đối chiếu giữa nhãn thực tế và nhãn dự đoán của mô hình.</td>
+</tr>
+<tr>
+<td>Micro-average</td>
+<td>Trung bình Micro</td>
+<td>Cách tính chỉ số bằng cách cộng dồn toàn bộ số đếm của tất cả các lớp trước khi chia.</td>
+</tr>
+<tr>
+<td>Macro-average</td>
+<td>Trung bình Macro</td>
+<td>Cách tính chỉ số bằng cách lấy trung bình cộng bình đẳng điểm số của từng lớp.</td>
+</tr>
+<tr>
+<td>Feature selection</td>
+<td>Lựa chọn đặc trưng</td>
+<td>Quá trình chắt lọc các đặc trưng quan trọng nhất và loại bỏ các đặc trưng nhiễu.</td>
+</tr>
+<tr>
+<td>Information gain</td>
+<td>Độ tăng thông tin</td>
+<td>Lượng độ bất định (entropy) giảm đi khi biết một đặc trưng xuất hiện hay vắng mặt.</td>
+</tr>
+<tr>
+<td>Agglomerative clustering</td>
+<td>Phân cụm tích tụ</td>
+<td>Phương pháp phân cụm phân cấp đi từ dưới lên, gộp dần các cụm gần nhau.</td>
+</tr>
+<tr>
+<td>Divisive clustering</td>
+<td>Phân cụm phân chia</td>
+<td>Phương pháp phân cụm phân cấp đi từ trên xuống, chia nhỏ dần cụm lớn ban đầu.</td>
+</tr>
+<tr>
+<td>K-means</td>
+<td>Thuật toán K-means</td>
+<td>Phương pháp phân cụm phân hoạch lặp dựa trên khoảng cách tới K trọng tâm.</td>
+</tr>
+<tr>
+<td>Centroid</td>
+<td>Trọng tâm</td>
+<td>Điểm đại diện cho cụm, có tọa độ bằng trung bình cộng tọa độ các điểm thành viên.</td>
+</tr>
+<tr>
+<td>Diameter</td>
+<td>Đường kính</td>
+<td>Khoảng cách lớn nhất giữa hai điểm bất kỳ thuộc cùng một cụm.</td>
+</tr>
+<tr>
+<td>Radius</td>
+<td>Bán kính</td>
+<td>Khoảng cách lớn nhất từ trọng tâm tới một điểm thành viên trong cụm.</td>
+</tr>
+<tr>
+<td>Purity</td>
+<td>Độ tinh khiết</td>
+<td>Chỉ số đánh giá ngoài tính bằng tỷ lệ các mẫu thuộc nhãn đa số trong mỗi cụm.</td>
+</tr>
+</tbody></table></div>
+
+        <footer class="lesson-footer"><span class="lesson-footer__meta"><span>SEG301m / CHƯƠNG 10</span><span class="site-credit">Made by <strong>Marcus</strong></span></span><a href="#top">Về đầu trang ↑</a></footer>
+      </article>
+      <nav class="chapter-pager" aria-label="Chapter navigation"><a class="chapter-pager__previous" href="./chapter-09.html">
+    <span>Chương trước</span>
+    <strong>09 · Đánh giá công cụ tìm kiếm</strong>
+  </a><a class="chapter-pager__next" href="./chapter-11.html">
+    <span>Chương sau</span>
+    <strong>11 · Tìm kiếm xã hội</strong>
+  </a></nav>
+    </main>
+  </div>
+</body>
+</html>

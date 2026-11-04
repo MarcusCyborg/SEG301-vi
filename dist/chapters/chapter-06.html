@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163b3c">
+  <meta name="description" content="Tìm hiểu nhu cầu thông tin, tinh chỉnh truy vấn, phản hồi, snippet, phân cụm kết quả và tìm kiếm xuyên ngôn ngữ.">
+  <title>CHƯƠNG 6 Truy vấn và giao diện | SEG301m</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=20261104-vi">
+  <link rel="stylesheet" href="../tutor.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/katex/katex.min.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/highlight.css?v=20261104-vi">
+  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang"}</script>
+  <script src="../app.js?v=20261104-vi" defer></script>
+  <script src="../tutor.js?v=20261104-vi" defer></script>
+</head>
+<body data-page="chapter" data-language="vi">
+  <a class="skip-link" href="#learning-goals-vi">Chuyển đến bài học</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
+    <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 6</span>
+    <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
+  </header>
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__line"></span> SEG301m / CHƯƠNG 6</p>
+        <h1 id="page-title">Truy vấn và<br><em>giao diện</em></h1>
+        <p class="hero__description">Tìm hiểu nhu cầu thông tin, tinh chỉnh truy vấn, phản hồi, snippet, phân cụm kết quả và tìm kiếm xuyên ngôn ngữ.</p>
+        <a class="start-link" href="#learning-goals-vi">Bắt đầu học <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <span class="orbit orbit--one"></span><span class="orbit orbit--two"></span>
+        <span class="signal signal--one"></span><span class="signal signal--two"></span>
+        <span class="hero__query">NGUỒN <b>06</b></span>
+        <span class="hero__result hero__result--one">01 <b>TÀI LIỆU</b></span>
+        <span class="hero__result hero__result--two">02 <b>CHỈ MỤC</b></span>
+        <span class="hero__result hero__result--three">03 <b>KẾT QUẢ</b></span>
+        <span class="hero__visual-label">TỪ NGUỒN ĐẾN TÌM KIẾM</span>
+      </div>
+    </div>
+    <div class="hero__footer"><span>CHƯƠNG 6</span><span>Nguồn: toàn bộ 19 slide bài giảng</span></div>
+  </section>
+  <div class="page-layout" id="lesson">
+    <nav class="chapter-nav" aria-label="Mục lục"><div class="chapter-nav__sticky">
+      <p class="chapter-nav__label">MỤC LỤC <span>06 / 12</span></p>
+      <div class="chapter-nav__links"><a href="#prerequisites-vi" data-section="prerequisites"><span>01</span>Kiến thức cần chuẩn bị</a>
+<a href="#system-position-vi" data-section="system-position"><span>02</span>Vị trí trong hệ thống tìm kiếm</a>
+<a href="#information-needs-and-queries-vi" data-section="information-needs-and-queries"><span>03</span>6.1 Nhu cầu thông tin và truy vấn</a>
+<a href="#query-transformation-vi" data-section="query-transformation"><span>04</span>6.2 Chuyển đổi và cải thiện truy vấn</a>
+<a href="#showing-results-vi" data-section="showing-results"><span>05</span>6.3 Hiển thị kết quả tìm kiếm</a>
+<a href="#cross-language-search-vi" data-section="cross-language-search"><span>06</span>6.4 Tìm kiếm xuyên ngôn ngữ (Cross-Language Search)</a>
+<a href="#exercise-vi" data-section="exercise"><span>07</span>Bài tập cuối chương</a>
+<a href="#summary-vi" data-section="summary"><span>08</span>Tổng kết</a>
+<a href="#quiz-vi" data-section="quiz"><span>09</span>Câu hỏi tự kiểm tra</a>
+<a href="#next-chapter-vi" data-section="next-chapter"><span>10</span>Chuyển tiếp sang chương sau</a>
+<a href="#glossary-vi" data-section="glossary"><span>11</span>Bảng thuật ngữ</a></div>
+      <div class="chapter-directory">
+    <p class="chapter-directory__label">ĐỦ 12 CHƯƠNG</p>
+    <div class="chapter-directory__links"><a class="chapter-directory__item" href="./chapter-01.html"><b>01</b>Truy xuất thông tin</a>
+<a class="chapter-directory__item" href="./chapter-02.html"><b>02</b>Các thành phần và luồng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-03.html"><b>03</b>Thu thập tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-04.html"><b>04</b>Biến từ thành dữ liệu có thể tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-05.html"><b>05</b>Từ chỉ mục đến kết quả hàng đầu</a>
+<span class="chapter-directory__item is-current" aria-current="page"><b>06</b>Biến nhu cầu thành truy vấn</span>
+<a class="chapter-directory__item" href="./chapter-07.html"><b>07</b>Cách tính điểm kết quả</a>
+<a class="chapter-directory__item" href="./chapter-08.html"><b>08</b>Giúp nội dung được tìm thấy</a>
+<a class="chapter-directory__item" href="./chapter-09.html"><b>09</b>Đo chất lượng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-10.html"><b>10</b>Phân loại và sắp xếp tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-11.html"><b>11</b>Dùng con người và mối quan hệ trong tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-12.html"><b>12</b>Khai thác thứ tự, cấu trúc và đa phương tiện</a></div>
+  </div>
+    </div></nav>
+    <main class="lesson-content" id="main-content">
+      <article class="lesson-language" lang="vi-VN" data-lang="vi">
+        <div class="intro-mark"><span>GHI CHÚ HỌC TẬP</span><span>Bản tiếng Việt · Chương 06</span></div>
+        <p><strong>Tài liệu gốc:</strong> Slide bài giảng SEG301m Chương 6, &quot;Queries and Interfaces&quot; (19 slide)<br><strong>Cách đọc:</strong> Chương này theo dõi toàn bộ hành trình tương tác: từ điều người dùng thực sự muốn biết, câu truy vấn họ gõ vào, các khâu tự động hoàn thiện truy vấn, cách hiển thị kết quả tìm kiếm, đến phản hồi thực tế của người dùng. Một tình huống thực tế xuyên suốt được sử dụng: &quot;Tìm kiếm laptop mỏng nhẹ phục vụ học tập cho sinh viên&quot;.</p>
+<h2 id="learning-goals-vi" data-section-heading="learning-goals">Mục tiêu của chương</h2>
+<p>Sau khi học xong chương này, bạn có thể giải thích và thực hiện các nội dung sau:</p>
+<ol>
+<li>Trình bày lý do vì sao nhu cầu thông tin (information need) và câu truy vấn (query) không đồng nhất với nhau.</li>
+<li>Phân biệt rõ chuẩn hóa (normalization), sửa lỗi chính tả (spelling correction), gợi ý truy vấn (query suggestion), mở rộng truy vấn (query expansion) và phản hồi độ liên quan (relevance feedback).</li>
+<li>Thực hiện các phép tính cơ bản về khoảng cách chỉnh sửa (edit distance), mô hình kênh nhiễu (noisy channel model) và hệ số Dice.</li>
+<li>Giải thích vai trò của tiêu đề, URL, đoạn trích tóm tắt (snippet), vùng từ khóa nổi bật (highlighting) và phân cụm kết quả giúp người dùng phán đoán tài liệu.</li>
+<li>Nêu rõ luồng hoạt động và giới hạn của tìm kiếm xuyên ngôn ngữ (cross-language search) khi ngôn ngữ truy vấn khác với ngôn ngữ tài liệu.</li>
+</ol>
+<p class="source-note"><span>SLIDE NGUỒN</span> 1-3</p>
+<figure class="chapter-map"><a href="../assets/chapter-06-mindmap.png" target="_blank" rel="noopener"><img src="../assets/chapter-06-mindmap.png" width="1672" height="941" loading="lazy" alt="Sơ đồ tư duy bằng tiếng Anh cho Chương 6, Truy vấn và giao diện"></a><figcaption>Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 6. Chọn ảnh để xem kích thước đầy đủ.</figcaption></figure>
+<h2 id="prerequisites-vi" data-section-heading="prerequisites">Kiến thức cần chuẩn bị</h2>
+<ul>
+<li>Các kỹ thuật chuẩn hóa, loại bỏ từ dừng và rút gọn gốc từ ở Chương 4 không chỉ áp dụng cho tài liệu mà áp dụng cho cả câu truy vấn.</li>
+<li>Chỉ mục đảo ở Chương 5 chịu trách nhiệm tìm các tài liệu ứng viên từ các từ truy vấn.</li>
+<li>Điểm số xếp hạng cao không đảm bảo chắc chắn rằng truy vấn đã thể hiện đầy đủ nhu cầu thực sự của người dùng.</li>
+<li>Hành vi nhấp chuột (click) và thời gian xem trang (dwell time) là tín hiệu hành vi, không phải nhãn độ liên quan tuyệt đối.</li>
+</ul>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Nếu vào cửa hàng máy tính và chỉ nói cụt lủn &quot;máy tính&quot;, người bán hàng không thể biết bạn mua để học lập trình, chơi game hay làm đồ họa, ngân sách bao nhiêu tiền. Câu chữ ngắn gọn người dùng gõ vào ô tìm kiếm cũng vậy. Hệ thống không được tự suy diễn tùy tiện mà phải dùng gợi ý, sửa lỗi, ngữ cảnh và cách trình bày kết quả để thu hẹp khoảng cách này.</p></aside>
+<h2 id="system-position-vi" data-section-heading="system-position">Vị trí trong hệ thống tìm kiếm</h2>
+<pre><code class="language-text">Nhu cầu thông tin (Information need)
+  ↓ Diễn đạt thành từ ngữ
+Truy vấn ban đầu (Initial query)
+  ↓ Chuẩn hóa, sửa lỗi, mở rộng, khai thác ngữ cảnh
+Truy vấn thực thi (Executed query)
+  ↓ Tra cứu chỉ mục và xếp hạng
+Kết quả tìm kiếm
+  ↓ Tiêu đề, URL, đoạn trích tóm tắt, cụm kết quả
+Phán đoán của người dùng
+  ↓ Đánh giá tường minh, nhấp chuột, tìm lại
+Truy vấn tiếp theo hoặc Vòng lặp phản hồi
+</code></pre>
+<p>Chương này tập trung vào ranh giới tương tác giữa con người và công cụ tìm kiếm. Chương 7 tiếp theo sẽ nghiên cứu các mô hình toán học tính điểm từ truy vấn thực thi và tài liệu.</p>
+<h2 id="information-needs-and-queries-vi" data-section-heading="information-needs-and-queries">6.1 Nhu cầu thông tin và truy vấn</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 4</p>
+<p>Nhu cầu thông tin (information need) là mục tiêu mà người dùng muốn đạt được trong thực tế, còn truy vấn (query) là chuỗi ký tự cụ thể mà người dùng nhập vào hệ thống tìm kiếm.</p>
+<p><strong>Ví dụ xuyên suốt:</strong> Nhu cầu thực tế của sinh viên:</p>
+<ul>
+<li>Phục vụ học các môn lập trình tại trường đại học.</li>
+<li>Trọng lượng nhẹ dưới 1.3 kg để tiện mang đi lại.</li>
+<li>Thời lượng pin thực tế đạt khoảng 10 tiếng liên tục.</li>
+<li>Ngân sách tối đa trong khoảng 15 đến 20 triệu đồng.</li>
+<li>Cần mua máy mới chính hãng, không mua máy cũ.</li>
+</ul>
+<p>Nếu người dùng chỉ gõ truy vấn <code>laptop sinh vien</code>, toàn bộ các tiêu chí về trọng lượng, thời lượng pin, mức giá, địa điểm và tình trạng máy hoàn toàn bị bỏ sót. Câu truy vấn chỉ phản ánh một phần rất nhỏ nhu cầu thông tin thực sự.</p>
+<p>Nhu cầu thông tin cũng quyết định số lượng tài liệu cần tìm. Nếu chỉ cần &quot;xem cấu hình khuyến nghị của trường&quot;, người dùng chỉ cần một kết quả chính xác duy nhất. Nhưng nếu muốn &quot;so sánh các dòng máy phù hợp&quot;, người dùng cần nhiều kết quả đa chiều. Cùng một từ khóa nhưng mục đích tác vụ khác nhau sẽ đòi hỏi chiến lược tìm kiếm và xếp hạng khác nhau.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tầng thông tin</th>
+<th>Ví dụ cụ thể</th>
+<th>Hệ thống có thể quan sát trực tiếp?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Nhu cầu thông tin</td>
+<td>Cần máy nhẹ, pin trâu, vừa túi tiền cho sinh viên CNTT</td>
+<td>Không thể quan sát trực tiếp</td>
+</tr>
+<tr>
+<td>Câu truy vấn</td>
+<td><code>laptop sinh vien</code></td>
+<td>Quan sát trực tiếp được</td>
+</tr>
+<tr>
+<td>Ngữ cảnh</td>
+<td>Vị trí tại Việt Nam, vừa tìm kiếm <code>yeu cau phan mem python</code></td>
+<td>Một phần (nếu được cấp quyền lưu vết)</td>
+</tr>
+<tr>
+<td>Hành vi tương tác</td>
+<td>Bấm mở trang, quay lại, gõ thêm từ khóa lọc</td>
+<td>Quan sát được hành vi nhưng ý nghĩa có thể mơ hồ</td>
+</tr>
+</tbody></table></div>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Vì sao hai người cùng gõ một từ khóa <code>python</code> vào ô tìm kiếm thì hệ thống không nên trả về cùng một danh sách kết quả giống hệt nhau?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Vì một người có thể đang tìm ngôn ngữ lập trình Python phục vụ việc học, còn người kia có thể đang tìm loài trăn (python) phục vụ môn sinh học. Chuỗi ký tự bề mặt không thể hiện trọn vẹn nhu cầu thông tin nếu không có thêm ngữ cảnh như lịch sử tìm kiếm gần nhất, chuyên mục lựa chọn hay vị trí địa lý.</p></div></details>
+
+<h2 id="query-transformation-vi" data-section-heading="query-transformation">6.2 Chuyển đổi và cải thiện truy vấn</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 5-11</p>
+<h3 id="detail-1-vi">Phân biệt rõ các kỹ thuật xử lý truy vấn</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Kỹ thuật</th>
+<th>Đầu vào</th>
+<th>Thao tác của hệ thống</th>
+<th>Ví dụ đầu ra</th>
+<th>Rủi ro chính</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chuẩn hóa (Normalization)</td>
+<td>Truy vấn có định dạng khác biệt</td>
+<td>Đồng nhất chữ hoa/thường, dấu cách, mã Unicode</td>
+<td><code>Laptop Sinh Vien</code> → <code>laptop sinh vien</code></td>
+<td>Vô tình xóa mất ký tự phân biệt quan trọng</td>
+</tr>
+<tr>
+<td>Sửa lỗi chính tả (Spelling correction)</td>
+<td>Từ bị nghi ngờ gõ sai</td>
+<td>Dùng từ điển, khoảng cách sửa đổi, xác suất để sửa</td>
+<td><code>lapotp</code> → <code>laptop</code></td>
+<td>Sửa nhầm tên riêng hoặc thuật ngữ hiếm</td>
+</tr>
+<tr>
+<td>Gợi ý truy vấn (Query suggestion)</td>
+<td>Truy vấn hiện tại hoặc ký tự đang gõ dở</td>
+<td>Đề xuất các câu truy vấn hoàn chỉnh từ nhật ký tìm kiếm</td>
+<td><code>laptop sinh vien</code> → <code>laptop sinh vien pin trau</code></td>
+<td>Bị thiên lệch theo các từ khóa quá phổ biến</td>
+</tr>
+<tr>
+<td>Mở rộng truy vấn (Query expansion)</td>
+<td>Mở rộng ngữ nghĩa truy vấn</td>
+<td>Tự động thêm từ đồng nghĩa, từ liên quan</td>
+<td><code>laptop</code> + <code>may tinh xach tay</code></td>
+<td>Trôi truy vấn (query drift) sang nghĩa khác</td>
+</tr>
+<tr>
+<td>Phản hồi độ liên quan (Relevance feedback)</td>
+<td>Phản hồi của người dùng</td>
+<td>Cập nhật trọng số từ dựa trên tài liệu được chọn</td>
+<td>Bổ sung từ <code>mong nhe</code> từ bài viết được khen</td>
+<td>Người dùng chọn nhầm tài liệu không phù hợp</td>
+</tr>
+</tbody></table></div>
+<h3 id="detail-2-vi">Xử lý Stopword và Stemming tại thời điểm truy vấn</h3>
+<p>Thay vì xóa cứng từ dừng ngay từ khâu lập chỉ mục, nhiều hệ thống hiện đại giữ lại toàn bộ từ trong chỉ mục và chỉ xử lý từ dừng linh hoạt tại thời điểm người dùng truy vấn. Điều này giúp hệ thống không làm mất ngữ nghĩa của các tên riêng như <code>The Who</code> hay câu nói nổi tiếng <code>to be or not to be</code>.</p>
+<p>Rút gọn gốc từ tại thời điểm truy vấn (query-based stemming) giúp mở rộng linh hoạt biến thể từ khi cần. Tuy nhiên, hai cụm từ <code>fish village</code> (làng cá) và <code>fishing village</code> (làng chài đánh cá) có nét nghĩa khác nhau; nếu tự động ép cả hai về <code>fish</code> thì kết quả sẽ bị lẫn lộn. Đôi khi việc giữ nguyên từ gốc và đề xuất biến thể dưới dạng từ khóa gợi ý sẽ an toàn hơn việc tự động thay thế ngầm.</p>
+<h3 id="detail-3-vi">Đếm khoảng cách chỉnh sửa (Edit Distance)</h3>
+<p>Khoảng cách Levenshtein là số lượng thao tác tối thiểu gồm chèn (insertion), xóa (deletion) và thay thế (substitution) để biến chuỗi này thành chuỗi kia. Nếu coi phép hoán vị hai ký tự liền kề (transposition) là 1 thao tác duy nhất thì đó là khoảng cách Damerau–Levenshtein.</p>
+<p><strong>Ví dụ minh họa:</strong> Sửa từ <code>lapotp</code> thành <code>laptop</code>:</p>
+<pre><code class="language-text">lapotp
+  └─ Hoán vị chữ &#39;o&#39; ở vị trí 4 và chữ &#39;t&#39; ở vị trí 5
+laptop
+</code></pre>
+<ul>
+<li>Theo Damerau–Levenshtein (cho phép hoán vị): Khoảng cách là 1 thao tác.</li>
+<li>Theo Levenshtein tiêu chuẩn: Phải thay <code>o → t</code> rồi thay <code>t → o</code>, khoảng cách là 2 thao tác thay thế.</li>
+</ul>
+<p>Phân tích các ví dụ trên Slide 7 theo khoảng cách Levenshtein tiêu chuẩn:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Từ gõ sai → Từ đúng</th>
+<th align="right">Khoảng cách Levenshtein chuẩn</th>
+<th>Ghi chú thao tác</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>extenssions</code> → <code>extensions</code></td>
+<td align="right">1</td>
+<td>Xóa bỏ 1 ký tự <code>s</code> thừa</td>
+</tr>
+<tr>
+<td><code>poiner</code> → <code>pointer</code></td>
+<td align="right">1</td>
+<td>Chèn thêm ký tự <code>t</code></td>
+</tr>
+<tr>
+<td><code>marshmellow</code> → <code>marshmallow</code></td>
+<td align="right">1</td>
+<td>Thay thế ký tự <code>e</code> thành <code>a</code></td>
+</tr>
+<tr>
+<td><code>brimingham</code> → <code>birmingham</code></td>
+<td align="right">2</td>
+<td>Levenshtein chuẩn tốn 2 phép thay thế (hoán vị tính là 1)</td>
+</tr>
+</tbody></table></div>
+<h3 id="detail-4-vi">Xếp hạng gợi ý sửa lỗi bằng mô hình kênh nhiễu (Noisy Channel Model)</h3>
+<p>Gọi từ bị gõ sai quan sát được là <code>e</code> (error), từ đúng trong suy nghĩ người dùng là <code>w</code> (word). Slide 8 xếp hạng các từ ứng viên theo tích xác suất:</p>
+<div class="formula-block" role="math" aria-label="rank correction w by P of e given w times P of w">
+  <span class="formula-main">score(w) ∝ P(e | w) P(w)</span>
+</div>
+
+<ul>
+<li><code>P(e | w)</code>: mô hình lỗi (error model), xác suất người dùng gõ thành <code>e</code> khi trong đầu định gõ từ <code>w</code> (phụ thuộc vào khoảng cách trên bàn phím).</li>
+<li><code>P(w)</code>: mô hình ngôn ngữ (language model), xác suất xuất hiện tự nhiên của từ <code>w</code> trong văn bản đời thực.</li>
+</ul>
+<p><strong>Ví dụ giả định:</strong> Người dùng gõ từ <code>batery</code>, hai ứng viên sửa lỗi là <code>battery</code> (pin) và <code>bakery</code> (tiệm bánh):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Ứng viên w</th>
+<th align="right">P(e | w)</th>
+<th align="right">P(w)</th>
+<th align="right">Tích xác suất</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>battery</code></td>
+<td align="right">0.08</td>
+<td align="right">0.004</td>
+<td align="right">0.00032</td>
+</tr>
+<tr>
+<td><code>bakery</code></td>
+<td align="right">0.01</td>
+<td align="right">0.002</td>
+<td align="right">0.00002</td>
+</tr>
+</tbody></table></div>
+<p>Mặc dù cả hai từ đều chỉ cách <code>batery</code> một thao tác gõ phím, ứng viên <code>battery</code> có xác suất gõ nhầm cao hơn và tần số phổ biến hơn nên đạt điểm vượt trội và được chọn làm gợi ý hàng đầu.</p>
+<p>Nếu xét thêm từ đứng ngay trước đó <code>w_p</code>, hệ thống nội suy giữa tần số chung và xác suất ngữ cảnh:</p>
+<div class="formula-block" role="math" aria-label="lambda P of w plus one minus lambda times P of w given previous word">
+  <span class="formula-main">λP(w) + (1−λ)P(w | w<sub>p</sub>)</span>
+</div>
+
+<p>Trong cụm từ <code>laptop batery</code>, xác suất có điều kiện <code>P(battery | laptop)</code> cực kỳ cao, củng cố vững chắc cho việc chọn từ <code>battery</code>.</p>
+<h3 id="detail-5-vi">Độ đo liên kết từ và Mở rộng truy vấn (Term Association)</h3>
+<p>Cửa sổ (window) là một đơn vị văn bản được ấn định để đếm sự đồng xuất hiện của các từ. Cửa sổ có thể là một đoạn gồm số từ nhất định hoặc trọn vẹn một tài liệu. Trong ví dụ minh họa dưới đây, <strong>1 tài liệu được coi là 1 cửa sổ</strong>:</p>
+<ul>
+<li><code>N</code>: tổng số lượng tài liệu/cửa sổ xem xét (<code>N = 100</code>).</li>
+<li><code>n_a</code>: số lượng cửa sổ có chứa từ <code>a</code> (<code>n_a = 40</code>).</li>
+<li><code>n_b</code>: số lượng cửa sổ có chứa từ <code>b</code> (<code>n_b = 30</code>).</li>
+<li><code>n_ab</code>: số lượng cửa sổ chứa đồng thời cả hai từ <code>a</code> và <code>b</code> (<code>n_ab = 18</code>).</li>
+</ul>
+<p>Hệ số Dice tiêu chuẩn:</p>
+<div class="formula-block" role="math" aria-label="Dice equals two n a b divided by n a plus n b">
+  <span class="formula-main">Dice(a,b) = 2n<sub>ab</sub> / (n<sub>a</sub> + n<sub>b</sub>)</span>
+</div>
+
+<p>Với số liệu trên: <code>Dice = 2(18) / (40 + 30) = 36 / 70 ≈ 0.514</code>. Hệ số càng lớn chứng tỏ mức độ bao phủ trùng nhau giữa hai từ càng cao.</p>
+<p>Nếu hai từ xuất hiện hoàn toàn độc lập ngẫu nhiên với nhau, số lượng cửa sổ đồng xuất hiện kỳ vọng là:</p>
+<div class="formula-block" role="math" aria-label="expected co-occurrence equals n a times n b divided by N equals twelve">
+  <span class="formula-main">n<sub>a</sub>n<sub>b</sub>/N = 40×30/100 = 12</span>
+</div>
+
+<p>Thực tế hai từ cùng xuất hiện 18 lần, vượt hơn mức kỳ vọng ngẫu nhiên 6 lần. Bảng so sánh các độ đo liên kết trong Slide 9 (áp dụng logarit tự nhiên <code>ln</code>):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Độ đo liên kết</th>
+<th>Công thức trong slide</th>
+<th align="right">Kết quả tính toán</th>
+<th>Ý nghĩa bản chất</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Mutual Information Measure (MIM)</td>
+<td><code>n_ab / (n_a n_b)</code></td>
+<td align="right"><code>18 / (40 × 30) = 0.015</code></td>
+<td>Tỉ lệ đồng xuất hiện chia cho tích độ phổ biến riêng</td>
+</tr>
+<tr>
+<td>Expected Mutual Information (EMIM)</td>
+<td><code>n_ab ln(N n_ab / (n_a n_b))</code></td>
+<td align="right"><code>18 ln(100 × 18 / 1200) = 18 ln(1.5) ≈ 7.298</code></td>
+<td>Độ lệch so với kỳ vọng độc lập có trọng số bởi tần số thực</td>
+</tr>
+<tr>
+<td>Chi-square (Dạng rút gọn trong slide)</td>
+<td><code>(n_ab − n_a n_b/N)² / (n_a n_b)</code></td>
+<td align="right"><code>(18 − 12)² / 1200 = 36 / 1200 = 0.030</code></td>
+<td>Đo độ lệch bình phương so với kỳ vọng ngẫu nhiên</td>
+</tr>
+<tr>
+<td>Hệ số Dice</td>
+<td><code>2n_ab / (n_a + n_b)</code></td>
+<td align="right"><code>36 / 70 ≈ 0.514</code></td>
+<td>Đo mức độ trùng lặp tập hợp giữa hai từ</td>
+</tr>
+</tbody></table></div>
+<p>Vì các thang đo có khoảng giá trị khác nhau, không thể so sánh trực tiếp con số <code>0.015</code> của MIM với <code>7.298</code> của EMIM để đánh giá bên nào tốt hơn; điều quan trọng là dùng cùng một thang đo để so sánh thứ tự giữa các từ ứng viên.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Vẫn với <code>N = 100</code>, <code>n_a = 40</code>, <code>n_b = 30</code>, nếu số lần đồng xuất hiện thực tế đúng bằng kỳ vọng ngẫu nhiên <code>n_ab = 12</code> thì giá trị EMIM và Chi-square rút gọn bằng bao nhiêu?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Khi <code>n_ab = 12</code>, ta có <code>N n_ab / (n_a n_b) = (100 × 12) / 1200 = 1</code>. Vì <code>ln(1) = 0</code>, giá trị EMIM bằng <code>12 × 0 = 0</code>. Với Chi-square, tử số là <code>(12 - 12)² = 0</code> nên kết quả cũng bằng 0. Điều này cho thấy sự đồng xuất hiện thực tế hoàn toàn trùng khớp với phân bố ngẫu nhiên độc lập.</p></div></details>
+
+<p>Trong mở rộng truy vấn (query expansion), hệ thống có thể thêm các từ liên quan như <code>may tinh xach tay</code>, <code>mong nhe</code>, <code>pin trau</code> vào truy vấn <code>laptop sinh vien</code>. Tuy nhiên, nếu mở rộng không kiểm soát sẽ gây ra hiện tượng <strong>trôi truy vấn (query drift)</strong>, ví dụ từ <code>laptop</code> bị kéo sang linh kiện bàn phím hoặc <code>sinh vien</code> bị kéo sang chủ đề vay vốn học sinh.</p>
+<h3 id="detail-6-vi">Ba hình thức phản hồi độ liên quan (Relevance Feedback)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Hình thức</th>
+<th>Nguồn tín hiệu</th>
+<th>Ví dụ</th>
+<th>Ưu và nhược điểm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Phản hồi tường minh (Explicit feedback)</td>
+<td>Người dùng chủ động đánh giá</td>
+<td>Bấm nút &quot;Bài viết này hữu ích&quot;</td>
+<td>Độ chính xác rất cao nhưng làm phiền người dùng</td>
+</tr>
+<tr>
+<td>Phản hồi ngầm định (Implicit feedback)</td>
+<td>Hành vi tự nhiên của người dùng</td>
+<td>Bấm nhấp, cuộn xem, lưu bài viết</td>
+<td>Dễ thu thập quy mô lớn nhưng dễ bị nhiễu và thiên lệch vị trí</td>
+</tr>
+<tr>
+<td>Phản hồi giả định (Pseudo-relevance feedback)</td>
+<td>Tự động coi top kết quả đầu là đúng</td>
+<td>Lấy các từ xuất hiện nhiều trong top 5</td>
+<td>Không cần người dùng can thiệp nhưng dễ trôi truy vấn nếu top đầu sai</td>
+</tr>
+</tbody></table></div>
+<p>Hành vi nhấp chuột thể hiện người dùng có chú ý đến tiêu đề, nhưng không khẳng định là nội dung bên trong thực sự đáp ứng nhu cầu. Người dùng có thể nhấp nhầm, nhấp vì vị trí hiển thị ở trên cùng (position bias), hoặc ngược lại không nhấp vì đã đọc được câu trả lời ngay trên đoạn trích snippet.</p>
+<h3 id="detail-7-vi">Ngữ cảnh và Cá nhân hóa (Personalization)</h3>
+<p>Cùng một câu truy vấn nhưng kết quả hữu ích nhất sẽ khác nhau tùy thuộc vào ai đang tìm, tìm ở đâu, vào thời điểm nào. Tìm kiếm địa phương (local search) kết hợp vị trí người dùng với vị trí tài liệu để ưu tiên các dịch vụ ở gần.</p>
+<p>Việc cá nhân hóa kết quả tìm kiếm dựa trên lịch sử tương tác đem lại sự tiện lợi, nhưng cũng đặt ra những thách thức lớn về quyền riêng tư và nguy cơ tạo ra &quot;bong bóng bộ lọc&quot; (filter bubble) cô lập người dùng trong các thông tin quen thuộc một chiều.</p>
+<h2 id="showing-results-vi" data-section-heading="showing-results">6.3 Hiển thị kết quả tìm kiếm</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 12-16</p>
+<h3 id="detail-8-vi">Trang kết quả và Đoạn trích tóm tắt (Snippet)</h3>
+<p>Trang kết quả tìm kiếm (Search Engine Results Page - SERP) là giao diện tương tác then chốt, nơi người dùng đưa ra quyết định có bấm vào xem tiếp tài liệu hay không:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Thành phần</th>
+<th>Vai trò chính</th>
+<th>Điểm cần lưu ý</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tiêu đề (Title)</td>
+<td>Nêu bật chủ đề chính hoặc tên trang</td>
+<td>Tiêu đề giật gân có thể không khớp nội dung thực</td>
+</tr>
+<tr>
+<td>URL / Tên miền</td>
+<td>Cho biết nguồn gốc và cấp bậc thư mục</td>
+<td>Cần kiểm tra độ uy tín của tên miền</td>
+</tr>
+<tr>
+<td>Đoạn trích (Snippet)</td>
+<td>Trích xuất ngắn chứa từ khóa truy vấn</td>
+<td>Không phải là bản tóm tắt toàn bộ tài liệu</td>
+</tr>
+<tr>
+<td>Làm nổi bật (Highlight)</td>
+<td>In đậm các từ khớp với truy vấn</td>
+<td>Xuất hiện nhiều từ chưa chắc nội dung đã hay</td>
+</tr>
+<tr>
+<td>Bản sao lưu (Cached link)</td>
+<td>Xem bản lưu trữ tại thời điểm lập chỉ mục</td>
+<td>Dữ liệu có thể khác biệt so với trang thực tế hiện tại</td>
+</tr>
+</tbody></table></div>
+<p><strong>Ví dụ minh họa:</strong> Xét tài liệu giới thiệu mẫu máy tính:</p>
+<pre><code class="language-text">Model A is designed for university programming courses.
+It weighs 1.18 kg and has a 13-hour measured battery life.
+The current price is 118,000 yen, including the student warranty.
+</code></pre>
+<ul>
+<li>Với truy vấn <code>lightweight student laptop</code>, đoạn trích tối ưu cần nhấn mạnh yếu tố trọng lượng và chính sách sinh viên:</li>
+</ul>
+<blockquote>
+<p>Model A is designed for university programming courses. It <strong>weighs 1.18 kg</strong> ... including the <strong>student warranty</strong>.</p>
+</blockquote>
+<ul>
+<li>Nhưng với truy vấn <code>laptop battery life</code>, chính tài liệu đó nên hiển thị đoạn trích khác tập trung vào thời lượng pin:</li>
+</ul>
+<blockquote>
+<p>It weighs 1.18 kg and has a <strong>13-hour measured battery life</strong>.</p>
+</blockquote>
+<p>Đoạn trích phụ thuộc truy vấn (query-biased snippet) linh hoạt thay đổi trích đoạn theo từng câu hỏi của người dùng, khác hoàn toàn với bản tóm tắt tĩnh cố định của tài liệu.</p>
+<h3 id="detail-9-vi">Thuật toán Luhn trong tạo đoạn trích</h3>
+<p>Slide 13 đề cập đến thuật toán Luhn. Tư tưởng cốt lõi của Luhn là chấm điểm cao cho các câu văn có mật độ tập trung dày đặc các từ khóa quan trọng (bỏ qua các từ dừng phổ biến). Điểm số cụm từ khóa thường được tính bằng tỉ lệ <code>(số từ quan trọng)² / khoảng cách từ</code>.</p>
+<p>Một câu văn ngắn chứa đồng thời cả <code>pin</code> và <code>10 tiếng</code> sẽ có điểm Luhn cao hơn hẳn việc hai từ này nằm rời rạc ở hai đoạn văn xa nhau.</p>
+<h3 id="detail-10-vi">Quảng cáo và Tìm kiếm</h3>
+<p>Quảng cáo là nguồn doanh thu chủ yếu của các công cụ tìm kiếm thương mại. Hệ thống ghép nối câu truy vấn ngắn của người dùng với các mẫu quảng cáo do nhà quảng cáo đấu thầu từ khóa và trang đích.</p>
+<p>Ví dụ ở Slide 15 với truy vấn <code>fish tanks</code>, hệ thống không chỉ hiển thị quảng cáo khớp chính xác từ khóa mà còn đưa ra các quảng cáo liên quan về ngữ nghĩa như <code>Aquariums</code> hay <code>Pet Supplies</code>. Điều tối quan trọng trong thiết kế giao diện là phải gắn nhãn rõ ràng để người dùng phân biệt rạch ròi giữa kết quả tự nhiên (organic results) và kết quả quảng cáo trả phí (paid ads).</p>
+<h3 id="detail-11-vi">Phân cụm kết quả tìm kiếm (Result Clustering)</h3>
+<p>Phân cụm kết quả tự động gom các trang web ở top đầu thành các nhóm chủ đề để người dùng dễ dàng định hướng. Ví dụ với từ khóa đa nghĩa <code>tropical fish</code>, hệ thống có thể chia kết quả thành các cụm: <code>Cá cảnh thủy cung</code>, <code>Bể nuôi cá</code>, <code>Kỹ thuật nhân giống</code>, <code>Cá biển nhiệt đới</code>.</p>
+<p>Khác với bộ lọc (filter) vốn dựa trên các trường thuộc tính có sẵn (như mức giá, năm sản xuất), phân cụm khám phá các nhóm chủ đề tiềm ẩn dựa trên độ tương đồng nội dung văn bản giữa các tài liệu.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Một kết quả có đoạn trích snippet chứa dày đặc các từ khóa của truy vấn thì có chắc chắn là tài liệu liên quan nhất không?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Chưa chắc chắn. Một trang web rác nhồi nhét từ khóa hoặc một bài viết chứa các câu văn phủ định (ví dụ: &quot;chúng tôi không bán laptop cho sinh viên&quot;) vẫn có thể xuất hiện dày đặc từ khóa. Đoạn trích chỉ giúp người dùng nắm bắt ngữ cảnh xuất hiện, cần kết hợp với độ uy tín của nguồn và toàn văn bài viết để đánh giá.</p></div></details>
+
+<h2 id="cross-language-search-vi" data-section-heading="cross-language-search">6.4 Tìm kiếm xuyên ngôn ngữ (Cross-Language Search)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 17</p>
+<p>Tìm kiếm xuyên ngôn ngữ (cross-language search - CLIR) là bài toán trong đó ngôn ngữ của câu truy vấn khác với ngôn ngữ của các tài liệu trong kho lưu trữ (ví dụ người dùng gõ tiếng Việt nhưng tìm tài liệu tiếng Anh hoặc tiếng Nhật).</p>
+<p>Quy trình xử lý tiêu biểu:</p>
+<pre><code class="language-text">Truy vấn ngôn ngữ gốc (Tiếng Việt)
+  ↓ Dịch câu truy vấn (Query translation)
+Truy vấn ngôn ngữ đích (Tiếng Anh)
+  ↓ Tìm kiếm trên chỉ mục tiếng Anh
+Tài liệu kết quả tiếng Anh
+  ↓ Dịch tài liệu (Tùy chọn)
+Hiển thị kết quả bằng tiếng Việt cho người dùng
+</code></pre>
+<p><strong>Ví dụ minh họa:</strong> Người dùng gõ truy vấn <code>laptop mong nhe cho sinh vien</code>. Hệ thống dịch sang tiếng Anh thành <code>lightweight laptop for students</code> và tiến hành tra cứu.</p>
+<p>Việc dịch từng từ đơn lẻ theo từ điển cơ học thường gặp nhiều bẫy:</p>
+<ul>
+<li>Từ <code>nhẹ</code> có thể là nhẹ về trọng lượng (lightweight), nhưng cũng có thể là nhẹ về mức độ (mild/light intensity).</li>
+<li>Các tên riêng, thương hiệu hoặc mã model phần cứng (như <code>ThinkPad</code>, <code>MacBook Air M2</code>) cần được giữ nguyên, không được dịch bừa bãi.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Phương pháp</th>
+<th>Ưu điểm</th>
+<th>Hạn chế</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Dịch câu truy vấn</td>
+<td>Câu truy vấn ngắn nên tốc độ dịch cực nhanh</td>
+<td>Truy vấn ngắn thiếu ngữ cảnh, dễ dịch sai nghĩa</td>
+</tr>
+<tr>
+<td>Dịch toàn bộ tài liệu</td>
+<td>Tạo được chỉ mục bằng ngôn ngữ của người dùng</td>
+<td>Chi phí dịch thuật và lưu trữ toàn bộ kho dữ liệu quá lớn</td>
+</tr>
+<tr>
+<td>Dùng từ điển song ngữ</td>
+<td>Dễ cài đặt, tốc độ tra cứu tức thì</td>
+<td>Kém cỏi trước từ đa nghĩa, cụm từ và từ vựng mới</td>
+</tr>
+<tr>
+<td>Mô hình dịch thống kê</td>
+<td>Khai thác được xác suất ngữ cảnh và đa ứng viên</td>
+<td>Phụ thuộc nặng nề vào chất lượng ngữ liệu huấn luyện</td>
+</tr>
+</tbody></table></div>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Khi người dùng tìm kiếm từ khóa <code>báo đốm tốc độ</code>, vì sao việc dịch thẳng sang tiếng Anh thành <code>jaguar speed</code> mà không kèm ngữ cảnh lại tiềm ẩn rủi ro?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Vì từ <code>jaguar</code> trong tiếng Anh vừa có nghĩa là loài thú săn mồi (báo đốm), vừa là thương hiệu xe hơi hạng sang Jaguar. Nếu không có thêm từ khóa ngữ cảnh về thế giới động vật học hoặc phân loại chuyên mục, hệ thống sẽ trả về lẫn lộn thông số tốc độ của xe hơi và vận tốc chạy của loài báo.</p></div></details>
+
+<h2 id="exercise-vi" data-section-heading="exercise">Bài tập cuối chương</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 18</p>
+<h3 id="detail-12-vi">Bài tập 1: Bài tập gốc trong slide 18</h3>
+<p>Sử dụng kho ngữ liệu văn bản Wikipedia để lập kế hoạch thực nghiệm:</p>
+<ol>
+<li>Xây dựng chỉ mục không áp dụng rút gọn gốc từ (stemming).</li>
+<li>Lấy ra 1.000 từ đầu tiên theo thứ tự từ điển.</li>
+<li>Áp dụng thuật toán stemmer cho 1.000 từ đó, gom các từ có cùng gốc thành các nhóm lớp (stem classes).</li>
+<li>Tính toán hệ số Dice cho từng cặp từ trong cùng một nhóm lớp.</li>
+</ol>
+<details class="answer-key"><summary>Xem hướng dẫn giải</summary><div class="answer-key__body"><p>Định nghĩa rõ quy tắc tách từ và chuẩn hóa chữ thường. Lưu trữ danh sách tài liệu xuất hiện của từng từ. Với hai từ <code>a</code> và <code>b</code> cùng chia sẻ một gốc từ, đếm số tài liệu chung <code>n_ab</code> và tính <code>2n_ab / (n_a + n_b)</code>. Các cặp từ có hệ số Dice rất thấp cho thấy mặc dù hình thái giống nhau nhưng ngữ cảnh sử dụng thực tế lại rất khác biệt.</p></div></details>
+
+<h3 id="detail-13-vi">Bài tập 2: Thiết kế chuỗi xử lý hoàn thiện truy vấn</h3>
+<p>Với truy vấn đầu vào bị lỗi <code>studnet lapotp batery</code>, hãy thiết kế chuỗi xử lý qua các bước: chuẩn hóa, sửa lỗi chính tả, gợi ý truy vấn và mở rộng truy vấn. Nêu rõ các rủi ro có thể làm sai lệch ý định ban đầu ở từng bước.</p>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><ul>
+<li>Sau bước sửa lỗi chính tả: <code>student laptop battery</code>.</li>
+<li>Sau bước gợi ý truy vấn: Đề xuất thêm <code>student laptop battery life</code> hoặc <code>student laptop battery replacement</code>.</li>
+<li>Sau bước mở rộng truy vấn: Bổ sung thêm các từ <code>notebook</code>, <code>pin</code>, <code>sac</code>.</li>
+<li>Rủi ro: Nếu người dùng đang muốn tìm cách thay pin bị hỏng mà hệ thống lại tự ý mở rộng sang việc mua máy mới mỏng nhẹ, hoặc từ <code>notebook</code> bị hiểu nhầm sang vở ghi chép học sinh, kết quả tìm kiếm sẽ đi chệch hoàn toàn khỏi mục đích ban đầu. Vì vậy, các bước mở rộng ngữ nghĩa nên hiển thị dưới dạng gợi ý để người dùng chủ động lựa chọn thay vì tự động ép buộc.</li>
+</ul></div></details>
+
+<h3 id="detail-14-vi">Bài tập 3: Lựa chọn hình thức hiển thị cho truy vấn so sánh giá</h3>
+<p>Đối với truy vấn so sánh giá máy tính của người dùng, hãy giải thích cách kết hợp giữa đoạn trích tóm tắt (snippet), bộ lọc (filter) và phân cụm kết quả (cluster).</p>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Bộ lọc theo các thuộc tính có cấu trúc (mức giá từ 15-20 triệu, RAM 16GB, trọng lượng &lt; 1.3kg) giúp người dùng thu hẹp chính xác phạm vi sản phẩm mong muốn. Phân cụm kết quả giúp nhóm các dòng máy theo thương hiệu hoặc mục đích sử dụng (máy văn phòng, máy lập trình, máy đồ họa). Đoạn trích snippet hiển thị chính xác dòng văn bản ghi nhận mức giá khuyến mãi và chính sách bảo hành sinh viên để người dùng đối chiếu trước khi bấm vào trang bán hàng.</p></div></details>
+
+<h2 id="summary-vi" data-section-heading="summary">Tổng kết</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 19</p>
+<ul>
+<li>Nhu cầu thông tin là mục tiêu trong nhận thức của người dùng, còn câu truy vấn chỉ là sự thể hiện ngắn gọn và thường không hoàn hảo của nhu cầu đó.</li>
+<li>Chuẩn hóa, sửa lỗi chính tả, gợi ý truy vấn, mở rộng truy vấn và phản hồi độ liên quan là các kỹ thuật có mục tiêu và cơ chế vận hành khác biệt.</li>
+<li>Khoảng cách chỉnh sửa đo lường sai lệch chữ viết bề mặt; mô hình kênh nhiễu kết hợp xác suất gõ nhầm với xác suất ngôn ngữ tự nhiên để xếp hạng từ sửa lỗi.</li>
+<li>Mở rộng truy vấn và phản hồi độ liên quan giúp khắc phục sự bất đồng từ vựng, nhưng phải kiểm soát hiện tượng trôi truy vấn.</li>
+<li>Tiêu đề, URL, đoạn trích phụ thuộc truy vấn, vùng in đậm từ khóa và phân cụm kết quả là những thành phần thiết yếu giúp người dùng phán đoán tài liệu.</li>
+<li>Tìm kiếm xuyên ngôn ngữ giải quyết rào cản ngôn ngữ giữa truy vấn và kho tài liệu, đòi hỏi xử lý thấu đáo từ đa nghĩa và tên riêng.</li>
+</ul>
+<h2 id="quiz-vi" data-section-heading="quiz">Câu hỏi tự kiểm tra</h2>
+<ol>
+<li>Trình bày sự khác biệt giữa nhu cầu thông tin (information need) và câu truy vấn (query).</li>
+<li>Vì sao trong khoảng cách Levenshtein tiêu chuẩn, thao tác hoán vị hai chữ cái kề nhau lại tính là 2 phép biến đổi?</li>
+<li>Phương pháp phản hồi độ liên quan giả định (pseudo-relevance feedback) dựa trên giả định ngầm định nào?</li>
+<li>Điểm khác biệt căn bản giữa đoạn trích phụ thuộc truy vấn (query-biased snippet) và bản tóm tắt tài liệu (summary) là gì?</li>
+<li>Nêu hai lý do vì sao lượt nhấp chuột (click) không thể coi là nhãn khẳng định chắc chắn 100% về độ liên quan của tài liệu.</li>
+</ol>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><ol>
+<li>Nhu cầu thông tin là vấn đề người dùng muốn giải quyết trong thực tế; truy vấn là chuỗi từ ngữ cụ thể gõ vào hệ thống để cố gắng diễn đạt nhu cầu đó.</li>
+<li>Vì thuật toán Levenshtein tiêu chuẩn chỉ gồm ba phép toán chèn, xóa và thay thế; muốn đổi chỗ hai ký tự <code>ot → to</code> bắt buộc phải thực hiện 2 phép thay thế riêng rẽ.</li>
+<li>Giả định rằng một số tài liệu đứng ở các vị trí đầu tiên của kết quả tìm kiếm vòng 1 chắc chắn là các tài liệu có độ liên quan đúng đắn.</li>
+<li>Đoạn trích phụ thuộc truy vấn trích lọc linh hoạt các câu văn chứa từ khóa của câu truy vấn hiện tại; bản tóm tắt tài liệu đúc kết nội dung chính của văn bản độc lập với câu truy vấn.</li>
+<li>Thứ nhất, người dùng có thể nhấp chuột do bị thu hút bởi tiêu đề hoặc do thiên lệch vị trí ở trên cùng (position bias) nhưng vào đọc thấy nội dung vô ích; thứ hai, người dùng có thể không nhấp chuột nhưng đã hoàn toàn thỏa mãn vì đọc được ngay thông tin cần tìm trên đoạn trích snippet.</li>
+</ol></div></details>
+
+<h2 id="next-chapter-vi" data-section-heading="next-chapter">Chuyển tiếp sang chương sau</h2>
+<p>Sau khi đã hoàn thiện câu truy vấn và cấu trúc giao diện hiển thị, câu hỏi cốt lõi đặt ra là: Thuật toán dựa trên những nguyên lý toán học nào để chấm điểm và quyết định tài liệu nào xứng đáng đứng đầu? Chương 7 tiếp theo sẽ so sánh toàn diện các mô hình truy xuất kinh điển: Boolean, Không gian vector, BM25, Mô hình ngôn ngữ và Học xếp hạng (Learning to Rank).</p>
+<h2 id="glossary-vi" data-section-heading="glossary">Bảng thuật ngữ</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>English</th>
+<th>Tiếng Việt</th>
+<th>Ý nghĩa trong chương này</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Information need</td>
+<td>Nhu cầu thông tin</td>
+<td>Điều người dùng thực sự muốn biết hoặc giải quyết trong thực tế</td>
+</tr>
+<tr>
+<td>Query</td>
+<td>Truy vấn</td>
+<td>Chuỗi ký tự, câu hỏi hoặc điều kiện nhập vào hệ thống tìm kiếm</td>
+</tr>
+<tr>
+<td>Query transformation</td>
+<td>Chuyển đổi truy vấn</td>
+<td>Quá trình điều chỉnh, chuẩn hóa hoặc mở rộng câu truy vấn</td>
+</tr>
+<tr>
+<td>Spelling correction</td>
+<td>Sửa lỗi chính tả</td>
+<td>Kỹ thuật phát hiện và đề xuất từ đúng cho các từ bị gõ sai</td>
+</tr>
+<tr>
+<td>Edit distance</td>
+<td>Khoảng cách chỉnh sửa</td>
+<td>Số lượng thao tác tối thiểu để biến đổi chuỗi ký tự này thành chuỗi khác</td>
+</tr>
+<tr>
+<td>Query suggestion</td>
+<td>Gợi ý truy vấn</td>
+<td>Tính năng tự động đề xuất các câu truy vấn hoàn chỉnh tiếp theo</td>
+</tr>
+<tr>
+<td>Query expansion</td>
+<td>Mở rộng truy vấn</td>
+<td>Kỹ thuật bổ sung các từ đồng nghĩa hoặc liên quan vào truy vấn gốc</td>
+</tr>
+<tr>
+<td>Query drift</td>
+<td>Trôi truy vấn</td>
+<td>Hiện tượng các từ mở rộng làm câu truy vấn đi chệch khỏi ý định ban đầu</td>
+</tr>
+<tr>
+<td>Relevance feedback</td>
+<td>Phản hồi độ liên quan</td>
+<td>Cơ chế dùng thông tin đánh giá tài liệu để tinh chỉnh lại câu truy vấn</td>
+</tr>
+<tr>
+<td>Pseudo-relevance feedback</td>
+<td>Phản hồi độ liên quan giả định</td>
+<td>Tự động coi các kết quả ở top đầu là tài liệu đúng để rút trích từ khóa</td>
+</tr>
+<tr>
+<td>Noisy channel model</td>
+<td>Mô hình kênh nhiễu</td>
+<td>Mô hình xác suất kết hợp giữa khả năng gõ lỗi và tần suất ngôn ngữ</td>
+</tr>
+<tr>
+<td>Dice coefficient</td>
+<td>Hệ số Dice</td>
+<td>Thước đo mức độ trùng lặp tập hợp đồng xuất hiện giữa hai từ</td>
+</tr>
+<tr>
+<td>Personalization</td>
+<td>Cá nhân hóa</td>
+<td>Tùy biến kết quả tìm kiếm theo hồ sơ và sở thích của từng người dùng</td>
+</tr>
+<tr>
+<td>Snippet</td>
+<td>Đoạn trích tóm tắt</td>
+<td>Đoạn văn ngắn trích xuất từ tài liệu hiển thị trên trang kết quả</td>
+</tr>
+<tr>
+<td>Result clustering</td>
+<td>Phân cụm kết quả</td>
+<td>Tự động gom các kết quả tìm kiếm hàng đầu thành các nhóm chủ đề</td>
+</tr>
+<tr>
+<td>Cross-language search</td>
+<td>Tìm kiếm xuyên ngôn ngữ</td>
+<td>Tìm kiếm khi ngôn ngữ câu truy vấn khác với ngôn ngữ của tài liệu</td>
+</tr>
+</tbody></table></div>
+
+        <footer class="lesson-footer"><span class="lesson-footer__meta"><span>SEG301m / CHƯƠNG 6</span><span class="site-credit">Made by <strong>Marcus</strong></span></span><a href="#top">Về đầu trang ↑</a></footer>
+      </article>
+      <nav class="chapter-pager" aria-label="Chapter navigation"><a class="chapter-pager__previous" href="./chapter-05.html">
+    <span>Chương trước</span>
+    <strong>05 · Xếp hạng với chỉ mục</strong>
+  </a><a class="chapter-pager__next" href="./chapter-07.html">
+    <span>Chương sau</span>
+    <strong>07 · Mô hình truy xuất</strong>
+  </a></nav>
+    </main>
+  </div>
+</body>
+</html>

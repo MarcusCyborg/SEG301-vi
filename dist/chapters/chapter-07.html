@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163b3c">
+  <meta name="description" content="So sánh Boolean, không gian vector, BM25, mô hình ngôn ngữ, mạng suy luận và learning to rank.">
+  <title>CHƯƠNG 7 Mô hình truy xuất | SEG301m</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=20261104-vi">
+  <link rel="stylesheet" href="../tutor.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/katex/katex.min.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/highlight.css?v=20261104-vi">
+  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang"}</script>
+  <script src="../app.js?v=20261104-vi" defer></script>
+  <script src="../tutor.js?v=20261104-vi" defer></script>
+</head>
+<body data-page="chapter" data-language="vi">
+  <a class="skip-link" href="#learning-goals-vi">Chuyển đến bài học</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
+    <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 7</span>
+    <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
+  </header>
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__line"></span> SEG301m / CHƯƠNG 7</p>
+        <h1 id="page-title">Mô hình<br><em>truy xuất</em></h1>
+        <p class="hero__description">So sánh Boolean, không gian vector, BM25, mô hình ngôn ngữ, mạng suy luận và learning to rank.</p>
+        <a class="start-link" href="#learning-goals-vi">Bắt đầu học <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <span class="orbit orbit--one"></span><span class="orbit orbit--two"></span>
+        <span class="signal signal--one"></span><span class="signal signal--two"></span>
+        <span class="hero__query">NGUỒN <b>07</b></span>
+        <span class="hero__result hero__result--one">01 <b>TÀI LIỆU</b></span>
+        <span class="hero__result hero__result--two">02 <b>CHỈ MỤC</b></span>
+        <span class="hero__result hero__result--three">03 <b>KẾT QUẢ</b></span>
+        <span class="hero__visual-label">TỪ NGUỒN ĐẾN TÌM KIẾM</span>
+      </div>
+    </div>
+    <div class="hero__footer"><span>CHƯƠNG 7</span><span>Nguồn: toàn bộ 25 slide bài giảng</span></div>
+  </section>
+  <div class="page-layout" id="lesson">
+    <nav class="chapter-nav" aria-label="Mục lục"><div class="chapter-nav__sticky">
+      <p class="chapter-nav__label">MỤC LỤC <span>07 / 12</span></p>
+      <div class="chapter-nav__links"><a href="#prerequisites-vi" data-section="prerequisites"><span>01</span>Kiến thức cần chuẩn bị</a>
+<a href="#system-position-vi" data-section="system-position"><span>02</span>Vị trí trong hệ thống tìm kiếm</a>
+<a href="#shared-collection-vi" data-section="shared-collection"><span>03</span>Bộ sưu tập tài liệu nhỏ dùng chung</a>
+<a href="#boolean-and-vector-space-vi" data-section="boolean-and-vector-space"><span>04</span>7.1 Tìm kiếm Boolean và Mô hình không gian vector</a>
+<a href="#probabilistic-models-and-bm25-vi" data-section="probabilistic-models-and-bm25"><span>05</span>7.2 Truy xuất xác suất và mô hình BM25</a>
+<a href="#language-models-vi" data-section="language-models"><span>06</span>7.3 Mô hình ngôn ngữ và Hàm hợp lý truy vấn</a>
+<a href="#inference-networks-vi" data-section="inference-networks"><span>07</span>7.4 Truy vấn phức tạp và Mạng suy luận (Inference Networks)</a>
+<a href="#web-search-vi" data-section="web-search"><span>08</span>7.5 Tìm kiếm Web</a>
+<a href="#machine-learning-and-ir-vi" data-section="machine-learning-and-ir"><span>09</span>7.6 Học máy, Học xếp hạng và Mô hình chủ đề</a>
+<a href="#application-based-models-vi" data-section="application-based-models"><span>10</span>7.7 Mô hình theo ứng dụng (Application-based Models)</a>
+<a href="#model-comparison-vi" data-section="model-comparison"><span>11</span>So sánh các mô hình truy xuất</a>
+<a href="#exercise-vi" data-section="exercise"><span>12</span>Bài tập cuối chương</a>
+<a href="#summary-vi" data-section="summary"><span>13</span>Tổng kết</a>
+<a href="#quiz-vi" data-section="quiz"><span>14</span>Câu hỏi tự kiểm tra</a>
+<a href="#next-chapter-vi" data-section="next-chapter"><span>15</span>Chuyển tiếp sang chương sau</a>
+<a href="#glossary-vi" data-section="glossary"><span>16</span>Bảng thuật ngữ</a></div>
+      <div class="chapter-directory">
+    <p class="chapter-directory__label">ĐỦ 12 CHƯƠNG</p>
+    <div class="chapter-directory__links"><a class="chapter-directory__item" href="./chapter-01.html"><b>01</b>Truy xuất thông tin</a>
+<a class="chapter-directory__item" href="./chapter-02.html"><b>02</b>Các thành phần và luồng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-03.html"><b>03</b>Thu thập tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-04.html"><b>04</b>Biến từ thành dữ liệu có thể tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-05.html"><b>05</b>Từ chỉ mục đến kết quả hàng đầu</a>
+<a class="chapter-directory__item" href="./chapter-06.html"><b>06</b>Biến nhu cầu thành truy vấn</a>
+<span class="chapter-directory__item is-current" aria-current="page"><b>07</b>Cách tính điểm kết quả</span>
+<a class="chapter-directory__item" href="./chapter-08.html"><b>08</b>Giúp nội dung được tìm thấy</a>
+<a class="chapter-directory__item" href="./chapter-09.html"><b>09</b>Đo chất lượng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-10.html"><b>10</b>Phân loại và sắp xếp tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-11.html"><b>11</b>Dùng con người và mối quan hệ trong tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-12.html"><b>12</b>Khai thác thứ tự, cấu trúc và đa phương tiện</a></div>
+  </div>
+    </div></nav>
+    <main class="lesson-content" id="main-content">
+      <article class="lesson-language" lang="vi-VN" data-lang="vi">
+        <div class="intro-mark"><span>GHI CHÚ HỌC TẬP</span><span>Bản tiếng Việt · Chương 07</span></div>
+        <p><strong>Tài liệu gốc:</strong> Slide bài giảng SEG301m Chương 7, &quot;Retrieval Models&quot; (25 slide)<br><strong>Cách đọc:</strong> Mô hình truy xuất là tư duy cốt lõi quyết định &quot;tài liệu nào xứng đáng được xếp lên đầu&quot;. Thay vì ghi nhớ công thức máy móc, hãy so sánh cách mỗi mô hình biểu diễn tài liệu và truy vấn, các giả định ngầm định, và cách diễn giải điểm số. Điểm số giữa các mô hình khác nhau không nằm trên cùng thang đo, do đó không thể so sánh số học trực tiếp với nhau.</p>
+<h2 id="learning-goals-vi" data-section-heading="learning-goals">Mục tiêu của chương</h2>
+<p>Sau khi học xong chương này, bạn có thể giải thích và tính toán các nội dung sau:</p>
+<ol>
+<li>Phân biệt sự khác nhau giữa tìm kiếm Boolean và truy xuất có xếp hạng (ranked retrieval).</li>
+<li>Xây dựng vector tài liệu và truy vấn từ tf, df, idf và tính toán độ tương đồng cosine (cosine similarity).</li>
+<li>Trình bày tư duy xác suất và tính điểm cho hai tài liệu theo công thức BM25 trong slide bài giảng.</li>
+<li>Giải thích hàm hợp lý của truy vấn (query likelihood), vấn đề xác suất bằng 0, làm mượt Dirichlet và điểm số logarit.</li>
+<li>Nêu rõ vai trò của mạng suy luận (inference network), tìm kiếm Web, học xếp hạng (Learning to Rank), mô hình chủ đề (topic model) và mô hình theo ứng dụng.</li>
+</ol>
+<p class="source-note"><span>SLIDE NGUỒN</span> 1-3</p>
+<figure class="chapter-map"><a href="../assets/chapter-07-mindmap.png" target="_blank" rel="noopener"><img src="../assets/chapter-07-mindmap.png" width="1491" height="1055" loading="lazy" alt="Sơ đồ tư duy bằng tiếng Anh cho Chương 7, Mô hình truy xuất"></a><figcaption>Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 7. Chọn ảnh để xem kích thước đầy đủ.</figcaption></figure>
+<h2 id="prerequisites-vi" data-section-heading="prerequisites">Kiến thức cần chuẩn bị</h2>
+<ul>
+<li>Vận dụng danh sách posting, tf, df, độ dài tài liệu và vị trí từ Chương 5.</li>
+<li>Khoảng cách giữa nhu cầu thông tin và câu truy vấn từ Chương 6 vẫn tồn tại trong mọi mô hình tìm kiếm.</li>
+<li>Khi thay đổi cơ số logarit, giá trị điểm số tuyệt đối sẽ thay đổi, nhưng thứ tự xếp hạng giữa các tài liệu không đổi (vì chỉ là nhân với hằng số dương).</li>
+<li>Điểm số xếp hạng cao không đồng nghĩa với xác suất liên quan đã được chuẩn hóa.</li>
+</ul>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Cùng một bài thi, có thầy chấm theo điều kiện đạt/không đạt (Boolean), có thầy so sánh với bài mẫu xem giống nhau bao nhiêu phần trăm (Vector Space), có thầy lại tính xác suất học sinh này thuộc nhóm giỏi hay nhóm kém (Mô hình xác suất). Đầu vào giống nhau nhưng nguyên tắc đánh giá khác nhau sẽ dẫn tới kết quả khác nhau. Mô hình truy xuất chính là các nguyên tắc đánh giá đó.</p></aside>
+<h2 id="system-position-vi" data-section-heading="system-position">Vị trí trong hệ thống tìm kiếm</h2>
+<pre><code class="language-text">Biểu diễn truy vấn + Biểu diễn tài liệu + Thống kê bộ sưu tập
+                            ↓
+                 Mô hình truy xuất (Retrieval Model)
+                            ↓
+                    Khớp hoặc Điểm số (Score)
+                            ↓
+                      Xếp hạng (Ranking)
+</code></pre>
+<p>Ở Chương 5, khâu xử lý truy vấn giải quyết bài toán tính toán hiệu năng (làm sao để duyệt nhanh); còn Chương 7 này định nghĩa bản chất công thức toán học tính điểm.</p>
+<h2 id="shared-collection-vi" data-section-heading="shared-collection">Bộ sưu tập tài liệu nhỏ dùng chung</h2>
+<p>Trong mô hình Boolean và mô hình Không gian vector, chúng ta dùng chung 4 tài liệu sau (bỏ qua vị trí từ):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Chuỗi token</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1</td>
+<td><code>tropical fish</code></td>
+</tr>
+<tr>
+<td>D2</td>
+<td><code>fish tank</code></td>
+</tr>
+<tr>
+<td>D3</td>
+<td><code>tropical aquarium</code></td>
+</tr>
+<tr>
+<td>D4</td>
+<td><code>aquarium guide</code></td>
+</tr>
+</tbody></table></div>
+<p>Tần số tài liệu df: <code>tropical = 2</code>, <code>fish = 2</code>, <code>aquarium = 2</code>, <code>tank = 1</code>, <code>guide = 1</code>.</p>
+<h2 id="boolean-and-vector-space-vi" data-section-heading="boolean-and-vector-space">7.1 Tìm kiếm Boolean và Mô hình không gian vector</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 4-8</p>
+<h3 id="detail-1-vi">Tìm kiếm Boolean (Boolean Retrieval)</h3>
+<p>Tìm kiếm Boolean đánh giá tài liệu dựa trên các phép toán logic ĐÚNG / SAI (TRUE / FALSE):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Truy vấn</th>
+<th>Phép toán tập hợp</th>
+<th>Kết quả trả về</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tropical AND fish</code></td>
+<td><code>{D1, D3} ∩ {D1, D2}</code></td>
+<td><code>{D1}</code></td>
+</tr>
+<tr>
+<td><code>tropical OR fish</code></td>
+<td><code>{D1, D3} ∪ {D1, D2}</code></td>
+<td><code>{D1, D2, D3}</code></td>
+</tr>
+<tr>
+<td><code>fish AND NOT aquarium</code></td>
+<td><code>{D1, D2} ∩ (Toàn bộ − {D3, D4})</code></td>
+<td><code>{D1, D2}</code></td>
+</tr>
+</tbody></table></div>
+<p>Mô hình Boolean cơ bản không tự động xếp thứ hạng giữa các tài liệu thỏa mãn điều kiện. Kết quả rất rõ ràng và dễ giải thích, nhưng đòi hỏi người dùng phải nắm vững cú pháp logic. Với truy vấn đơn giản, kết quả dễ rơi vào tình trạng quá nhiều hoặc không có kết quả nào (0 kết quả).</p>
+<p>Toán tử <code>NOT</code> lấy phần bù trên chính bộ sưu tập tài liệu đang xét. Khi có dấu ngoặc đơn, thứ tự ưu tiên thực hiện từ trong ra ngoài.</p>
+<h3 id="detail-2-vi">Xếp hạng theo tính gần kề (Proximity ranking)</h3>
+<p>Dựa trên chỉ mục vị trí ở Chương 5, hệ thống có thể cộng thêm điểm thưởng (bonus) nếu các từ truy vấn xuất hiện sát cạnh nhau trong tài liệu.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Với truy vấn <code>tropical fish</code>, tài liệu D1 chứa hai từ nằm liền kề nhau sẽ được ưu tiên hơn một tài liệu có hai từ nằm cách xa nhau một quãng. Đây là bước phát triển tinh mịn hơn so với việc chỉ kiểm tra đúng/sai của Boolean thuần túy.</p></aside>
+<h3 id="detail-3-vi">Xác định các trục trong Không gian vector</h3>
+<p>Mô hình không gian vector (vector space model) coi mỗi từ vựng là một trục tọa độ độc lập. Với 5 từ vựng <code>tropical, fish, aquarium, tank, guide</code>, mỗi tài liệu trở thành một điểm tọa độ trong không gian 5 chiều:</p>
+<div class="formula-block" role="math" aria-label="document D i equals vector d i one through d i t">
+  <span class="formula-main">D<sub>i</sub> = (d<sub>i1</sub>, d<sub>i2</sub>, …, d<sub>it</sub>)</span>
+</div>
+
+<p>Trọng số <code>d_ij</code> của từ <code>j</code> trong tài liệu <code>i</code> được tính bằng tích giữa tần số từ thô (raw tf) và nghịch đảo tần số tài liệu (idf):</p>
+<div class="formula-block" role="math" aria-label="idf of term t equals natural log of N divided by document frequency">
+  <span class="formula-main">idf(t) = ln(N / df(t))</span>
+  <span class="formula-sub">w(t,D) = tf(t,D) · idf(t)</span>
+</div>
+
+<p>Với tổng số tài liệu <code>N = 4</code>:</p>
+<ul>
+<li>Các từ có <code>df = 2</code> nhận <code>idf = ln(4 / 2) = ln(2) ≈ 0.693</code>.</li>
+<li>Các từ có <code>df = 1</code> nhận <code>idf = ln(4 / 1) = ln(4) ≈ 1.386</code>.</li>
+</ul>
+<p>Tọa độ vector của truy vấn và 4 tài liệu:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Vector</th>
+<th align="right">tropical</th>
+<th align="right">fish</th>
+<th align="right">aquarium</th>
+<th align="right">tank</th>
+<th align="right">guide</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Q = <code>tropical fish</code></td>
+<td align="right">0.693</td>
+<td align="right">0.693</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>D1</td>
+<td align="right">0.693</td>
+<td align="right">0.693</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>D2</td>
+<td align="right">0</td>
+<td align="right">0.693</td>
+<td align="right">0</td>
+<td align="right">1.386</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>D3</td>
+<td align="right">0.693</td>
+<td align="right">0</td>
+<td align="right">0.693</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>D4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.693</td>
+<td align="right">0</td>
+<td align="right">1.386</td>
+</tr>
+</tbody></table></div>
+<h3 id="detail-4-vi">Tính toán độ tương đồng Cosine (Cosine Similarity)</h3>
+<p>Độ tương đồng cosine đo góc hợp bởi giữa hai vector; góc càng hẹp thì giá trị cosine càng lớn (gần 1):</p>
+<div class="formula-block" role="math" aria-label="cosine D Q equals dot product divided by vector lengths">
+  <span class="formula-main">cos(D,Q) = (Σ<sub>j=1</sub><sup>t</sup> d<sub>j</sub>q<sub>j</sub>) / (√Σd<sub>j</sub><sup>2</sup> · √Σq<sub>j</sub><sup>2</sup>)</span>
+</div>
+
+<p>Tử số là tích vô hướng, mẫu số là tích độ dài của hai vector. Độ dài vector truy vấn <code>|Q| = √(0.693² + 0.693²) ≈ 0.980</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tài liệu</th>
+<th>Tích vô hướng với Q</th>
+<th align="right">Độ dài vector |D|</th>
+<th align="right">Điểm Cosine</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1</td>
+<td><code>0.693² + 0.693² = 0.961</code></td>
+<td align="right">0.980</td>
+<td align="right">1.000</td>
+</tr>
+<tr>
+<td>D2</td>
+<td><code>0.693² = 0.480</code></td>
+<td align="right"><code>√(0.693² + 1.386²) ≈ 1.550</code></td>
+<td align="right">0.316</td>
+</tr>
+<tr>
+<td>D3</td>
+<td><code>0.693² = 0.480</code></td>
+<td align="right">0.980</td>
+<td align="right">0.500</td>
+</tr>
+<tr>
+<td>D4</td>
+<td>0</td>
+<td align="right">1.550</td>
+<td align="right">0.000</td>
+</tr>
+</tbody></table></div>
+<p>Thứ tự xếp hạng: <code>D1 (1.000) &gt; D3 (0.500) &gt; D2 (0.316) &gt; D4 (0.000)</code>.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Vì sao tài liệu D2 chứa từ <code>fish</code> mà điểm tương đồng cosine lại thấp hơn tài liệu D3 (vốn chỉ chứa từ <code>tropical</code>)?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Vì từ thứ hai trong D2 là <code>tank</code> có idf rất lớn (1.386), kéo vector D2 lệch mạnh về trục <code>tank</code> xa khỏi vector truy vấn. Trong khi đó, từ thứ hai của D3 là <code>aquarium</code> có idf nhỏ hơn (0.693), giúp góc giữa vector D3 và vector truy vấn hẹp hơn góc của D2.</p></div></details>
+
+<h2 id="probabilistic-models-and-bm25-vi" data-section-heading="probabilistic-models-and-bm25">7.2 Truy xuất xác suất và mô hình BM25</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 9-10</p>
+<h3 id="detail-5-vi">Xem bài toán IR như bài toán phân loại nhị phân</h3>
+<p>Mô hình xác suất so sánh xem tài liệu <code>D</code> có xác suất thuộc lớp liên quan <code>R</code> (Relevant) cao hơn hay thuộc lớp không liên quan <code>NR</code> (Non-Relevant) cao hơn:</p>
+<div class="formula-block" role="math" aria-label="classify relevant if P D given R P R is greater than P D given non relevant P non relevant">
+  <span class="formula-main">P(D|R)P(R) &gt; P(D|NR)P(NR)</span>
+</div>
+
+<p>Mô hình độc lập nhị phân (Binary Independence Model - BIM) giả định sự xuất hiện của các từ là độc lập có điều kiện theo lớp. Giả định này đơn giản hóa tính toán nhưng bỏ qua mối liên hệ thực tế giữa các từ như <code>tropical</code> và <code>fish</code>.</p>
+<h3 id="detail-6-vi">Công thức BM25 trong slide bài giảng</h3>
+<p>Slide 10 kết hợp trọng số lý thuyết thông tin Robertson–Spärck Jones (RSJ) với tần số từ trong tài liệu và tần số từ trong truy vấn:</p>
+<div class="formula-block" role="math" aria-label="BM25 score with relevance weight document term frequency and query term frequency">
+  <span class="formula-main">Σ<sub>i∈Q</sub> log {[(r<sub>i</sub>+0.5)(N−n<sub>i</sub>−R+r<sub>i</sub>+0.5)] / [(R−r<sub>i</sub>+0.5)(n<sub>i</sub>−r<sub>i</sub>+0.5)]}</span>
+  <span class="formula-sub">× ((k<sub>1</sub>+1)f<sub>i</sub>)/(K+f<sub>i</sub>) × ((k<sub>2</sub>+1)qf<sub>i</sub>)/(k<sub>2</sub>+qf<sub>i</sub>)</span>
+</div>
+
+<ul>
+<li><code>N</code>: tổng số tài liệu trong bộ sưu tập.</li>
+<li><code>n_i</code>: số tài liệu chứa từ <code>i</code> (chính là df).</li>
+<li><code>R</code>: số lượng tài liệu đã biết là có liên quan.</li>
+<li><code>r_i</code>: số tài liệu liên quan có chứa từ <code>i</code>.</li>
+<li><code>f_i</code>: tần số xuất hiện của từ <code>i</code> trong tài liệu đang xét (tf).</li>
+<li><code>qf_i</code>: tần số xuất hiện của từ <code>i</code> trong câu truy vấn.</li>
+<li><code>k1</code>: tham số điều chỉnh tốc độ bão hòa của tf tài liệu (thường đặt từ 1.2 đến 2.0).</li>
+<li><code>k2</code>: tham số điều chỉnh độ bão hòa của tf truy vấn.</li>
+<li><code>K</code>: hệ số chuẩn hóa theo độ dài tài liệu:</li>
+</ul>
+<div class="formula-block" role="math" aria-label="K equals k one times one minus b plus b document length over average document length">
+  <span class="formula-main">K = k<sub>1</sub>((1−b) + b|D|/avgdl)</span>
+</div>
+
+<p>Tham số <code>b ∈ [0, 1]</code> kiểm soát mức độ phạt tài liệu dài: <code>b = 0</code> nghĩa là không phạt độ dài, <code>b = 1</code> phạt mạnh nhất.</p>
+<p>Khi không có thông tin phản hồi liên quan trước (<code>R = r_i = 0</code>), thành phần idf rút gọn về dạng:</p>
+<div class="formula-block" role="math" aria-label="idf equals natural log N minus n plus point five divided by n plus point five">
+  <span class="formula-main">idf<sub>RSJ</sub>(i) = ln((N−n<sub>i</sub>+0.5)/(n<sub>i</sub>+0.5))</span>
+</div>
+
+<p>Dạng thức RSJ nguyên bản này có thể nhận giá trị âm nếu từ xuất hiện ở hơn một nửa số tài liệu (<code>n_i &gt; N / 2</code>).</p>
+<h3 id="detail-7-vi">Tính toán BM25 trên hai tài liệu</h3>
+<p><strong>Số liệu giả định:</strong> Xét kho 8 tài liệu (<code>N = 8</code>), truy vấn <code>tropical fish</code> (<code>qf = 1</code>). Tham số: <code>k1 = 1.2</code>, <code>b = 0.75</code>, <code>avgdl = 10</code>, <code>k2 = 1000</code> (khi đó thành phần truy vấn xấp xỉ bằng 1):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Thống kê từ</th>
+<th align="right">tropical</th>
+<th align="right">fish</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>df (<code>n_i</code>)</td>
+<td align="right">2</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>RSJ IDF</td>
+<td align="right"><code>ln(6.5 / 2.5) ≈ 0.956</code></td>
+<td align="right"><code>ln(5.5 / 3.5) ≈ 0.452</code></td>
+</tr>
+</tbody></table></div>
+<p>Hai tài liệu ứng viên:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tài liệu</th>
+<th align="right">Độ dài |D|</th>
+<th align="right">tf(tropical)</th>
+<th align="right">tf(fish)</th>
+<th>Hệ số K</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1</td>
+<td align="right">6</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td><code>1.2(0.25 + 0.75 × 0.6) = 0.84</code></td>
+</tr>
+<tr>
+<td>D2</td>
+<td align="right">14</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td><code>1.2(0.25 + 0.75 × 1.4) = 1.56</code></td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><p>Điểm số tài liệu D1:</p>
+<ul>
+<li>tf factor của <code>tropical</code>: <code>(2.2 × 1) / (0.84 + 1) ≈ 1.196</code></li>
+<li>tf factor của <code>fish</code>: <code>(2.2 × 2) / (0.84 + 2) ≈ 1.549</code></li>
+<li><code>score(D1) = 0.956 × 1.196 + 0.452 × 1.549 ≈ 1.142 + 0.700 = 1.843</code></li>
+</ul>
+</li>
+<li><p>Điểm số tài liệu D2:</p>
+<ul>
+<li>tf factor của <code>tropical</code>: <code>(2.2 × 2) / (1.56 + 2) ≈ 1.236</code></li>
+<li>tf factor của <code>fish</code>: <code>(2.2 × 1) / (1.56 + 1) ≈ 0.859</code></li>
+<li><code>score(D2) = 0.956 × 1.236 + 0.452 × 0.859 ≈ 1.181 + 0.388 = 1.569</code></li>
+</ul>
+</li>
+</ul>
+<p>Tài liệu D1 đạt điểm cao hơn D2 (<code>1.843 &gt; 1.569</code>). Dù D2 có tần số <code>tropical</code> gấp đôi D1, thành phần tf bị bão hòa và độ dài của D2 dài hơn mức trung bình (<code>14 &gt; 10</code>) khiến điểm số của D2 bị kìm hãm lại.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Vì sao trong BM25, khi tần số xuất hiện của một từ tăng từ 1 lên 2 lần thì đóng góp điểm số của từ đó không tăng gấp đôi?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Vì thành phần tf trong BM25 có dạng bão hòa <code>(k1 + 1)f / (K + f)</code>. Khi <code>f</code> tăng lên, mẫu số cũng tăng theo, làm cho độ dốc tăng trưởng giảm dần. Cơ chế này ngăn chặn việc nhồi nhét một từ khóa quá nhiều lần để tăng điểm vô hạn.</p></div></details>
+
+<h2 id="language-models-vi" data-section-heading="language-models">7.3 Mô hình ngôn ngữ và Hàm hợp lý truy vấn</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 11-15</p>
+<h3 id="detail-8-vi">Xem tài liệu như nguồn sinh ra từ ngữ</h3>
+<p>Mô hình ngôn ngữ unigram (unigram language model) coi mỗi tài liệu như một phân phối xác suất sinh ra các từ. Phương pháp hàm hợp lý của truy vấn (query likelihood) tính xác suất để mô hình ngôn ngữ của tài liệu sinh ra đúng câu truy vấn của người dùng:</p>
+<div class="formula-block" role="math" aria-label="P Q given D equals product of P q i given D">
+  <span class="formula-main">P(Q|D) = ∏<sub>i=1</sub><sup>n</sup> P(q<sub>i</sub>|D)</span>
+  <span class="formula-sub">P(q<sub>i</sub>|D) = f<sub>q_i,D</sub> / |D|</span>
+</div>
+
+<p>Theo định lý Bayes, xác suất hậu nghiệm <code>P(D|Q) ∝ P(Q|D)P(D)</code>. Nếu giả định xác suất tiên nghiệm của mọi tài liệu <code>P(D)</code> đều bằng nhau thì thứ bậc của <code>P(D|Q)</code> trùng khớp với thứ bậc của hàm hợp lý <code>P(Q|D)</code>.</p>
+<h3 id="detail-9-vi">Vấn đề xác suất bằng 0 (Zero-probability Problem)</h3>
+<p>Nếu tài liệu thiếu dù chỉ 1 từ trong câu truy vấn, <code>P(q_i | D) = 0</code>, kéo theo tích xác suất của toàn bộ câu truy vấn bằng 0: <code>P(Q | D) = 0</code>. Điều này làm mất đi khả năng phân biệt thứ tự giữa các tài liệu khớp được 4 trên 5 từ với tài liệu không khớp từ nào.</p>
+<h3 id="detail-10-vi">Kỹ thuật làm mượt Dirichlet (Dirichlet Smoothing)</h3>
+<p>Làm mượt Dirichlet phân bổ một phần xác suất từ mô hình ngôn ngữ chung của toàn bộ sưu tập cho các từ không xuất hiện trong tài liệu:</p>
+<div class="formula-block" role="math" aria-label="P word given D mu equals document frequency plus mu collection probability divided by document length plus mu">
+  <span class="formula-main">P(w|D,μ) = (f<sub>w,D</sub> + μP(w|C)) / (|D|+μ)</span>
+</div>
+
+<ul>
+<li><code>f_w,D</code>: số lần từ <code>w</code> xuất hiện trong tài liệu <code>D</code>.</li>
+<li><code>P(w|C)</code>: xác suất xuất hiện của từ <code>w</code> trong toàn bộ bộ sưu tập.</li>
+<li><code>μ &gt; 0</code>: tham số Dirichlet đóng vai trò như số lượng từ giả định mượn từ bộ sưu tập.</li>
+</ul>
+<p><strong>Ví dụ tính toán:</strong> 4 tài liệu có tổng cộng 13 token, tần suất bộ sưu tập: <code>tropical = 2/13</code>, <code>fish = 4/13</code>, đặt <code>μ = 4</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tài liệu</th>
+<th>Chuỗi token</th>
+<th align="right">P(tropical | D, μ)</th>
+<th align="right">P(fish | D, μ)</th>
+<th align="right">Tích xác suất</th>
+<th align="right">Điểm logarit ln</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1</td>
+<td><code>tropical fish fish</code></td>
+<td align="right">0.2308</td>
+<td align="right">0.4615</td>
+<td align="right">0.1065</td>
+<td align="right">-2.240</td>
+</tr>
+<tr>
+<td>D2</td>
+<td><code>fish tank tank tank</code></td>
+<td align="right">0.0769</td>
+<td align="right">0.2788</td>
+<td align="right">0.0214</td>
+<td align="right">-3.842</td>
+</tr>
+<tr>
+<td>D3</td>
+<td><code>tropical aquarium guide</code></td>
+<td align="right">0.2308</td>
+<td align="right">0.1758</td>
+<td align="right">0.0406</td>
+<td align="right">-3.205</td>
+</tr>
+<tr>
+<td>D4</td>
+<td><code>aquarium fish guide</code></td>
+<td align="right">0.0879</td>
+<td align="right">0.3187</td>
+<td align="right">0.0280</td>
+<td align="right">-3.575</td>
+</tr>
+</tbody></table></div>
+<p>Với tài liệu D2 hoàn toàn không chứa từ <code>tropical</code>, nhờ làm mượt, xác suất vẫn đạt <code>(0 + 4 × 2/13) / (4 + 4) ≈ 0.0769</code> thay vì bằng 0. Thứ tự xếp hạng: <code>D1 &gt; D3 &gt; D4 &gt; D2</code>.</p>
+<p>Trong thực tế, người ta luôn tính tổng logarit <code>Σ log P(q_i | D)</code> để tránh tràn số dưới khi nhân nhiều xác suất nhỏ.</p>
+<h3 id="detail-11-vi">Mô hình độ liên quan và Phân kỳ Kullback–Leibler (KL Divergence)</h3>
+<p>Slide 14-15 giới thiệu hướng tiếp cận nâng cao: ước lượng mô hình độ liên quan (relevance model) <code>R</code> từ các tài liệu hàng đầu, sau đó đo khoảng cách phân kỳ KL giữa mô hình <code>R</code> và mô hình tài liệu <code>D</code>:</p>
+<div class="formula-block" role="math" aria-label="KL P Q equals sum P x log P x over Q x">
+  <span class="formula-main">KL(P||Q) = Σ<sub>x</sub> P(x) log(P(x)/Q(x))</span>
+</div>
+
+<p>Vì phân kỳ KL càng nhỏ nghĩa là tài liệu càng gần với mô hình liên quan, ta tối đa hóa giá trị âm <code>-KL(R || D)</code>. Sau khi triệt tiêu thành phần hằng số không phụ thuộc vào tài liệu, điểm số xếp hạng rút gọn thành:</p>
+<div class="formula-block" role="math" aria-label="score D equals sum P w given R log P w given D">
+  <span class="formula-main">score(D) = Σ<sub>w</sub> P(w|R) log P(w|D)</span>
+</div>
+
+<p>Cực tiểu hóa phân kỳ KL hoàn toàn tương đương với việc cực đại hóa điểm số tích logarit trên.</p>
+<h2 id="inference-networks-vi" data-section-heading="inference-networks">7.4 Truy vấn phức tạp và Mạng suy luận (Inference Networks)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 16-18</p>
+<p>Mạng suy luận (inference network) kết nối các tài liệu, các trường văn bản, đặc trưng từ vựng và toán tử truy vấn thành một đồ thị mạng Bayesian để truyền dẫn bằng chứng:</p>
+<pre><code class="language-text">Tài liệu D
+  ├─ Mô hình trường title θ_title ─ Đặc trưng r1, r2 ...
+  ├─ Mô hình trường body  θ_body  ─ Đặc trưng r1, r2 ...
+  └─ Mô hình trường h1    θ_h1    ─ Đặc trưng r1, r2 ...
+                                      ↓
+                         Toán tử truy vấn q1, q2
+                                      ↓
+                            Nhu cầu thông tin I
+</code></pre>
+<ul>
+<li><strong>Nút tài liệu D:</strong> Tài liệu ứng viên đang được đánh giá.</li>
+<li><strong>Nút trường (Field nodes):</strong> Mô hình ngôn ngữ riêng cho từng vùng cấu trúc như title, body, heading.</li>
+<li><strong>Nút đặc trưng (Feature nodes <code>r_i</code>):</strong> Các bằng chứng cụ thể trích xuất từ văn bản (từ đơn, cụm từ có thứ tự, đồng xuất hiện trong cửa sổ).</li>
+<li><strong>Nút toán tử truy vấn (<code>q_i</code>):</strong> Các toán tử biểu diễn điều kiện tìm kiếm (như <code>#od:1</code>, <code>#combine</code>).</li>
+<li><strong>Nút nhu cầu thông tin (Information need <code>I</code>):</strong> Nút đỉnh cao nhất tổng hợp toàn bộ bằng chứng thành điểm số thỏa mãn nhu cầu thông tin.</li>
+<li><strong>Cạnh liên kết (Edges):</strong> Thể hiện sự phụ thuộc suy luận xác suất giữa các tầng, không phải là siêu liên kết hyperlink trên Web.</li>
+</ul>
+<p>Công thức tính xác suất đặc trưng được làm mượt bằng Dirichlet:</p>
+<div class="formula-block" role="math" aria-label="P r i given D mu equals f r i D plus mu P r i given C divided by document length plus mu">
+  <span class="formula-main">P(r<sub>i</sub>|D,μ) = (f<sub>r_i,D</sub> + μP(r<sub>i</sub>|C)) / (|D|+μ)</span>
+</div>
+
+<p>Cú pháp truy vấn dạng cây của Galago biểu diễn các điều kiện tìm kiếm phức tạp:</p>
+<pre><code class="language-text">#combine(
+  #od:1(tropical fish)
+  #od:1(aquarium fish)
+  fish
+)
+</code></pre>
+<p>Toán tử <code>#od:1</code> yêu cầu hai từ phải xuất hiện liền kề đúng thứ tự (ordered distance 1), còn toán tử <code>#combine</code> kết hợp trọng số các nhánh bằng chứng.</p>
+<h2 id="web-search-vi" data-section-heading="web-search">7.5 Tìm kiếm Web</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 19-20</p>
+<p>Tìm kiếm Web phải đối mặt với dữ liệu quy mô khổng lồ, chất lượng không đồng đều, hành vi spam tinh vi và sự đa dạng về ý định người dùng (search intent):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Ý định tìm kiếm</th>
+<th>Mục tiêu của người dùng</th>
+<th>Ví dụ truy vấn</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tìm kiếm thông tin (Informational)</td>
+<td>Tìm hiểu kiến thức về một chủ đề</td>
+<td><code>cong thuc tinh bm25</code></td>
+</tr>
+<tr>
+<td>Tìm kiếm điều hướng (Navigational)</td>
+<td>Đi thẳng tới một trang web hoặc cổng thông tin cụ thể</td>
+<td><code>cong thong tin sinh vien fpt</code></td>
+</tr>
+<tr>
+<td>Tìm kiếm giao dịch (Transactional)</td>
+<td>Thực hiện hành động như mua sắm, tải tệp, đăng ký</td>
+<td><code>mua laptop sinh vien mong nhe</code></td>
+</tr>
+</tbody></table></div>
+<p>Mỗi ý định đòi hỏi loại trang đích và tiêu chí xếp hạng khác nhau.</p>
+<p>Các công cụ tìm kiếm Web thương mại kết hợp hàng trăm đặc trưng: nội dung văn bản, văn bản neo, độ mới, vị trí địa lý, độ uy tín PageRank và tín hiệu tương tác người dùng. Độ phổ biến (popularity) phản ánh mức độ quan tâm của cộng đồng, nhưng không đồng nhất với độ liên quan: một trang chủ nổi tiếng không thể thay thế cho một bài viết giải thích chi tiết đúng trọng tâm câu hỏi.</p>
+<h2 id="machine-learning-and-ir-vi" data-section-heading="machine-learning-and-ir">7.6 Học máy, Học xếp hạng và Mô hình chủ đề</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 21-22</p>
+<h3 id="detail-12-vi">Mô hình tạo sinh (Generative) và Mô hình phân biệt (Discriminative)</h3>
+<ul>
+<li><strong>Mô hình tạo sinh (Generative model):</strong> Mô hình hóa cách dữ liệu hoặc câu truy vấn được sinh ra từ tài liệu (tiêu biểu như mô hình ngôn ngữ).</li>
+<li><strong>Mô hình phân biệt (Discriminative model):</strong> Học trực tiếp hàm ánh xạ từ các vector đặc trưng quan sát được sang nhãn phân loại hoặc điểm số xếp hạng.</li>
+</ul>
+<p>Trong <strong>Học xếp hạng (Learning to Rank - LTR)</strong>, mỗi mẫu dữ liệu đầu vào là một bộ:</p>
+<pre><code class="language-text">(Truy vấn q, Tài liệu D, Vector đặc trưng x, Nhãn độ liên quan y)
+</code></pre>
+<p>Vector đặc trưng <code>x</code> kết hợp điểm BM25, mức độ khớp tiêu đề, tính gần kề, điểm PageRank và độ mới.</p>
+<p><strong>Ví dụ tính điểm từ hàm học được:</strong> Giả sử mô hình đã học được bộ trọng số <code>(0.6, 0.3, 0.1)</code> cho ba đặc trưng đã chuẩn hóa <code>BM25 = 0.8</code>, <code>khớp tiêu đề = 1.0</code>, <code>độ mới = 0.4</code>:</p>
+<pre><code class="language-text">score = 0.6 × 0.8 + 0.3 × 1.0 + 0.1 × 0.4 = 0.82
+</code></pre>
+<p>Ba hướng tiếp cận chính trong LTR:</p>
+<ul>
+<li><strong>Pointwise:</strong> Dự đoán điểm số hoặc cấp độ liên quan cho từng tài liệu độc lập.</li>
+<li><strong>Pairwise (như Ranking SVM):</strong> Học từ các cặp tài liệu <code>(D_A tốt hơn D_B)</code>, tìm vector trọng số sao cho điểm số của tài liệu tốt luôn cao hơn tài liệu kém.</li>
+<li><strong>Listwise:</strong> Tối ưu hóa trực tiếp các chỉ số đánh giá toàn bộ danh sách (như NDCG hay MAP).</li>
+</ul>
+<h3 id="detail-13-vi">Bất đồng từ vựng và Mô hình chủ đề (Topic Models)</h3>
+<p>Khi người dùng tìm kiếm từ <code>car</code> nhưng tài liệu chỉ chứa từ đồng nghĩa <code>automobile</code>, các mô hình so khớp từ bề mặt sẽ bỏ sót tài liệu.</p>
+<ul>
+<li><strong>Chỉ mục ngữ nghĩa tiềm ẩn (Latent Semantic Indexing - LSI):</strong> Sử dụng phép phân rã ma trận đại số tuyến tính (SVD) để chiếu các từ và tài liệu vào một không gian tiềm ẩn số chiều thấp, đưa các từ đồng xuất hiện về gần nhau.</li>
+<li><strong>Phân bổ Dirichlet tiềm ẩn (Latent Dirichlet Allocation - LDA):</strong> Mô hình xác suất tạo sinh giả định mỗi tài liệu là một phân phối hòa trộn của nhiều chủ đề (topics), và mỗi chủ đề là một phân phối xác suất sinh ra các từ vựng.</li>
+</ul>
+<p>Ví dụ một bài báo về thiết bị thông minh có thể chứa 70% chủ đề công nghệ và 30% chủ đề thể thao:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Chủ đề</th>
+<th align="right">AI</th>
+<th align="right">chip</th>
+<th align="right">ball</th>
+<th align="right">match</th>
+<th align="right">Tổng</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Công nghệ</td>
+<td align="right">0.40</td>
+<td align="right">0.35</td>
+<td align="right">0.05</td>
+<td align="right">0.20</td>
+<td align="right">1.00</td>
+</tr>
+<tr>
+<td>Thể thao</td>
+<td align="right">0.05</td>
+<td align="right">0.05</td>
+<td align="right">0.45</td>
+<td align="right">0.45</td>
+<td align="right">1.00</td>
+</tr>
+</tbody></table></div>
+<p>Quy trình tạo sinh của LDA:</p>
+<ol>
+<li>Chọn phân phối chủ đề <code>θ_D</code> cho tài liệu <code>D</code> (ví dụ: Công nghệ 0.7, Thể thao 0.3).</li>
+<li>Tại mỗi vị trí từ, chọn một chủ đề <code>z</code> theo tỉ lệ <code>θ_D</code>.</li>
+<li>Từ chủ đề <code>z</code> đã chọn, sinh ra một từ ngữ cụ thể <code>w</code> theo phân phối xác suất của chủ đề đó.</li>
+</ol>
+<p>Trong khâu huấn luyện thực tế, hệ thống quan sát các từ xuất hiện trong văn bản để suy luận ngược lại phân phối chủ đề tiềm ẩn.</p>
+<h2 id="application-based-models-vi" data-section-heading="application-based-models">7.7 Mô hình theo ứng dụng (Application-based Models)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 23</p>
+<p>Mô hình theo ứng dụng điều chỉnh chiến lược tìm kiếm theo đặc thù của từng miền nghiệp vụ:</p>
+<ol>
+<li>Xây dựng bộ sưu tập kiểm thử đặc thù gồm các truy vấn, tài liệu và nhãn đánh giá thực tế của nghiệp vụ.</li>
+<li>Thiết lập mô hình đường cơ sở (baseline model).</li>
+<li>Bổ sung các đặc trưng chuyên biệt của miền ứng dụng.</li>
+<li>Đánh giá và so sánh định lượng trên cùng một tập kiểm thử độc lập.</li>
+</ol>
+<p>Ví dụ trong tìm kiếm văn bản quy định của trường đại học, tính pháp lý, cơ quan ban hành, số hiệu văn bản và ngày có hiệu lực quan trọng hơn nhiều so với độ phổ biến thông thường.</p>
+<h2 id="model-comparison-vi" data-section-heading="model-comparison">So sánh các mô hình truy xuất</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mô hình</th>
+<th>Biểu diễn dữ liệu</th>
+<th>Cơ chế quyết định / Điểm số</th>
+<th>Ý nghĩa trực quan</th>
+<th>Ưu điểm chính</th>
+<th>Hạn chế và phạm vi áp dụng</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Boolean</td>
+<td>Tập hợp các từ</td>
+<td>Logic AND/OR/NOT (ĐÚNG/SAI)</td>
+<td>Thỏa mãn trọn vẹn điều kiện</td>
+<td>Rõ ràng, dễ đoán, lọc chính xác</td>
+<td>Không tự xếp hạng; dễ rơi vào 0 kết quả</td>
+</tr>
+<tr>
+<td>Proximity</td>
+<td>Vị trí offset của từ</td>
+<td>Điểm thưởng khoảng cách và thứ tự</td>
+<td>Các từ gần nhau có liên hệ mạnh</td>
+<td>Rất hiệu quả cho tên riêng, cụm từ</td>
+<td>Cần chỉ mục vị trí; tốn thêm quy tắc khoảng cách</td>
+</tr>
+<tr>
+<td>Không gian vector</td>
+<td>Vector trọng số tf-idf</td>
+<td>Tích vô hướng / Cosine</td>
+<td>Hướng vector càng gần thì càng giống</td>
+<td>Hỗ trợ khớp từng phần và xếp hạng</td>
+<td>Giả định các từ độc lập, phụ thuộc cách gán trọng số</td>
+</tr>
+<tr>
+<td>Xác suất nhị phân</td>
+<td>Vector nhị phân sự hiện diện</td>
+<td>Tỉ số cơ may độ liên quan (Odds)</td>
+<td>Xác suất thuộc về lớp tài liệu đúng</td>
+<td>Nền tảng lý thuyết xác suất chặt chẽ</td>
+<td>Giả định độc lập, cần dữ liệu ước lượng xác suất</td>
+</tr>
+<tr>
+<td>BM25</td>
+<td>tf, df, độ dài tài liệu</td>
+<td>Bão hòa tf × IDF × chuẩn hóa độ dài</td>
+<td>Đánh giá từ hiếm với tần số hợp lý</td>
+<td>Baseline cực mạnh cho văn bản</td>
+<td>Cần tinh chỉnh tham số <code>k1</code>, <code>b</code></td>
+</tr>
+<tr>
+<td>Query likelihood</td>
+<td>Phân phối ngôn ngữ tài liệu</td>
+<td>Tích xác suất hoặc tổng logarit</td>
+<td>Khả năng tài liệu sinh ra câu truy vấn</td>
+<td>Lý thuyết tường minh, tích hợp làm mượt</td>
+<td>Giả định unigram độc lập, cần kỹ thuật làm mượt</td>
+</tr>
+<tr>
+<td>Mạng suy luận</td>
+<td>Đồ thị nút đặc trưng và toán tử</td>
+<td>Niềm tin tổng hợp (Belief score)</td>
+<td>Cây kết hợp nhiều luồng bằng chứng</td>
+<td>Biểu diễn được cấu trúc, cụm từ, trường</td>
+<td>Thiết kế và giải thích hệ thống phức tạp</td>
+</tr>
+<tr>
+<td>Học xếp hạng (LTR)</td>
+<td>Vector đặc trưng truy vấn-tài liệu</td>
+<td>Hàm xếp hạng học từ dữ liệu</td>
+<td>Học cách kết hợp đặc trưng tối ưu</td>
+<td>Kết hợp hàng trăm tín hiệu khác nhau</td>
+<td>Cần tập dữ liệu huấn luyện lớn có gán nhãn</td>
+</tr>
+<tr>
+<td>Mô hình chủ đề (LDA/LSI)</td>
+<td>Không gian chủ đề số chiều thấp</td>
+<td>Độ tương đồng trong không gian tiềm ẩn</td>
+<td>Đồng xuất hiện cùng chủ đề tiềm ẩn</td>
+<td>Khắc phục bất đồng từ vựng</td>
+<td>Khó kiểm soát từ hiếm và khớp cụm từ chính xác</td>
+</tr>
+<tr>
+<td>Theo ứng dụng</td>
+<td>Đặc trưng chuyên biệt của miền</td>
+<td>Tùy biến theo nghiệp vụ miền</td>
+<td>Tối ưu riêng cho từng bài toán</td>
+<td>Khai thác sâu tri thức nghiệp vụ</td>
+<td>Chi phí bảo trì cao, khó tái sử dụng cho miền khác</td>
+</tr>
+</tbody></table></div>
+<p>Lưu ý: Không thể lấy con số điểm của các mô hình khác nhau để so sánh trực tiếp độ lớn với nhau. Đánh giá mô hình phải dựa trên việc so sánh thứ bậc kết quả trên cùng một tập dữ liệu kiểm thử chuẩn.</p>
+<h2 id="exercise-vi" data-section-heading="exercise">Bài tập cuối chương</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 24</p>
+<h3 id="detail-14-vi">Bài tập 1: Thiết kế dự án kiểm thử theo chuẩn TREC</h3>
+<p>Thiết kế một bộ sưu tập kiểm thử truy xuất adhoc dựa trên dữ liệu Wikipedia:</p>
+<ol>
+<li>Xây dựng danh sách nhu cầu thông tin và chuyển hóa thành các câu truy vấn.</li>
+<li>Thiết lập quy trình đánh giá độ liên quan bằng phương pháp gộp kết quả (pooling) từ nhiều công cụ tìm kiếm khác nhau.</li>
+<li>Phân chia tập truy vấn thành tập phát triển (train/tuning) và tập kiểm thử độc lập (test).</li>
+</ol>
+<details class="answer-key"><summary>Xem hướng dẫn giải</summary><div class="answer-key__body"><p>Mô tả rõ ràng nhu cầu thông tin trong một đoạn văn ngắn trước khi tóm tắt thành truy vấn ngắn. Áp dụng kỹ thuật pooling lấy top-K tài liệu hàng đầu từ ít nhất 3 mô hình khác nhau (ví dụ: Boolean, Không gian vector, BM25) để chuyên viên thẩm định nhãn liên quan. Các tài liệu nằm ngoài pool có thể tạm coi là không liên quan nhưng cần ghi chú rõ ràng về độ bao phủ của pool.</p></div></details>
+
+<h3 id="detail-15-vi">Bài tập 2: Lập trình kiểm thử mô hình BM25</h3>
+<p>Cài đặt công thức tính điểm BM25 trong slide và kiểm thử trên các trường hợp biên: từ không xuất hiện trong tài liệu (<code>tf = 0</code>), từ xuất hiện ở hơn một nửa số tài liệu (<code>df &gt; N / 2</code>), tài liệu rất ngắn và tài liệu rất dài.</p>
+<details class="answer-key"><summary>Xem hướng dẫn giải</summary><div class="answer-key__body"><p>Tách biệt các hàm tính IDF, thành phần tần số tài liệu và thành phần tần số truy vấn. Khi <code>df &gt; N / 2</code>, công thức RSJ nguyên bản sẽ cho giá trị IDF âm, dẫn tới việc tài liệu chứa từ này bị trừ điểm. Cần ghi chú rõ hiện tượng này và so sánh với biến thể BM25 không âm (<code>log(1 + ...)</code>).</p></div></details>
+
+<h3 id="detail-16-vi">Bài tập 3: Cơ chế phát hiện trôi truy vấn trong phản hồi giả định</h3>
+<p>Xây dựng quy tắc phát hiện hiện tượng trôi truy vấn (query drift) khi tự động lấy thêm từ khóa từ top 3 tài liệu hàng đầu.</p>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Cảnh báo trôi truy vấn khi: (1) Tổng trọng số của các từ mở rộng mới vượt trội áp đảo hoàn toàn trọng số của các từ truy vấn gốc; (2) Các từ mới chỉ xuất hiện cục bộ trong đúng 1 tài liệu top đầu mà không được chia sẻ giữa các tài liệu trong top 3; (3) Kết quả tìm kiếm sau khi mở rộng không còn chứa bất kỳ tài liệu nào của danh sách top 3 ban đầu.</p></div></details>
+
+<h2 id="summary-vi" data-section-heading="summary">Tổng kết</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 25</p>
+<ul>
+<li>Tìm kiếm Boolean đánh giá điều kiện đúng/sai tuyệt đối và không tự động xếp thứ bậc trong dạng thức cơ bản.</li>
+<li>Mô hình không gian vector biểu diễn tài liệu và truy vấn dưới dạng vector trọng số tf-idf và đo độ gần góc bằng độ tương đồng cosine.</li>
+<li>Mô hình BM25 kết hợp hài hòa giữa idf, độ bão hòa tần số từ và sự chuẩn hóa theo độ dài tài liệu.</li>
+<li>Phương pháp hàm hợp lý truy vấn (Query likelihood) đo xác suất tài liệu sinh ra câu truy vấn, sử dụng làm mượt Dirichlet để khắc phục vấn đề xác suất bằng 0.</li>
+<li>Mạng suy luận (Inference network) kết hợp linh hoạt nhiều nguồn bằng chứng từ các trường dữ liệu và toán tử cấu trúc phức tạp.</li>
+<li>Học xếp hạng (LTR) sử dụng máy học để tự động tối ưu hóa việc kết hợp hàng trăm đặc trưng khác nhau từ dữ liệu nhãn liên quan.</li>
+<li>Mô hình chủ đề (LSI, LDA) giải quyết bài toán bất đồng từ vựng bằng cách khám phá không gian ngữ nghĩa tiềm ẩn.</li>
+</ul>
+<h2 id="quiz-vi" data-section-heading="quiz">Câu hỏi tự kiểm tra</h2>
+<ol>
+<li>Vì sao nói mô hình Boolean cơ bản không phải là một mô hình truy xuất có xếp hạng (ranked retrieval)?</li>
+<li>Giải thích vì sao độ tương đồng cosine không phải là một xác suất.</li>
+<li>Trong công thức BM25 của slide, điều kiện nào sẽ khiến trọng số RSJ IDF nhận giá trị âm?</li>
+<li>Dưới giả định nào thì thứ bậc của hàm hợp lý truy vấn <code>P(Q|D)</code> trùng khớp với thứ bậc của xác suất hậu nghiệm <code>P(D|Q)</code>?</li>
+<li>Dữ liệu cần thiết ở giai đoạn huấn luyện (training) và giai đoạn suy luận (inference) của bài toán Học xếp hạng (LTR) khác nhau như thế nào?</li>
+<li>Vì sao việc cực tiểu hóa phân kỳ <code>KL(R||D)</code> lại hoàn toàn tương đương với việc cực đại hóa điểm số <code>Σ P(w|R) log P(w|D)</code>?</li>
+<li>Trong quy trình tạo sinh của mô hình LDA, đối với một vị trí từ cụ thể, chủ đề và từ ngữ được lựa chọn theo thứ tự nào?</li>
+</ol>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><ol>
+<li>Vì mô hình chỉ trả về tập hợp các tài liệu thỏa mãn điều kiện logic mà không đưa ra cơ chế chấm điểm số thực để sắp xếp thứ tự ưu tiên giữa các tài liệu đó.</li>
+<li>Vì cosine đo góc hình học giữa hai vector trong không gian nhiều chiều, giá trị không được chuẩn hóa thành một phân phối xác suất có tổng bằng 1 trên toàn bộ không gian biến cố.</li>
+<li>Khi tần số tài liệu của từ vượt quá một nửa kích thước bộ sưu tập (<code>n_i &gt; N / 2</code>), khiến phân số trong logarit nhỏ hơn 1 và dẫn tới giá trị âm.</li>
+<li>Dưới giả định xác suất tiên nghiệm của mọi tài liệu <code>P(D)</code> là hoàn toàn bằng nhau (phân phối đều).</li>
+<li>Giai đoạn huấn luyện cần các cặp truy vấn - tài liệu có đầy đủ vector đặc trưng kèm nhãn độ liên quan thực tế; giai đoạn suy luận chỉ cần vector đặc trưng của cặp mới để tính điểm xếp hạng qua mô hình đã học.</li>
+<li>Vì sau khi đổi dấu <code>-KL(R||D)</code> để chuyển thành bài toán cực đại hóa, số hạng đầu tiên <code>Σ P(w|R) log P(w|R)</code> là hằng số cố định với mọi tài liệu nên có thể lược bỏ mà không ảnh hưởng tới thứ tự xếp hạng.</li>
+<li>Trước tiên chọn chủ đề <code>z</code> từ phân phối chủ đề của tài liệu <code>θ_D</code>, sau đó mới chọn từ <code>w</code> từ phân phối xác suất từ vựng của chủ đề <code>z</code> đó.</li>
+</ol></div></details>
+
+<h2 id="next-chapter-vi" data-section-heading="next-chapter">Chuyển tiếp sang chương sau</h2>
+<p>Chương này đã so sánh toàn diện các mô hình xếp hạng bên trong công cụ tìm kiếm. Chương 8 tiếp theo sẽ tiếp cận bài toán từ góc độ ngược lại: người sở hữu trang web cần tối ưu hóa nội dung, cấu trúc và mã nguồn như thế nào (SEO) để được công cụ tìm kiếm hiểu đúng và xếp hạng thuận lợi.</p>
+<h2 id="glossary-vi" data-section-heading="glossary">Bảng thuật ngữ</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>English</th>
+<th>Tiếng Việt</th>
+<th>Ý nghĩa trong chương này</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Retrieval model</td>
+<td>Mô hình truy xuất</td>
+<td>Mô hình toán học xác định mức độ khớp hoặc điểm số giữa truy vấn và tài liệu</td>
+</tr>
+<tr>
+<td>Boolean retrieval</td>
+<td>Tìm kiếm Boolean</td>
+<td>Mô hình tìm kiếm dựa trên các phép toán logic AND, OR, NOT</td>
+</tr>
+<tr>
+<td>Vector space model</td>
+<td>Mô hình không gian vector</td>
+<td>Mô hình biểu diễn tài liệu và truy vấn thành các vector trọng số trong không gian đa chiều</td>
+</tr>
+<tr>
+<td>Cosine similarity</td>
+<td>Độ tương đồng Cosine</td>
+<td>Độ đo góc giữa hai vector phản ánh mức độ tương đồng định hướng</td>
+</tr>
+<tr>
+<td>Probabilistic retrieval model</td>
+<td>Mô hình truy xuất xác suất</td>
+<td>Mô hình đánh giá tài liệu dựa trên xác suất liên quan và lý thuyết thông tin</td>
+</tr>
+<tr>
+<td>Binary independence model</td>
+<td>Mô hình độc lập nhị phân</td>
+<td>Mô hình xác suất giả định sự xuất hiện của các từ là độc lập có điều kiện theo lớp</td>
+</tr>
+<tr>
+<td>BM25</td>
+<td>Thuật toán BM25</td>
+<td>Hàm xếp hạng phi tuyến kết hợp tần số từ bão hòa, idf và chuẩn hóa độ dài tài liệu</td>
+</tr>
+<tr>
+<td>Query likelihood</td>
+<td>Hàm hợp lý truy vấn</td>
+<td>Phương pháp xếp hạng dựa trên xác suất tài liệu sinh ra câu truy vấn</td>
+</tr>
+<tr>
+<td>Smoothing</td>
+<td>Làm mượt</td>
+<td>Kỹ thuật điều chỉnh phân phối xác suất để tránh lỗi xác suất bằng 0 cho từ chưa gặp</td>
+</tr>
+<tr>
+<td>Dirichlet smoothing</td>
+<td>Làm mượt Dirichlet</td>
+<td>Kỹ thuật làm mượt bổ sung tần suất từ trong bộ sưu tập như một lượng đếm giả định</td>
+</tr>
+<tr>
+<td>KL divergence</td>
+<td>Phân kỳ KL</td>
+<td>Thước đo bất đối xứng đo lường sự khác biệt giữa hai phân phối xác suất</td>
+</tr>
+<tr>
+<td>Inference network</td>
+<td>Mạng suy luận</td>
+<td>Mô hình mạng Bayesian kết nối nhiều nguồn bằng chứng văn bản và toán tử truy vấn</td>
+</tr>
+<tr>
+<td>Generative model</td>
+<td>Mô hình tạo sinh</td>
+<td>Mô hình xác suất mô tả quy trình dữ liệu quan sát được sinh ra như thế nào</td>
+</tr>
+<tr>
+<td>Discriminative model</td>
+<td>Mô hình phân biệt</td>
+<td>Mô hình học máy dự đoán trực tiếp điểm số hoặc nhãn từ các đặc trưng quan sát</td>
+</tr>
+<tr>
+<td>Learning to rank</td>
+<td>Học xếp hạng (LTR)</td>
+<td>Phương pháp ứng dụng học máy để huấn luyện hàm xếp hạng từ dữ liệu thực nghiệm</td>
+</tr>
+<tr>
+<td>Support Vector Machine (SVM)</td>
+<td>Máy vector hỗ trợ (SVM)</td>
+<td>Thuật toán học máy tìm siêu phẳng phân cách tối ưu, ứng dụng trong học xếp hạng</td>
+</tr>
+<tr>
+<td>Ranking SVM</td>
+<td>Ranking SVM</td>
+<td>Thuật toán học xếp hạng theo từng cặp tài liệu dựa trên nguyên lý SVM</td>
+</tr>
+<tr>
+<td>Latent Semantic Indexing</td>
+<td>Lập chỉ mục ngữ nghĩa tiềm ẩn (LSI)</td>
+<td>Kỹ thuật giảm chiều ma trận từ-tài liệu để bắt trọn ngữ nghĩa đồng xuất hiện tiềm ẩn</td>
+</tr>
+<tr>
+<td>Latent Dirichlet Allocation</td>
+<td>Phân bổ Dirichlet tiềm ẩn (LDA)</td>
+<td>Mô hình xác suất sinh biểu diễn tài liệu dưới dạng hòa trộn của các chủ đề tiềm ẩn</td>
+</tr>
+<tr>
+<td>Application-based model</td>
+<td>Mô hình theo ứng dụng</td>
+<td>Mô hình truy xuất được tinh chỉnh riêng theo yêu cầu nghiệp vụ của miền ứng dụng</td>
+</tr>
+</tbody></table></div>
+
+        <footer class="lesson-footer"><span class="lesson-footer__meta"><span>SEG301m / CHƯƠNG 7</span><span class="site-credit">Made by <strong>Marcus</strong></span></span><a href="#top">Về đầu trang ↑</a></footer>
+      </article>
+      <nav class="chapter-pager" aria-label="Chapter navigation"><a class="chapter-pager__previous" href="./chapter-06.html">
+    <span>Chương trước</span>
+    <strong>06 · Truy vấn và giao diện</strong>
+  </a><a class="chapter-pager__next" href="./chapter-08.html">
+    <span>Chương sau</span>
+    <strong>08 · Tối ưu hóa công cụ tìm kiếm (SEO)</strong>
+  </a></nav>
+    </main>
+  </div>
+</body>
+</html>

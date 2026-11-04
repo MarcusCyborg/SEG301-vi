@@ -1,0 +1,29 @@
+{
+  "name": "seg301m-vietnamese-study-notes",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check-build.mjs && node scripts/verify-chapters-08-10.mjs && node scripts/verify-chapters-11-12.mjs && node scripts/test-retrieval.mjs && node scripts/test-generated-files.mjs && node scripts/verify-responsive.mjs",
+    "check:lessons": "node scripts/verify-chapters-08-10.mjs && node scripts/verify-chapters-11-12.mjs",
+    "check:responsive": "node scripts/verify-responsive.mjs",
+    "test:tutor": "node scripts/test-tutor.mjs",
+    "start:tutor": "node server/main.mjs",
+    "test:retrieval": "node scripts/test-retrieval.mjs",
+    "test:generated-files": "node scripts/test-generated-files.mjs"
+  },
+  "dependencies": {
+    "dompurify": "^3.4.16",
+    "fflate": "^0.8.3",
+    "highlight.js": "^11.11.1",
+    "katex": "^0.16.22",
+    "marked": "15.0.12",
+    "pdfjs-dist": "^4.10.38",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.12",
+    "puppeteer-core": "^24.40.0"
+  }
+}

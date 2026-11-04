@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163b3c">
+  <meta name="description" content="Tìm hiểu crawler, độ mới, nguồn cấp, bảng mã, phát hiện trùng lặp và loại bỏ nhiễu.">
+  <title>CHƯƠNG 3 Thu thập dữ liệu và nguồn cấp | SEG301m</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=20261104-vi">
+  <link rel="stylesheet" href="../tutor.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/katex/katex.min.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/highlight.css?v=20261104-vi">
+  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang"}</script>
+  <script src="../app.js?v=20261104-vi" defer></script>
+  <script src="../tutor.js?v=20261104-vi" defer></script>
+</head>
+<body data-page="chapter" data-language="vi">
+  <a class="skip-link" href="#learning-goals-vi">Chuyển đến bài học</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
+    <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 3</span>
+    <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
+  </header>
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__line"></span> SEG301m / CHƯƠNG 3</p>
+        <h1 id="page-title">Thu thập dữ liệu<br><em>và nguồn cấp</em></h1>
+        <p class="hero__description">Tìm hiểu crawler, độ mới, nguồn cấp, bảng mã, phát hiện trùng lặp và loại bỏ nhiễu.</p>
+        <a class="start-link" href="#learning-goals-vi">Bắt đầu học <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <span class="orbit orbit--one"></span><span class="orbit orbit--two"></span>
+        <span class="signal signal--one"></span><span class="signal signal--two"></span>
+        <span class="hero__query">NGUỒN <b>03</b></span>
+        <span class="hero__result hero__result--one">01 <b>TÀI LIỆU</b></span>
+        <span class="hero__result hero__result--two">02 <b>CHỈ MỤC</b></span>
+        <span class="hero__result hero__result--three">03 <b>KẾT QUẢ</b></span>
+        <span class="hero__visual-label">TỪ NGUỒN ĐẾN TÌM KIẾM</span>
+      </div>
+    </div>
+    <div class="hero__footer"><span>CHƯƠNG 3</span><span>Nguồn: toàn bộ 33 slide bài giảng</span></div>
+  </section>
+  <div class="page-layout" id="lesson">
+    <nav class="chapter-nav" aria-label="Mục lục"><div class="chapter-nav__sticky">
+      <p class="chapter-nav__label">MỤC LỤC <span>03 / 12</span></p>
+      <div class="chapter-nav__links"><a href="#prerequisites-vi" data-section="prerequisites"><span>01</span>Kiến thức cần chuẩn bị</a>
+<a href="#what-to-search-vi" data-section="what-to-search"><span>02</span>3.1 Những gì nên đưa vào phạm vi tìm kiếm</a>
+<a href="#retrieving-web-pages-vi" data-section="retrieving-web-pages"><span>03</span>3.2 Thu thập trang Web</a>
+<a href="#crawler-design-vi" data-section="crawler-design"><span>04</span>3.3 Thiết kế trình thu thập</a>
+<a href="#freshness-vi" data-section="freshness"><span>05</span>3.4 Độ mới và Quá trình thu thập lại</a>
+<a href="#special-crawling-vi" data-section="special-crawling"><span>06</span>3.5 Thu thập theo chủ đề, Deep Web và Sitemap</a>
+<a href="#documents-and-feeds-vi" data-section="documents-and-feeds"><span>07</span>3.6 Tài liệu nội bộ và nguồn cấp</a>
+<a href="#encoding-and-storage-vi" data-section="encoding-and-storage"><span>08</span>3.7 Bảng mã ký tự và Lưu trữ tài liệu</a>
+<a href="#duplicate-removal-vi" data-section="duplicate-removal"><span>09</span>3.8 Giảm thiểu trùng lặp tài liệu</a>
+<a href="#noise-removal-vi" data-section="noise-removal"><span>10</span>3.9 Loại bỏ nhiễu (Noise Removal)</a>
+<a href="#exercise-vi" data-section="exercise"><span>11</span>Bài tập cuối chương</a>
+<a href="#summary-vi" data-section="summary"><span>12</span>Tổng kết</a>
+<a href="#quiz-vi" data-section="quiz"><span>13</span>Câu hỏi tự kiểm tra</a>
+<a href="#glossary-vi" data-section="glossary"><span>14</span>Bảng thuật ngữ</a></div>
+      <div class="chapter-directory">
+    <p class="chapter-directory__label">ĐỦ 12 CHƯƠNG</p>
+    <div class="chapter-directory__links"><a class="chapter-directory__item" href="./chapter-01.html"><b>01</b>Truy xuất thông tin</a>
+<a class="chapter-directory__item" href="./chapter-02.html"><b>02</b>Các thành phần và luồng tìm kiếm</a>
+<span class="chapter-directory__item is-current" aria-current="page"><b>03</b>Thu thập tài liệu</span>
+<a class="chapter-directory__item" href="./chapter-04.html"><b>04</b>Biến từ thành dữ liệu có thể tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-05.html"><b>05</b>Từ chỉ mục đến kết quả hàng đầu</a>
+<a class="chapter-directory__item" href="./chapter-06.html"><b>06</b>Biến nhu cầu thành truy vấn</a>
+<a class="chapter-directory__item" href="./chapter-07.html"><b>07</b>Cách tính điểm kết quả</a>
+<a class="chapter-directory__item" href="./chapter-08.html"><b>08</b>Giúp nội dung được tìm thấy</a>
+<a class="chapter-directory__item" href="./chapter-09.html"><b>09</b>Đo chất lượng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-10.html"><b>10</b>Phân loại và sắp xếp tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-11.html"><b>11</b>Dùng con người và mối quan hệ trong tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-12.html"><b>12</b>Khai thác thứ tự, cấu trúc và đa phương tiện</a></div>
+  </div>
+    </div></nav>
+    <main class="lesson-content" id="main-content">
+      <article class="lesson-language" lang="vi-VN" data-lang="vi">
+        <div class="intro-mark"><span>GHI CHÚ HỌC TẬP</span><span>Bản tiếng Việt · Chương 03</span></div>
+        <p><strong>Tài liệu gốc:</strong> Slide bài giảng SEG301m Chương 3, &quot;Crawls and Feeds&quot; (33 slide)<br><strong>Cách đọc:</strong> Chương này sẽ dễ nắm bắt nhất khi bạn theo dõi tuần tự 4 bước: &quot;phát hiện tài liệu&quot;, &quot;thu thập an toàn và lịch sự&quot;, &quot;chuyển đổi và lưu trữ bền vững&quot;, và &quot;loại bỏ trùng lặp cùng nhiễu nội dung&quot;.</p>
+<h2 id="learning-goals-vi" data-section-heading="learning-goals">Mục tiêu của chương</h2>
+<p>Sau khi học xong chương này, bạn có thể giải thích các nội dung sau:</p>
+<ol>
+<li>Trình bày luồng hoạt động của Web crawler từ khâu phát hiện URL, tải trang đến bổ sung các liên kết mới vào hàng đợi (frontier).</li>
+<li>Nêu rõ lý do cần thu thập song song đa luồng, chính sách lịch sự (politeness policy) và bài toán giữ độ tươi mới (freshness).</li>
+<li>So sánh sự khác biệt giữa các phương thức thu thập Web, tài liệu nội bộ, email và nguồn cấp (feed).</li>
+<li>Trình bày các nguyên lý cơ bản về bảng mã ký tự, lưu trữ tài liệu quy mô lớn, loại bỏ trùng lặp và loại bỏ nhiễu.</li>
+</ol>
+<p class="source-note"><span>SLIDE NGUỒN</span> 1-3</p>
+<figure class="chapter-map"><a href="../assets/chapter-03-mindmap.png" target="_blank" rel="noopener"><img src="../assets/chapter-03-mindmap.png" width="1491" height="1055" loading="lazy" alt="Sơ đồ tư duy bằng tiếng Anh cho Chương 3, Thu thập dữ liệu và nguồn cấp"></a><figcaption>Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 3. Chọn ảnh để xem kích thước đầy đủ.</figcaption></figure>
+<h2 id="prerequisites-vi" data-section-heading="prerequisites">Kiến thức cần chuẩn bị</h2>
+<p>Ở Chương 2, chúng ta đã biết thu thập văn bản là cửa ngõ đầu vào của công cụ tìm kiếm. Chương này sẽ đi sâu vào cơ chế hoạt động của cửa ngõ đó:</p>
+<ul>
+<li><strong>Tập tài liệu (Document collection):</strong> Tập hợp các tài liệu được lưu trữ để phục vụ tìm kiếm.</li>
+<li><strong>Trình thu thập (Crawler):</strong> Chương trình tự động phát hiện và tải các trang Web hoặc tệp tin.</li>
+<li><strong>Độ mới (Freshness):</strong> Mức độ dữ liệu trong hệ thống phản ánh kịp thời các thay đổi trên thực tế.</li>
+<li><strong>Chỉ mục đảo:</strong> Cấu trúc tra cứu tài liệu từ từ ngữ. Các dấu vân tay (fingerprint) phát hiện trùng lặp cũng có thể lưu trong cấu trúc này.</li>
+</ul>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Crawler giống như thủ thư đi gom sách về cho thư viện. Không chỉ gom càng nhiều càng tốt, người thủ thư còn phải tránh gom nhiều bản trùng lặp, phải cập nhật bản in mới khi sách thay đổi nội dung, và không được nhầm lẫn tờ rơi quảng cáo với nội dung sách thực sự.</p></aside>
+<h2 id="what-to-search-vi" data-section-heading="what-to-search">3.1 Những gì nên đưa vào phạm vi tìm kiếm</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 4</p>
+<p>Slide đề cập đến ý tưởng &quot;thu thập mọi thứ có thể&quot;. Việc thêm một tài liệu mới có thể giúp hệ thống trả lời được câu hỏi mà trước đó chưa có tài liệu nào đáp ứng được. Tuy nhiên, nếu đưa vào quá nhiều tài liệu rác và chất lượng kém, gánh nặng cho thuật toán xếp hạng sẽ tăng lên rất nhiều.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Lợi ích khi thêm tài liệu</th>
+<th>Thách thức nảy sinh</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Mở rộng phạm vi câu hỏi có thể trả lời</td>
+<td>Tài liệu rác và trùng lặp làm tăng ứng viên gây nhiễu</td>
+</tr>
+<tr>
+<td>Lưu giữ được các thông tin hiếm và ngách</td>
+<td>Tốn thêm dung lượng lưu trữ và thời gian tính toán</td>
+</tr>
+<tr>
+<td>Cung cấp thông tin cập nhật mới nhất</td>
+<td>Khó khăn hơn trong việc đưa tài liệu thực sự tốt lên đầu</td>
+</tr>
+</tbody></table></div>
+<p>Vì vậy, hệ thống không chỉ chạy theo số lượng thu thập mà phải cân nhắc đồng thời giữa chất lượng, độ mới, tỷ lệ trùng lặp và chi phí tài nguyên thu thập.</p>
+<h2 id="retrieving-web-pages-vi" data-section-heading="retrieving-web-pages">3.2 Thu thập trang Web</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 5-8</p>
+<h3 id="detail-1-vi">Vì sao phải sao chép dữ liệu Web</h3>
+<p>Để người dùng có thể tìm kiếm tức thì, hệ thống phải tải nội dung các trang về máy chủ của mình trước. Quá trình phát hiện và tải trang này gọi là <strong>thu thập Web (crawling)</strong>, và chương trình thực hiện gọi là <strong>trình thu thập Web (Web crawler)</strong> (hay spider / bot).</p>
+<p>Hai khó khăn mang tính bản chất:</p>
+<ul>
+<li>Quy mô Web lên tới hàng chục tỷ trang và liên tục có các trang mới được tạo ra mỗi giây.</li>
+<li>Các trang nằm trên máy chủ của bên thứ ba, ngoài tầm kiểm soát của công cụ tìm kiếm, do đó thường xuyên xảy ra tình trạng trang biến mất, sửa đổi hoặc phản hồi chập chờn.</li>
+</ul>
+<h3 id="detail-2-vi">Cấu trúc của URL</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 6</p>
+<p>URL là định danh duy nhất cho một tài nguyên mạng. Ví dụ <code>http://www.cs.umass.edu/csinfo/people.html</code> gồm ba phần:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Thành phần</th>
+<th>Ví dụ</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Giao thức (scheme)</td>
+<td><code>http</code></td>
+<td>Phương thức giao tiếp để lấy tài nguyên</td>
+</tr>
+<tr>
+<td>Tên máy chủ (hostname)</td>
+<td><code>www.cs.umass.edu</code></td>
+<td>Tên máy chủ lưu trữ trang Web</td>
+</tr>
+<tr>
+<td>Đường dẫn tài nguyên (resource path)</td>
+<td><code>/csinfo/people.html</code></td>
+<td>Đường dẫn tệp hoặc tài nguyên cụ thể trên máy chủ</td>
+</tr>
+</tbody></table></div>
+<p>Mặc dù URL là định danh cơ bản, trong thực tế nhiều URL khác nhau có thể trỏ về cùng một nội dung giống hệt nhau.</p>
+<h3 id="detail-3-vi">Giao thức HTTP: Phương thức GET và POST</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 7</p>
+<ul>
+<li><strong>GET:</strong> Yêu cầu máy chủ gửi về nội dung của tài nguyên được chỉ định. Đây là phương thức chủ yếu mà crawler sử dụng.</li>
+</ul>
+<pre><code class="language-http">GET /csinfo/people.html HTTP/1.0
+</code></pre>
+<ul>
+<li><strong>POST:</strong> Gửi dữ liệu bổ sung lên máy chủ, thường dùng cho việc bấm nút thanh toán, gửi biểu mẫu hoặc cập nhật trạng thái. Crawler thông thường tuyệt đối không được tự tiện gửi lệnh POST bừa bãi vì có thể gây biến đổi dữ liệu ngoài ý muốn trên máy chủ mục tiêu.</li>
+</ul>
+<h3 id="detail-4-vi">Lần theo liên kết</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 8</p>
+<p>Crawler tải một trang Web về và bóc tách các liên kết siêu văn bản trong trang đó. Các liên kết có thể trỏ tới các trang trong cùng máy chủ hoặc trỏ ra máy chủ bên ngoài. Bằng cách đưa các URL mới phát hiện vào danh sách xử lý tiếp, crawler dần mở rộng đồ thị liên kết trên toàn Web.</p>
+<h2 id="crawler-design-vi" data-section-heading="crawler-design">3.3 Thiết kế trình thu thập</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 9-11</p>
+<h3 id="detail-5-vi">Hàng đợi Frontier</h3>
+<p><strong>Frontier</strong> là hàng đợi lưu trữ các URL đã được phát hiện nhưng chưa được tải về. Nếu chỉ dùng một hàng đợi đơn giản vào-trước-ra-trước (FIFO), crawler sẽ rất dễ gửi hàng loạt yêu cầu liên tiếp tới cùng một máy chủ trong thời gian ngắn, gây nghẽn mạng cục bộ.</p>
+<h3 id="detail-6-vi">Vì sao bắt buộc phải dùng đa luồng (Multi-threading)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 9</p>
+<p>Một luồng tải trang đơn lẻ tốn phần lớn thời gian vào việc chờ đợi (I/O wait):</p>
+<ul>
+<li>Chờ máy chủ DNS phân giải tên miền.</li>
+<li>Chờ thiết lập kết nối TCP và bắt tay HTTP với máy chủ.</li>
+<li>Chờ nhận dữ liệu phản hồi truyền qua mạng.</li>
+</ul>
+<p>Nếu sử dụng kiến trúc đa luồng, trong lúc một luồng đang chờ máy chủ A phản hồi, các luồng khác có thể kết nối và tải trang từ máy chủ B, C. Nhờ đó, thông lượng tổng thể của hệ thống tăng lên hàng trăm lần. Tuy nhiên, việc tăng số luồng phải có giới hạn để không gây quá tải mạng nội bộ và máy chủ đối tác.</p>
+<h3 id="detail-7-vi">Chính sách lịch sự (Politeness policy)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 10</p>
+<p><strong>Chính sách lịch sự (politeness policy)</strong> là tập hợp các quy tắc nhằm bảo vệ máy chủ của trang web khỏi nguy cơ bị nghẽn do crawler:</p>
+<ul>
+<li>Không gửi nhiều yêu cầu đồng thời tới cùng một máy chủ.</li>
+<li>Giữ khoảng cách tối thiểu vài giây giữa hai lần yêu cầu liên tiếp tới cùng một máy chủ.</li>
+<li>Phân chia frontier thành các hàng đợi logic riêng biệt cho từng máy chủ (per-host queues).</li>
+</ul>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Crawler chuẩn cũng đọc tệp <code>robots.txt</code> của website để tuân thủ các quy định cấm quét hoặc điều chỉnh tham số độ trễ (crawl-delay). Hàm <code>permitsCrawl</code> trong mã giả ở Slide 11 chính là bước kiểm tra quyền thu thập này.</p></aside>
+<h3 id="detail-8-vi">Vòng lặp của một luồng Crawler</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 11</p>
+<pre><code class="language-text">procedure CRAWLERTHREAD(frontier)
+  while not frontier.done() do
+    website &lt;- frontier.nextSite()
+    url &lt;- website.nextURL()
+    if website.permitsCrawl(url) then
+      text &lt;- retrieveURL(url)
+      storeDocument(url, text)
+      for each foundUrl in parse(text) do
+        frontier.addURL(foundUrl)
+      end for
+    end if
+    frontier.releaseSite(website)
+  end while
+end procedure
+</code></pre>
+<p>Các bước thực thi:</p>
+<ol>
+<li>Lấy một website sẵn sàng xử lý từ frontier.</li>
+<li>Rút ra một URL tiếp theo của website đó.</li>
+<li>Kiểm tra xem URL có được phép thu thập hay không (<code>permitsCrawl</code>).</li>
+<li>Tải nội dung trang và lưu trữ vào kho dữ liệu.</li>
+<li>Phân tích nội dung để trích xuất các URL mới và thêm vào frontier.</li>
+<li>Giải phóng trạng thái khóa của website (<code>releaseSite</code>) để các luồng sau có thể phục vụ website này khi đủ thời gian giãn cách.</li>
+</ol>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Nếu trong mã lập trình, kỹ sư quên gọi lệnh <code>releaseSite</code> ở cuối vòng lặp thì điều gì sẽ xảy ra với các URL còn lại của trang web đó?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Website đó sẽ bị khóa vĩnh viễn ở trạng thái &quot;đang được một luồng xử lý&quot;. Hậu quả là hàng đợi chứa toàn bộ các URL còn lại của website đó sẽ không bao giờ được cấp phép cho luồng nào lấy ra nữa, khiến crawler bỏ sót các trang tiếp theo của trang web.</p></div></details>
+
+<h2 id="freshness-vi" data-section-heading="freshness">3.4 Độ mới và Quá trình thu thập lại</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 12-15</p>
+<h3 id="detail-9-vi">Vì sao phải thu thập lại một trang web đã có</h3>
+<p>Các trang Web liên tục được thêm mới, sửa đổi hoặc xóa bỏ. Nếu crawler không quay lại thu thập định kỳ, bản sao lưu trong chỉ mục sẽ trở nên lỗi thời so với thực tế. Mục tiêu của việc thu thập lại (re-crawling) là duy trì <strong>độ mới (freshness)</strong> cho bộ sưu tập.</p>
+<h3 id="detail-10-vi">Yêu cầu HEAD và Tiêu đề Last-Modified</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 13-14</p>
+<p>Phương thức HTTP <strong>HEAD</strong> yêu cầu máy chủ chỉ gửi về các dòng tiêu đề (header) mà không gửi phần thân (body) của tài liệu. Bằng cách kiểm tra trường <code>Last-Modified</code>, crawler biết được thời điểm trang được cập nhật lần cuối:</p>
+<pre><code class="language-http">HEAD /csinfo/people.html HTTP/1.1
+Host: www.cs.umass.edu
+</code></pre>
+<p>Phương pháp này tiết kiệm băng thông mạng rất lớn so với việc tải lại toàn bộ nội dung. Tuy nhiên, không phải máy chủ nào cũng cấu hình trả về trường <code>Last-Modified</code> một cách chuẩn xác.</p>
+<h3 id="detail-11-vi">Chỉ số Age (Độ cũ của bản sao lưu)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15</p>
+<p>Hãy hình dung trục thời gian cụ thể:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mốc thời gian</th>
+<th>Sự kiện diễn ra</th>
+<th>Trạng thái bản sao lưu trong máy tìm kiếm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ngày 0 (09:00)</td>
+<td>Crawler tải trang web về</td>
+<td>Bản sao hoàn toàn mới (khớp thực tế)</td>
+</tr>
+<tr>
+<td>Ngày 2 (09:00)</td>
+<td>Trang gốc trên web bị sửa đổi</td>
+<td>Bản sao bắt đầu bị cũ từ thời điểm này</td>
+</tr>
+<tr>
+<td>Ngày 7 (09:00)</td>
+<td>Crawler quay lại quét và tải bản mới</td>
+<td>Bản sao được cập nhật lại thành mới</td>
+</tr>
+</tbody></table></div>
+<p>Trong ví dụ này: <strong>Thời gian kể từ lần quét trước</strong> là 7 ngày. Nhưng <strong>khoảng thời gian hệ thống lưu giữ bản sao cũ</strong> chỉ kéo dài từ lúc trang bị đổi (Ngày 2) đến khi crawler quét lại (Ngày 7), tức là 5 ngày. Cần phân biệt rõ hai khái niệm này để hiểu đúng công thức Age.</p>
+<p>Chỉ số <strong>Age</strong> biểu thị: &quot;Kỳ vọng về khoảng thời gian trung bình mà hệ thống lưu giữ một bản sao cũ nếu trang có sự thay đổi giữa hai lần quét cách nhau khoảng thời gian <code>t</code>&quot;. Vì thời điểm trang bị thay đổi là ngẫu nhiên, ta phải tính giá trị kỳ vọng toán học:</p>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Giả sử bạn kiểm tra hòm thư sau mỗi 7 ngày. Tùy vào việc lá thư được gửi đến vào ngày nào trong tuần, số ngày lá thư nằm chờ trong hòm mà bạn không hề hay biết sẽ khác nhau. Nếu thư đến sớm, bạn để thư chờ lâu; nếu thư đến ngay sát thời điểm bạn kiểm tra, bạn hầu như không để thư chờ. Chỉ số Age chính là thời gian chờ đợi đó được tính trung bình theo xác suất xuất hiện của từng thời điểm thư đến.</p></aside>
+<div class="formula-block" role="math" aria-label="Age lambda t equals integral from zero to t of probability the page changed at x times t minus x dx">
+  <span class="formula-main">Age(λ, t) = ∫<sub>0</sub><sup>t</sup> P(page changed at time x)(t - x) dx</span>
+  <span class="formula-sub">= ∫<sub>0</sub><sup>t</sup> λe<sup>-λx</sup>(t - x) dx</span>
+</div>
+
+<ul>
+<li><code>t</code>: thời gian từ lần thu thập cuối đến khi thu thập lại (đơn vị ví dụ là ngày).</li>
+<li><code>x</code>: thời điểm trang xuất hiện <strong>lần thay đổi đầu tiên</strong> kể từ lần thu thập trước (<code>0 ≤ x ≤ t</code>).</li>
+<li><code>t - x</code>: khoảng thời gian hệ thống lưu giữ bản sao cũ (từ lần đổi đầu tiên đến khi thu thập lại).</li>
+<li><code>λ</code>: tốc độ thay đổi trên một đơn vị thời gian (ví dụ: số lần đổi trên mỗi ngày).</li>
+<li><code>λe^{-λx}</code>: hàm mật độ xác suất biểu diễn khả năng lần thay đổi đầu tiên xảy ra tại thời điểm <code>x</code> theo phân phối Poisson/mũ.</li>
+</ul>
+<p>Nếu trong khoảng <code>t</code> trang không đổi lần nào thì bản sao không bị cũ, đóng góp bằng 0. Nếu trang thay đổi nhiều lần thì bản sao đã bị cũ ngay từ lần thay đổi đầu tiên <code>x</code>. Do đó, công thức này tính từ thời điểm đổi đầu tiên <code>x</code> cho tới khi thu thập lại, chứ không tính lại từ đầu sau mỗi lần thay đổi tiếp theo.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Xét trường hợp <code>λ = 1/7 ngày⁻¹</code> (trung bình 7 ngày trang đổi một lần) và chu kỳ thu thập lại <code>t = 7 ngày</code>:</p></aside>
+<div class="formula-block" role="math" aria-label="Age one seventh comma seven equals seven minus seven times one minus e to the minus one equals seven over e">
+  <span class="formula-main">Age(1/7, 7) = 7 - (1 - e<sup>-1</sup>)/(1/7)</span>
+  <span class="formula-sub">= 7 - 7(1 - e<sup>-1</sup>) = 7/e ≈ 2.58 ngày</span>
+</div>
+
+<p>Con số <code>2.58 ngày</code> không có nghĩa là &quot;trang đã được thu thập từ 2.58 ngày trước&quot;, mà là thời gian lưu giữ bản sao cũ tính trung bình cho mọi khả năng (bao gồm cả trường hợp trang không hề thay đổi). Vì xác suất trang thay đổi ít nhất một lần trong vòng 7 ngày là <code>1 - e^-1 ≈ 0.632</code>, nên giá trị trung bình này nhỏ hơn con số 5 ngày trong ví dụ cố định ở trên (vốn giả định chắc chắn có thay đổi ở ngày thứ 2).</p>
+<details class="answer-key"><summary>Xem công thức rút gọn tích phân</summary><div class="answer-key__body"><p>Bằng phương pháp tích phân từng phần, công thức tổng quát rút gọn thành:</p>
+<div class="formula-block" role="math" aria-label="Age lambda t equals t minus one minus e to the minus lambda t over lambda">
+  <span class="formula-main">Age(λ, t) = t - (1 - e<sup>-λt</sup>)/λ</span>
+</div>
+
+<p>Số hạng đầu <code>t</code> trừ đi phần tương ứng với thời gian chờ kỳ vọng cho đến khi có thay đổi. Nếu chu kỳ <code>t</code> càng ngắn thì khả năng thu thập lại trước khi có thay đổi càng cao, và chỉ số Age sẽ càng nhỏ.</p></div></details>
+
+<p><strong>Nói chính xác hơn:</strong> Công thức này giả định các thay đổi tuân theo một quá trình Poisson với tốc độ không đổi <code>λ</code>. Đối với các trang cập nhật theo lịch cố định (như mỗi buổi sáng hoặc mỗi thứ Hai hàng tuần), hay các trang tin tức có lượng cập nhật tăng đột biến khi xảy ra sự kiện, các mô hình khác có thể sẽ phù hợp hơn.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Nếu crawler quét trang vào ngày 0, trang web bị sửa vào ngày 6, và crawler quay lại vào ngày 7, thì thời gian từ lần quét trước và thời gian giữ bản sao cũ lần lượt là bao nhiêu?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Thời gian kể từ lần thu thập cuối là 7 ngày. Bản sao bắt đầu bị cũ sau lần thay đổi vào ngày thứ 6, do đó thời gian hệ thống lưu giữ bản sao cũ là <code>7 - 6 = 1 ngày</code>.</p></div></details>
+
+<h2 id="special-crawling-vi" data-section-heading="special-crawling">3.5 Thu thập theo chủ đề, Deep Web và Sitemap</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 16-18</p>
+<h3 id="detail-12-vi">Thu thập theo chủ đề (Focused crawling)</h3>
+<p><strong>Thu thập theo chủ đề (focused crawling)</strong> ưu tiên thu thập các trang thuộc một chủ đề cụ thể (như điện ảnh, y khoa, tài chính). Nhờ loại bớt các trang không liên quan ngay từ khâu thu thập, hệ thống tiết kiệm băng thông và đạt độ chính xác cao hơn cho các công cụ tìm kiếm chuyên ngành.</p>
+<p>So sánh hai phương pháp tiếp cận:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Phương pháp</th>
+<th>Ưu điểm</th>
+<th>Vấn đề / Hạn chế</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Thu thập toàn bộ Web rồi lọc bỏ sau</td>
+<td>Có thể trì hoãn việc phán đoán về sau</td>
+<td>Tốn lượng lớn băng thông và dung lượng lưu trữ, phần lớn dữ liệu bị loại bỏ</td>
+</tr>
+<tr>
+<td>Đánh giá độ liên quan trước và sau khi tải trang</td>
+<td>Giảm thiểu các trang không cần thiết</td>
+<td>Đòi hỏi cơ chế tự động đánh giá trang có thuộc đúng chủ đề hay không</td>
+</tr>
+</tbody></table></div>
+<h3 id="detail-13-vi">Deep Web (Web ẩn)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 17</p>
+<p>Slide định nghĩa <strong>Deep Web (hidden Web)</strong> là vùng thông tin rộng lớn mà crawler thông thường không thể tự tìm tới bằng cách lần theo liên kết tĩnh:</p>
+<ul>
+<li>Các trang yêu cầu đăng nhập mật khẩu hoặc phân quyền nội bộ.</li>
+<li>Dữ liệu nằm trong cơ sở dữ liệu, chỉ xuất hiện sau khi người dùng điền biểu mẫu tìm kiếm.</li>
+<li>Các trang sinh nội dung động hoàn toàn bằng mã JavaScript phía máy khách.</li>
+</ul>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Lưu ý</span><p>Thuật ngữ Deep Web ở đây chỉ các nội dung kỹ thuật mà crawler khó tiếp cận tự động, hoàn toàn không mang hàm ý bất hợp pháp.</p></aside>
+<h3 id="detail-14-vi">Sơ đồ trang web (Sitemap)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 18</p>
+<p>Chủ sở hữu trang web có thể dùng <strong>sitemap</strong> để thông báo cho crawler danh sách các URL, thời điểm cập nhật lần cuối và tần suất cập nhật dự kiến. Sitemap đóng vai trò hỗ trợ khi crawler không thể tự phát hiện toàn bộ các trang chỉ bằng việc lần theo liên kết.</p>
+<p>Thông tin trong sitemap hỗ trợ đắc lực cho việc lập lịch phát hiện và ưu tiên thu thập lại, nhưng không trực tiếp đảm bảo thứ hạng tìm kiếm của trang.</p>
+<h2 id="documents-and-feeds-vi" data-section-heading="documents-and-feeds">3.6 Tài liệu nội bộ và nguồn cấp</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 19-20</p>
+<h3 id="detail-15-vi">Tài liệu trên máy tính cá nhân và Email</h3>
+<p>Các tệp Word, bản trình chiếu, bảng tính và email lưu trên máy tính cá nhân đặt ra những yêu cầu đặc thù cho tìm kiếm desktop:</p>
+<ul>
+<li><strong>Tốc độ cập nhật:</strong> Người dùng muốn tìm thấy email hoặc tệp vừa lưu gần như ngay lập tức.</li>
+<li><strong>Tiết kiệm dung lượng đĩa:</strong> Vì tệp đã nằm sẵn trên hệ thống tệp, hệ thống cần tránh tạo thêm bản sao trùng lặp chiếm bộ nhớ.</li>
+<li><strong>Quyền riêng tư:</strong> Xử lý dữ liệu cá nhân nhạy cảm, đòi hỏi kiểm soát quyền truy cập chặt chẽ.</li>
+</ul>
+<p>Trong ghi chú của slide, hệ thống tìm kiếm desktop có thể đọc nội dung tệp vào thẳng bộ nhớ RAM và chuyển trực tiếp cho bộ lập chỉ mục mà không cần lưu thêm một bản sao ra ổ cứng.</p>
+<h3 id="detail-16-vi">Nguồn cấp tài liệu (Document Feed)</h3>
+<p><strong>Nguồn cấp tài liệu (document feed)</strong> là cơ chế truyền nhận dữ liệu có thứ tự từ một nguồn phát:</p>
+<ul>
+<li><strong>Cơ chế đẩy (Push feed):</strong> Bên phát hành chủ động gửi thông báo và dữ liệu tài liệu mới ngay khi vừa xuất bản cho các bên đăng ký.</li>
+<li><strong>Cơ chế kéo (Pull feed):</strong> Bên nhận định kỳ gửi yêu cầu thăm dò xem có bài viết mới hay không (tiêu biểu như đọc RSS feed).</li>
+</ul>
+<p>Cơ chế đẩy cập nhật nhanh tức thì nhưng đòi hỏi hạ tầng lắng nghe phức tạp. Cơ chế kéo dễ triển khai nhưng nếu thăm dò quá dày sẽ tốn băng thông, thăm dò quá thưa sẽ bị trễ thông tin.</p>
+<h2 id="encoding-and-storage-vi" data-section-heading="encoding-and-storage">3.7 Bảng mã ký tự và Lưu trữ tài liệu</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 21-25</p>
+<h3 id="detail-17-vi">Bảng mã ký tự (Character Encoding)</h3>
+<p>Máy tính biểu diễn chữ viết bằng các chuỗi bit nhị phân thông qua quy tắc ánh xạ gọi là <strong>bảng mã ký tự (character encoding)</strong>.</p>
+<p>Slide giới thiệu ASCII là chuẩn 1 byte (chỉ biểu diễn được bảng chữ cái tiếng Anh cơ bản), các chuẩn CJK dùng 2 byte cho chữ tượng hình, và bảng mẫu biểu diễn 1 đến 4 byte tương ứng với chuẩn UTF-8.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Không nên hiểu nhầm rằng &quot;mọi chữ cái châu Á đều chiếm đúng 2 byte&quot;. Trong chuẩn UTF-8, số byte cho mỗi ký tự biến thiên linh hoạt: ký tự ASCII chiếm 1 byte, ký tự tiếng Việt có dấu chiếm 2 đến 3 byte, và một số chữ tượng hình hiếm chiếm tới 4 byte. Điều cốt lõi là hệ thống thu thập phải nhận diện đúng bảng mã nguồn và quy đổi đồng nhất về UTF-8 trước khi xử lý.</p></aside>
+<p>Nếu nhận diện sai bảng mã, trang web sẽ bị lỗi hiển thị phông chữ (lỗi font/mojibake), dẫn đến việc các từ khóa bị lưu thành các chuỗi byte sai lệch và không thể tìm thấy.</p>
+<h3 id="detail-18-vi">Yêu cầu đối với hệ thống lưu trữ tài liệu</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 22-24</p>
+<p>Phương pháp lưu trữ tài liệu sau chuyển đổi cho tới khi xây dựng chỉ mục cần đáp ứng các yêu cầu sau:</p>
+<ul>
+<li><strong>Truy cập ngẫu nhiên (random access):</strong> Có thể lấy nhanh nội dung văn bản gốc theo URL hoặc mã tài liệu docID để tạo đoạn trích kết quả (snippet).</li>
+<li><strong>Nén dữ liệu (compression):</strong> Giảm thiểu dung lượng ổ đĩa lưu trữ và băng thông truyền tải mạng.</li>
+<li><strong>Khả năng cập nhật (updating):</strong> Dễ dàng phản ánh tài liệu mới thêm vào, các chỉnh sửa hoặc thao tác xóa tài liệu.</li>
+</ul>
+<p>Trong tìm kiếm trên máy tính cá nhân (desktop search), vì tệp gốc đã nằm sẵn trên hệ thống tệp nên có thể thiết kế hệ thống mà không cần thêm một kho lưu trữ tài liệu riêng biệt. Để tạo đoạn trích kết quả (snippet), hệ thống cần truy cập nhanh vào phần thân tài liệu, và hàm băm từ URL có thể được dùng để tra cứu nhanh vị trí lưu trữ.</p>
+<h3 id="detail-19-vi">Cơ sở dữ liệu và BigTable</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 23, 25</p>
+<p>Cơ sở dữ liệu thông thường rất tốt cho việc lưu trữ dữ liệu nhỏ có cấu trúc. Tuy nhiên, với kho tài liệu Web lên tới hàng tỷ trang, cần đến các hệ thống lưu trữ phân tán chuyên dụng như BigTable của Google.</p>
+<p>Trong BigTable, một bảng dữ liệu khổng lồ được chia thành nhiều khối nhỏ gọi là <strong>tablet</strong>, phân tán và phục vụ trên hàng nghìn máy chủ. Hệ thống tối ưu hóa tối đa cho thao tác đọc/ghi theo từng hàng với tốc độ cực cao, thay vì hỗ trợ các câu lệnh truy vấn quan hệ phức tạp.</p>
+<h2 id="duplicate-removal-vi" data-section-heading="duplicate-removal">3.8 Giảm thiểu trùng lặp tài liệu</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 26-29</p>
+<h3 id="detail-20-vi">Trùng lặp hoàn toàn (Exact Duplicates)</h3>
+<p>Khi nhiều URL khác nhau hoặc các trang web nhân bản (mirror site) trả về nội dung y hệt nhau, crawler sẽ tốn tài nguyên nếu lưu trữ nhiều lần. Giá trị kiểm tra <strong>checksum</strong> được tính toán từ nội dung văn bản để nhận diện các trang trùng nhau 100%.</p>
+<p>Slide nêu ví dụ chuỗi <code>Tropical fish</code> tính tổng mã ký tự được giá trị checksum đơn giản là <code>508</code>. Hai văn bản giống hệt nhau sẽ luôn cho cùng một giá trị checksum.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Lưu ý</span><p>Việc cộng tổng mã ký tự rất dễ dẫn tới hiện tượng xung đột (hai văn bản khác nhau vô tình có cùng tổng số). Trong thực tế, hệ thống luôn dùng các hàm băm mạnh mẽ hơn như MD5, SHA-1 hoặc MurmurHash.</p></aside>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Khái niệm</th>
+<th>Vai trò trong chương</th>
+<th>Phản ứng khi văn bản thay đổi rất nhỏ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Checksum</td>
+<td>Giá trị kiểm tra ngắn kiểm tra lỗi truyền hoặc trùng lặp tuyệt đối</td>
+<td>Thường thay đổi giá trị, nhưng dễ xung đột ở hàm đơn giản</td>
+</tr>
+<tr>
+<td>Hash thông thường</td>
+<td>Hàm ánh xạ đầu vào tùy ý thành chuỗi bit độ dài cố định</td>
+<td>Thay đổi hoàn toàn dù chỉ đổi 1 ký tự (hiệu ứng tuyết lở)</td>
+</tr>
+<tr>
+<td>Fingerprint (Dấu vân tay)</td>
+<td>Biểu diễn rút gọn giữ lại các đặc trưng cốt lõi của tài liệu</td>
+<td>Được thiết kế sao cho hai văn bản gần giống nhau sẽ có fingerprint gần giống nhau</td>
+</tr>
+</tbody></table></div>
+<p>Khi tìm kiếm sự trùng khớp tuyệt đối, việc đối chiếu giá trị băm mạnh (strong hash) là rất thuận tiện. Trong bài toán trùng lặp gần, vì hàm băm thông thường sẽ biến thành giá trị hoàn toàn khác chỉ sau một chỉnh sửa nhỏ, nên việc chỉ dùng hàm băm thông thường là không đủ; khi đó ta cần dùng fingerprint để giữ lại các đặc trưng của tài liệu.</p>
+<h3 id="detail-21-vi">Trùng lặp gần (Near Duplicates)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 27</p>
+<p>Nhiều trang web có nội dung bài viết chính giống hệt nhau nhưng chỉ khác nhau ngày tháng, tên tác giả, thanh điều hướng hoặc banner quảng cáo. Chúng là các trang <strong>trùng lặp gần (near duplicates)</strong> (ví dụ giống nhau trên 90% nội dung).</p>
+<ul>
+<li><strong>Kịch bản tìm kiếm (search scenario):</strong> So sánh 1 tài liệu mới tải về với <code>N</code> tài liệu đã có trong kho, độ phức tạp là <code>O(N)</code>.</li>
+<li><strong>Kịch bản khám phá (discovery scenario):</strong> So sánh từng cặp giữa tất cả các tài liệu trong kho, độ phức tạp là <code>O(N²)</code>.</li>
+</ul>
+<p>Nếu có 1.000 tài liệu, số cặp cần so sánh là <code>1.000 × 999 / 2 = 499.500</code> cặp. Nếu tăng gấp đôi số tài liệu lên 2.000, số phép so sánh tăng gần gấp 4 lần lên gần 2 triệu cặp. Vì vậy, so sánh từng cặp là bất khả thi trên quy mô lớn, buộc hệ thống phải dùng fingerprint để gom nhóm nhanh các ứng viên nghi ngờ trùng lặp.</p>
+<h3 id="detail-22-vi">Quy trình tạo Fingerprint</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 28-29</p>
+<ol>
+<li>Tách văn bản thành chuỗi từ, loại bỏ dấu câu, thẻ HTML và khoảng trắng thừa.</li>
+<li>Ghép các từ liên tiếp thành các cụm n-gram.</li>
+<li>Chọn ra tập hợp các n-gram tiêu biểu cho tài liệu.</li>
+<li>Băm các n-gram đã chọn thành các giá trị băm.</li>
+<li>Lưu trữ các giá trị băm vào chỉ mục đảo để tra cứu nhanh.</li>
+</ol>
+<p>Quy trình ở Slide 28 là phương pháp tạo fingerprint phổ biến bằng cách chọn các n-gram tiêu biểu rồi lưu giá trị băm của chúng. Slide 29 trình bày một kỹ thuật khác (thuật toán SimHash): kết hợp các giá trị băm của từ có gắn trọng số để tạo thành một chuỗi bit duy nhất. Đừng nhầm lẫn việc chọn n-gram và phép cộng trừ theo từng bit là cùng một bước duy nhất.</p>
+<p><strong>Giải thích thêm ngoài slide (Ví dụ 4-bit bổ trợ đọc Slide 29):</strong> Các giá trị băm sau đây được giả định nhằm mục đích luyện tập tính toán, không phải lấy từ một hàm băm cụ thể trong thực tế:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Từ</th>
+<th align="right">Trọng số</th>
+<th>Giá trị băm 4-bit giả định</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>fish</code></td>
+<td align="right">3</td>
+<td><code>1010</code></td>
+</tr>
+<tr>
+<td><code>tropical</code></td>
+<td align="right">1</td>
+<td><code>1101</code></td>
+</tr>
+<tr>
+<td><code>tank</code></td>
+<td align="right">1</td>
+<td><code>0110</code></td>
+</tr>
+</tbody></table></div>
+<p>Quy tắc: Tại mỗi vị trí bit, nếu bit là 1 thì cộng trọng số, nếu bit là 0 thì trừ trọng số:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Từ</th>
+<th align="right">Bit 1</th>
+<th align="right">Bit 2</th>
+<th align="right">Bit 3</th>
+<th align="right">Bit 4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>fish</code> (trọng số 3, mã <code>1010</code>)</td>
+<td align="right">+3</td>
+<td align="right">-3</td>
+<td align="right">+3</td>
+<td align="right">-3</td>
+</tr>
+<tr>
+<td><code>tropical</code> (trọng số 1, mã <code>1101</code>)</td>
+<td align="right">+1</td>
+<td align="right">+1</td>
+<td align="right">-1</td>
+<td align="right">+1</td>
+</tr>
+<tr>
+<td><code>tank</code> (trọng số 1, mã <code>0110</code>)</td>
+<td align="right">-1</td>
+<td align="right">+1</td>
+<td align="right">+1</td>
+<td align="right">-1</td>
+</tr>
+<tr>
+<td><strong>Tổng từng cột</strong></td>
+<td align="right"><strong>+3</strong></td>
+<td align="right"><strong>-1</strong></td>
+<td align="right"><strong>+3</strong></td>
+<td align="right"><strong>-3</strong></td>
+</tr>
+<tr>
+<td><strong>Quy đổi dấu thành bit</strong></td>
+<td align="right"><strong>1</strong></td>
+<td align="right"><strong>0</strong></td>
+<td align="right"><strong>1</strong></td>
+<td align="right"><strong>0</strong></td>
+</tr>
+</tbody></table></div>
+<p>Cột có tổng dương nhận giá trị bit 1, cột có tổng âm nhận giá trị bit 0. Dấu vân tay 4-bit thu được là <code>1010</code>. Trong trường hợp tổng cột bằng 0, quá trình triển khai thực tế cần có quy tắc quy định trước sẽ gán bit 0 hay bit 1.</p>
+<p>Slide 29 áp dụng nguyên lý tương tự với chuỗi 8-bit cho câu <code>Tropical fish include ...</code>, dùng tần suất từ làm trọng số. Vector tổng các cột thu được là <code>1, -5, 9, -9, 3, 1, 3, 3</code>. Chuyển các cột dương thành 1 và cột âm thành 0, ta được fingerprint 8-bit <code>10101111</code>.</p>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Dấu vân tay (fingerprint) không phải là toàn văn tài liệu, mà là bản tóm lược ngắn gọn các đặc trưng nội dung. Khi được thiết kế sao cho các tài liệu hơi khác nhau vẫn có fingerprint tương tự nhau, hệ thống có thể phát hiện các tài liệu gần trùng lặp với tốc độ rất nhanh.</p></aside>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Trong ví dụ 4-bit trên, nếu trọng số của từ <code>fish</code> giảm từ 3 xuống 1 thì tổng các cột và fingerprint cuối cùng sẽ thay đổi như thế nào?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Khi trọng số của <code>fish</code> là 1, phần đóng góp của <code>fish</code> đổi thành <code>(+1, -1, +1, -1)</code>. Tổng các cột khi đó lần lượt là <code>(+1, +1, +1, -1)</code>. Sau khi quy đổi dấu (dương thành 1, âm thành 0), fingerprint mới thu được là <code>1110</code>. Việc thay đổi trọng số làm thay đổi mức độ ảnh hưởng của từ thường gặp đối với quyết định biểu quyết đa số ở từng bit.</p></div></details>
+
+<h2 id="noise-removal-vi" data-section-heading="noise-removal">3.9 Loại bỏ nhiễu (Noise Removal)</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 30-31</p>
+<p>Trang Web thường chứa rất nhiều thành phần ngoài nội dung chính: banner quảng cáo, menu điều hướng, chân trang, thanh chia sẻ mạng xã hội. Ở Slide 30, khối nội dung hữu ích thực tế chiếm chưa đầy 20% diện tích trang, hơn 80% còn lại là nhiễu đối với bài toán tìm kiếm.</p>
+<h3 id="detail-23-vi">Phát hiện vùng văn bản chính dựa trên chuỗi thẻ</h3>
+<p>Slide 31 mô hình hóa trang Web thành một chuỗi token và dùng chuỗi bit nhị phân để đánh dấu:</p>
+<ul>
+<li><code>b_n = 1</code>: token thứ <code>n</code> là một thẻ HTML.</li>
+<li><code>b_n = 0</code>: token thứ <code>n</code> là văn bản nội dung.</li>
+<li><code>N</code>: tổng số lượng token của trang.</li>
+</ul>
+<p>Vùng nội dung chính ứng viên nằm trong đoạn chỉ số <code>[i, j]</code>. Mục tiêu là tìm đoạn <code>[i, j]</code> làm cực đại hóa hàm mục tiêu:</p>
+<div class="formula-block" role="math" aria-label="sum of tags before i plus non-tags from i through j plus tags after j">
+  <span class="formula-main">Σ<sub>n=0</sub><sup>i-1</sup>b<sub>n</sub> + Σ<sub>n=i</sub><sup>j</sup>(1 - b<sub>n</sub>) + Σ<sub>n=j+1</sub><sup>N-1</sup>b<sub>n</sub></span>
+</div>
+
+<p>Ý nghĩa công thức: Điểm số sẽ cao nhất khi bên ngoài đoạn <code>[i, j]</code> chứa nhiều thẻ HTML nhất (đầu trang và chân trang), đồng thời bên trong đoạn <code>[i, j]</code> chứa nhiều token văn bản nhất.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Xét chuỗi 12 token mẫu:</p></aside>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Vị trí token</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+<th>11</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Token</td>
+<td><code>&lt;nav&gt;</code></td>
+<td>Home</td>
+<td><code>&lt;/nav&gt;</code></td>
+<td><code>&lt;p&gt;</code></td>
+<td>Search</td>
+<td>engines</td>
+<td>help</td>
+<td>users</td>
+<td><code>&lt;/p&gt;</code></td>
+<td><code>&lt;footer&gt;</code></td>
+<td>Contact</td>
+<td><code>&lt;/footer&gt;</code></td>
+</tr>
+<tr>
+<td>Giá trị <code>b_n</code></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody></table></div>
+<p>So sánh hai đoạn ứng viên: Ứng viên A là mục menu <code>[1, 1]</code>, Ứng viên B là đoạn văn bản chính <code>[4, 7]</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Ứng viên</th>
+<th align="right">Số thẻ trước đoạn</th>
+<th align="right">Số chữ trong đoạn</th>
+<th align="right">Số thẻ sau đoạn</th>
+<th align="right">Tổng điểm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A: <code>[1, 1]</code> (Menu)</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="right">7</td>
+</tr>
+<tr>
+<td>B: <code>[4, 7]</code> (Nội dung)</td>
+<td align="right">3</td>
+<td align="right">4</td>
+<td align="right">3</td>
+<td align="right">10</td>
+</tr>
+</tbody></table></div>
+<p>Ứng viên B chứa 4 từ văn bản liên tục và được bao bọc bởi nhiều thẻ định dạng ở hai phía nên đạt điểm số 10, vượt trội so với Ứng viên A (7 điểm). Hệ thống xác định chính xác B là vùng nội dung bài viết cần giữ lại.</p>
+<p>Nếu duyệt ngây thơ mọi cặp <code>[i, j]</code>, số đoạn cần kiểm tra là <code>N(N+1)/2</code> (độ phức tạp <code>O(N²)</code>). Tuy nhiên, bằng kỹ thuật mảng cộng dồn (prefix sum), bài toán có thể tối ưu hóa để tìm ra lời giải trong độ phức tạp tuyến tính <code>O(N)</code>.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giới hạn</span><p>Trang web hiện đại thường phân mảnh nội dung thành nhiều khối div phức tạp và tải động qua JavaScript. Công thức trên là mô hình nền tảng trong slide kinh điển, trong thực tế cần kết hợp thêm phân tích cây DOM thị giác.</p></aside>
+<h2 id="exercise-vi" data-section-heading="exercise">Bài tập cuối chương</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 14, 32</p>
+<h3 id="detail-24-vi">Bài tập 1: Kiểm tra cập nhật tài nguyên bằng yêu cầu HEAD</h3>
+<p>Thực hiện gửi yêu cầu HTTP HEAD tới một số URL thử nghiệm và đọc các trường tiêu đề như <code>Last-Modified</code>, <code>Content-Length</code>, <code>ETag</code>.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Gợi ý thực hiện</span><p>So sánh dung lượng tải về giữa yêu cầu GET và HEAD. Ghi lại các trường hợp máy chủ hỗ trợ báo thời điểm sửa đổi và trường hợp máy chủ không cung cấp thông tin này. Lưu ý không gửi yêu cầu lặp lại dồn dập tới máy chủ thực tế.</p></aside>
+<h3 id="detail-25-vi">Bài tập 2: Lập trình luồng Crawler cơ bản</h3>
+<p>Dựa vào mã giả ở Slide 11, lập trình một module crawler đơn giản.</p>
+<p>Các yêu cầu an toàn bắt buộc:</p>
+<ul>
+<li>Giới hạn tên miền mục tiêu và số lượng trang tối đa được quét.</li>
+<li>Sử dụng cấu trúc dữ liệu tập hợp (Set) để lưu các URL đã quét, tránh quét lặp.</li>
+<li>Đặt thời gian nghỉ tối thiểu giữa các lần gửi yêu cầu tới cùng một máy chủ (politeness).</li>
+<li>Xử lý các trường hợp ngoại lệ: kết nối mạng quá hạn (timeout), lỗi HTTP 404/500, tệp không phải văn bản.</li>
+<li>Chỉ thử nghiệm trên các trang do chính bạn quản lý hoặc các trang được phép thử nghiệm thực hành.</li>
+</ul>
+<p>Đây là các điều kiện phụ trợ để thực hành an toàn và là phần bổ sung cho đề bài gốc trong slide.</p>
+<h2 id="summary-vi" data-section-heading="summary">Tổng kết</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 33 (và toàn bộ slide 1-32)</p>
+<ul>
+<li>Web crawler quản lý các URL phát hiện được qua hàng đợi frontier, tải nội dung và trích xuất các liên kết mới.</li>
+<li>Kiến trúc đa luồng giúp che giấu độ trễ mạng, nhưng phải tuân thủ chính sách lịch sự (politeness policy) để bảo vệ máy chủ nguồn.</li>
+<li>Thu thập lại định kỳ, khai thác yêu cầu HEAD và sơ đồ sitemap là những công cụ giúp bảo đảm độ mới cho dữ liệu.</li>
+<li>Tài liệu nội bộ, email và nguồn cấp (feed) có các đặc tính vận hành khác biệt so với thu thập web mở.</li>
+<li>Bảng mã ký tự cần được chuẩn hóa đồng nhất về Unicode/UTF-8; hệ thống lưu trữ phải đáp ứng truy cập ngẫu nhiên, nén và cập nhật.</li>
+<li>Checksum, fingerprint (SimHash) và thuật toán phát hiện vùng văn bản chính giúp loại trừ trùng lặp và lọc sạch nhiễu nội dung.</li>
+</ul>
+<h2 id="quiz-vi" data-section-heading="quiz">Câu hỏi tự kiểm tra</h2>
+<ol>
+<li>Vì sao không phải cứ tăng số lượng tài liệu thu thập là chất lượng tìm kiếm sẽ tự động tăng theo?</li>
+<li>Hàng đợi frontier trong crawler dùng để lưu trữ đối tượng nào?</li>
+<li>Lý do chính khiến crawler bắt buộc phải sử dụng kiến trúc đa luồng là gì?</li>
+<li>Chính sách lịch sự (politeness policy) được thiết kế nhằm bảo vệ đối tượng nào?</li>
+<li>Yêu cầu HTTP HEAD hỗ trợ khâu quyết định thu thập lại trang như thế nào?</li>
+<li>Sự khác biệt cốt lõi giữa focused crawling và phương pháp &quot;thu thập toàn bộ rồi lọc sau&quot; là gì?</li>
+<li>Cơ chế đẩy (push feed) và kéo (pull feed) khác nhau như thế nào?</li>
+<li>Vì sao phương pháp phát hiện trùng lặp hoàn toàn và trùng lặp gần lại sử dụng kỹ thuật khác nhau?</li>
+<li>Trong công thức loại bỏ nhiễu, số hạng ở giữa <code>Σ (1 - b_n)</code> đo lường đại lượng gì?</li>
+<li>Trong chỉ số Age, tham số <code>t</code> và biểu thức <code>t - x</code> khác nhau như thế nào?</li>
+<li>Checksum, hàm băm thông thường và fingerprint (dấu vân tay) ưu tiên những mục tiêu gì?</li>
+</ol>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><ol>
+<li>Vì nếu thu thập thêm nhiều tài liệu rác và trùng lặp, dung lượng lưu trữ tăng lên và gánh nặng của thuật toán xếp hạng cũng tăng theo, khiến việc đưa tài liệu thực sự giá trị lên đầu trở nên khó khăn hơn.</li>
+<li>Frontier lưu trữ các URL đã được phát hiện từ các trang trước nhưng chưa được tải về máy chủ.</li>
+<li>Vì một luồng đơn lẻ mất phần lớn thời gian chờ DNS, bắt tay kết nối và truyền dữ liệu qua mạng; đa luồng giúp tận dụng thời gian chờ để tải song song các máy chủ khác, nâng cao thông lượng hệ thống.</li>
+<li>Bảo vệ máy chủ của các trang web mục tiêu khỏi nguy cơ bị nghẽn mạng hoặc sập dịch vụ do nhận quá nhiều yêu cầu dồn dập.</li>
+<li>HEAD chỉ tải về tiêu đề HTTP chứa thông tin như <code>Last-Modified</code>, giúp crawler biết trang có thay đổi hay không mà không tốn băng thông tải toàn bộ thân bài viết.</li>
+<li>Focused crawling đánh giá và quyết định độ liên quan của trang ngay tại thời điểm thu thập để không tải trang rác; còn phương pháp kia tải bừa bãi toàn bộ rồi sau đó mới tốn công sàng lọc và vứt bỏ.</li>
+<li>Push là bên phát hành chủ động gửi dữ liệu ngay khi có bài mới; Pull là bên nhận phải định kỳ chủ động gửi yêu cầu thăm dò xem có bài mới hay không.</li>
+<li>Trùng lặp hoàn toàn chỉ cần so khớp chính xác mã băm là đủ; trùng lặp gần đòi hỏi các biểu diễn giữ lại đặc trưng cốt lõi (như SimHash) cho phép chấp nhận các sai lệch nhỏ về mặt chữ.</li>
+<li>Đo lường số lượng token văn bản (không phải thẻ HTML) nằm bên trong phân đoạn ứng viên <code>[i, j]</code>.</li>
+<li><code>t</code> là tổng thời gian từ lần quét trước đến lần quét lại; còn <code>t - x</code> là khoảng thời gian bản sao trong hệ thống thực sự bị cũ (tính từ thời điểm trang gốc bị đổi <code>x</code> đến thời điểm quét lại <code>t</code>).</li>
+<li>Checksum ưu tiên kiểm tra lỗi toàn vẹn hoặc khớp chính xác; hàm băm thông thường ưu tiên ánh xạ nhanh và phân tán ngẫu nhiên; fingerprint ưu tiên bảo toàn khoảng cách ngữ nghĩa giữa các văn bản gần giống nhau.</li>
+</ol></div></details>
+
+<h2 id="glossary-vi" data-section-heading="glossary">Bảng thuật ngữ</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>English</th>
+<th>Tiếng Việt</th>
+<th>Ý nghĩa trong chương này</th>
+<th>Slide nguồn</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Crawling</td>
+<td>Thu thập Web / Crawling</td>
+<td>Quá trình phát hiện và tải về các trang web</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Web crawler</td>
+<td>Trình thu thập Web</td>
+<td>Chương trình tự động lần theo liên kết để thu thập trang</td>
+<td>5, 8–11</td>
+</tr>
+<tr>
+<td>URL</td>
+<td>Định danh tài nguyên mạng (URL)</td>
+<td>Chuỗi ký tự định danh duy nhất một tài nguyên trên mạng</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Scheme</td>
+<td>Giao thức URL (Scheme)</td>
+<td>Thành phần xác định phương thức giao tiếp (như http, https)</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Hostname</td>
+<td>Tên máy chủ</td>
+<td>Thành phần xác định máy tính cung cấp dịch vụ web</td>
+<td>6</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>Yêu cầu GET</td>
+<td>Phương thức HTTP yêu cầu lấy dữ liệu tài nguyên về máy</td>
+<td>7</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>Yêu cầu POST</td>
+<td>Phương thức HTTP gửi dữ liệu bổ sung lên máy chủ</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Frontier</td>
+<td>Hàng đợi biên / frontier (Frontier)</td>
+<td>Hàng đợi quản lý danh sách các URL đang chờ thu thập</td>
+<td>9–11</td>
+</tr>
+<tr>
+<td>Thread</td>
+<td>Luồng xử lý</td>
+<td>Đơn vị thực thi độc lập bên trong tiến trình máy tính</td>
+<td>9, 11</td>
+</tr>
+<tr>
+<td>Politeness policy</td>
+<td>Chính sách lịch sự</td>
+<td>Quy định giãn cách yêu cầu để tránh gây quá tải máy chủ đối tác</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Revisit</td>
+<td>Thu thập lại / revisit</td>
+<td>Quá trình crawler quay lại kiểm tra trang web đã thu thập từ trước</td>
+<td>12</td>
+</tr>
+<tr>
+<td>HEAD</td>
+<td>Yêu cầu HEAD</td>
+<td>Phương thức HTTP chỉ tải về tiêu đề không tải phần thân</td>
+<td>13–14</td>
+</tr>
+<tr>
+<td>Last-Modified</td>
+<td>Thời điểm cập nhật cuối</td>
+<td>Trường tiêu đề HTTP phản ánh thời điểm sửa trang web</td>
+<td>13</td>
+</tr>
+<tr>
+<td>Age</td>
+<td>Chỉ số Age</td>
+<td>Kỳ vọng thời gian lưu giữ bản sao cũ khi trang có thay đổi</td>
+<td>15</td>
+</tr>
+<tr>
+<td>Focused crawling</td>
+<td>Thu thập theo chủ đề</td>
+<td>Chiến lược thu thập ưu tiên các trang thuộc một miền chủ đề</td>
+<td>16</td>
+</tr>
+<tr>
+<td>Deep Web</td>
+<td>Web ẩn (Deep Web)</td>
+<td>Vùng dữ liệu khó tiếp cận bằng cách lần liên kết thông thường</td>
+<td>17</td>
+</tr>
+<tr>
+<td>Sitemap</td>
+<td>Sơ đồ trang / sitemap</td>
+<td>Tệp XML thông báo cấu trúc URL và tần suất cập nhật trang</td>
+<td>18</td>
+</tr>
+<tr>
+<td>Push feed</td>
+<td>Nguồn cấp kiểu đẩy</td>
+<td>Cơ chế bên phát hành chủ động gửi nội dung mới cho bên nhận</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Pull feed</td>
+<td>Nguồn cấp kiểu kéo</td>
+<td>Cơ chế bên nhận định kỳ gửi yêu cầu kiểm tra nội dung mới</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Character encoding</td>
+<td>Mã hóa ký tự (Character encoding)</td>
+<td>Quy tắc ánh xạ chuỗi bit nhị phân thành chữ viết hiển thị</td>
+<td>21</td>
+</tr>
+<tr>
+<td>Random access</td>
+<td>Truy cập ngẫu nhiên</td>
+<td>Khả năng đọc thẳng một bản ghi tài liệu mà không cần duyệt tuần tự</td>
+<td>22, 24</td>
+</tr>
+<tr>
+<td>Tablet</td>
+<td>Tablet</td>
+<td>Khối phân vùng dữ liệu nhỏ trong kiến trúc lưu trữ BigTable</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Checksum</td>
+<td>Mã kiểm tra / checksum</td>
+<td>Con số ngắn tính từ nội dung phục vụ kiểm tra trùng lặp</td>
+<td>26</td>
+</tr>
+<tr>
+<td>Hash</td>
+<td>Hàm băm / giá trị băm</td>
+<td>Hàm ánh xạ đầu vào thành chuỗi bit độ dài cố định</td>
+<td>26, 28–29</td>
+</tr>
+<tr>
+<td>Near duplicate</td>
+<td>Trùng lặp gần</td>
+<td>Các tài liệu có nội dung cốt lõi gần như giống hệt nhau</td>
+<td>27</td>
+</tr>
+<tr>
+<td>Fingerprint</td>
+<td>Dấu vân tay / fingerprint</td>
+<td>Chuỗi bit tóm lược đặc trưng phục vụ phát hiện trùng lặp gần</td>
+<td>28–29</td>
+</tr>
+<tr>
+<td>Noise</td>
+<td>Nhiễu nội dung / loại bỏ nhiễu</td>
+<td>Các thành phần ngoài nội dung chính như banner, quảng cáo, menu</td>
+<td>30–31</td>
+</tr>
+</tbody></table></div>
+
+        <footer class="lesson-footer"><span class="lesson-footer__meta"><span>SEG301m / CHƯƠNG 3</span><span class="site-credit">Made by <strong>Marcus</strong></span></span><a href="#top">Về đầu trang ↑</a></footer>
+      </article>
+      <nav class="chapter-pager" aria-label="Chapter navigation"><a class="chapter-pager__previous" href="./chapter-02.html">
+    <span>Chương trước</span>
+    <strong>02 · Kiến trúc của công cụ tìm kiếm</strong>
+  </a><a class="chapter-pager__next" href="./chapter-04.html">
+    <span>Chương sau</span>
+    <strong>04 · Xử lý văn bản</strong>
+  </a></nav>
+    </main>
+  </div>
+</body>
+</html>

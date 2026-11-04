@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163b3c">
+  <meta name="description" content="Theo dõi các thành phần của công cụ tìm kiếm từ khâu thu thập tài liệu đến xếp hạng và đánh giá.">
+  <title>CHƯƠNG 2 Kiến trúc của công cụ tìm kiếm | SEG301m</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=20261104-vi">
+  <link rel="stylesheet" href="../tutor.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/katex/katex.min.css?v=20261104-vi">
+  <link rel="stylesheet" href="../assets/highlight.css?v=20261104-vi">
+  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang"}</script>
+  <script src="../app.js?v=20261104-vi" defer></script>
+  <script src="../tutor.js?v=20261104-vi" defer></script>
+</head>
+<body data-page="chapter" data-language="vi">
+  <a class="skip-link" href="#learning-goals-vi">Chuyển đến bài học</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
+    <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 2</span>
+    <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
+  </header>
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__line"></span> SEG301m / CHƯƠNG 2</p>
+        <h1 id="page-title">Kiến trúc của công<br><em>cụ tìm kiếm</em></h1>
+        <p class="hero__description">Theo dõi các thành phần của công cụ tìm kiếm từ khâu thu thập tài liệu đến xếp hạng và đánh giá.</p>
+        <a class="start-link" href="#learning-goals-vi">Bắt đầu học <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <span class="orbit orbit--one"></span><span class="orbit orbit--two"></span>
+        <span class="signal signal--one"></span><span class="signal signal--two"></span>
+        <span class="hero__query">NGUỒN <b>02</b></span>
+        <span class="hero__result hero__result--one">01 <b>TÀI LIỆU</b></span>
+        <span class="hero__result hero__result--two">02 <b>CHỈ MỤC</b></span>
+        <span class="hero__result hero__result--three">03 <b>KẾT QUẢ</b></span>
+        <span class="hero__visual-label">TỪ NGUỒN ĐẾN TÌM KIẾM</span>
+      </div>
+    </div>
+    <div class="hero__footer"><span>CHƯƠNG 2</span><span>Nguồn: toàn bộ 34 slide bài giảng</span></div>
+  </section>
+  <div class="page-layout" id="lesson">
+    <nav class="chapter-nav" aria-label="Mục lục"><div class="chapter-nav__sticky">
+      <p class="chapter-nav__label">MỤC LỤC <span>02 / 12</span></p>
+      <div class="chapter-nav__links"><a href="#prerequisites-vi" data-section="prerequisites"><span>01</span>Kiến thức cần chuẩn bị</a>
+<a href="#system-architecture-vi" data-section="system-architecture"><span>02</span>2.1 Thông tin tổng quan về kiến trúc hệ thống</a>
+<a href="#text-acquisition-vi" data-section="text-acquisition"><span>03</span>2.2 Thu thập văn bản</a>
+<a href="#text-transformation-vi" data-section="text-transformation"><span>04</span>2.3 Biến đổi văn bản</a>
+<a href="#index-creation-vi" data-section="index-creation"><span>05</span>2.4 Tạo chỉ mục</a>
+<a href="#user-interaction-vi" data-section="user-interaction"><span>06</span>2.5 Tương tác với người dùng</a>
+<a href="#ranking-vi" data-section="ranking"><span>07</span>2.6 Xếp hạng</a>
+<a href="#evaluation-vi" data-section="evaluation"><span>08</span>2.7 Đánh giá</a>
+<a href="#exercise-vi" data-section="exercise"><span>09</span>Bài tập cuối chương</a>
+<a href="#summary-vi" data-section="summary"><span>10</span>Tổng kết</a>
+<a href="#quiz-vi" data-section="quiz"><span>11</span>Câu hỏi tự kiểm tra</a>
+<a href="#glossary-vi" data-section="glossary"><span>12</span>Bảng thuật ngữ</a></div>
+      <div class="chapter-directory">
+    <p class="chapter-directory__label">ĐỦ 12 CHƯƠNG</p>
+    <div class="chapter-directory__links"><a class="chapter-directory__item" href="./chapter-01.html"><b>01</b>Truy xuất thông tin</a>
+<span class="chapter-directory__item is-current" aria-current="page"><b>02</b>Các thành phần và luồng tìm kiếm</span>
+<a class="chapter-directory__item" href="./chapter-03.html"><b>03</b>Thu thập tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-04.html"><b>04</b>Biến từ thành dữ liệu có thể tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-05.html"><b>05</b>Từ chỉ mục đến kết quả hàng đầu</a>
+<a class="chapter-directory__item" href="./chapter-06.html"><b>06</b>Biến nhu cầu thành truy vấn</a>
+<a class="chapter-directory__item" href="./chapter-07.html"><b>07</b>Cách tính điểm kết quả</a>
+<a class="chapter-directory__item" href="./chapter-08.html"><b>08</b>Giúp nội dung được tìm thấy</a>
+<a class="chapter-directory__item" href="./chapter-09.html"><b>09</b>Đo chất lượng tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-10.html"><b>10</b>Phân loại và sắp xếp tài liệu</a>
+<a class="chapter-directory__item" href="./chapter-11.html"><b>11</b>Dùng con người và mối quan hệ trong tìm kiếm</a>
+<a class="chapter-directory__item" href="./chapter-12.html"><b>12</b>Khai thác thứ tự, cấu trúc và đa phương tiện</a></div>
+  </div>
+    </div></nav>
+    <main class="lesson-content" id="main-content">
+      <article class="lesson-language" lang="vi-VN" data-lang="vi">
+        <div class="intro-mark"><span>GHI CHÚ HỌC TẬP</span><span>Bản tiếng Việt · Chương 02</span></div>
+        <p><strong>Tài liệu gốc:</strong> Slide bài giảng SEG301m Chương 2, &quot;Architecture of a Search Engine&quot; (34 slide)<br><strong>Cách đọc:</strong> Trước tiên hãy tách biệt hai quy trình: &quot;luồng chuẩn bị tài liệu&quot; và &quot;luồng trả lời câu hỏi của người dùng&quot;. Sau đó, theo dõi từng thành phần nhận dữ liệu gì và chuyển tiếp dữ liệu gì cho khâu tiếp theo để nắm bắt toàn diện kiến trúc công cụ tìm kiếm.</p>
+<h2 id="learning-goals-vi" data-section-heading="learning-goals">Mục tiêu của chương</h2>
+<p>Sau khi học xong chương này, bạn có thể giải thích các nội dung sau:</p>
+<ol>
+<li>Trình bày mối quan hệ giữa nhu cầu thông tin, truy vấn, tập tài liệu và chỉ mục.</li>
+<li>Phân biệt rõ quy trình lập chỉ mục và quy trình xử lý truy vấn.</li>
+<li>Giải thích 6 khối thành phần chính cấu tạo nên công cụ tìm kiếm theo luồng dữ liệu.</li>
+<li>Phân biệt hiệu năng tìm kiếm thể hiện qua tính hiệu quả (effectiveness) và tốc độ thể hiện qua tính hiệu năng (efficiency).</li>
+</ol>
+<p class="source-note"><span>SLIDE NGUỒN</span> 1-3</p>
+<figure class="chapter-map"><a href="../assets/chapter-02-mindmap.png" target="_blank" rel="noopener"><img src="../assets/chapter-02-mindmap.png" width="1672" height="941" loading="lazy" alt="Sơ đồ tư duy bằng tiếng Anh cho Chương 2, Kiến trúc của công cụ tìm kiếm"></a><figcaption>Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 2. Chọn ảnh để xem kích thước đầy đủ.</figcaption></figure>
+<h2 id="prerequisites-vi" data-section-heading="prerequisites">Kiến thức cần chuẩn bị</h2>
+<p>Hãy ôn lại các thuật ngữ quan trọng đã học ở Chương 1:</p>
+<ul>
+<li><strong>Truy vấn (query):</strong> Từ ngữ hoặc điều kiện người dùng nhập vào hệ thống tìm kiếm.</li>
+<li><strong>Tài liệu (document):</strong> Trang Web, email, tệp PDF hoặc bất kỳ đơn vị dữ liệu nào cần tìm kiếm.</li>
+<li><strong>Độ liên quan (relevance):</strong> Mức độ tài liệu đáp ứng được nhu cầu thông tin của người dùng.</li>
+<li><strong>Xếp hạng (ranking):</strong> Việc sắp xếp các tài liệu hữu ích dự đoán lên các vị trí hàng đầu.</li>
+</ul>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Công cụ tìm kiếm hoạt động tương tự như một kho hàng khổng lồ tìm món hàng phù hợp theo đơn đặt. Việc sắp xếp hàng hóa trước và đánh số từng kệ là &quot;lập chỉ mục&quot;, còn việc nhận đơn hàng rồi tra cứu vị trí kệ để lấy hàng là &quot;xử lý truy vấn&quot;.</p></aside>
+<h2 id="system-architecture-vi" data-section-heading="system-architecture">2.1 Thông tin tổng quan về kiến trúc hệ thống</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 4-8</p>
+<h3 id="detail-1-vi">Khởi đầu từ nhu cầu muốn biết của người dùng</h3>
+<p>Quá trình tìm kiếm thực chất bắt đầu từ trước khi người dùng gõ ký tự vào ô tìm kiếm. Người dùng xuất phát từ một <strong>nhu cầu thông tin (information need)</strong>. Ví dụ, người dùng có nhu cầu &quot;muốn biết thời tiết ngày mai ở Thành phố Hồ Chí Minh&quot; và chuyển hóa nhu cầu đó thành truy vấn như <code>thoi tiet ho chi minh ngay mai</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Thành phần</th>
+<th>Vai trò</th>
+<th>Ví dụ thực tế</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Nhu cầu thông tin</td>
+<td>Điều người dùng thực sự muốn biết</td>
+<td>Muốn biết ngày mai có mưa không để lên kế hoạch</td>
+</tr>
+<tr>
+<td>Người dùng</td>
+<td>Người đang cần thông tin</td>
+<td>Sinh viên chuẩn bị đi thực địa</td>
+</tr>
+<tr>
+<td>Truy vấn</td>
+<td>Cách diễn đạt nhu cầu thành dạng máy tìm được</td>
+<td><code>thoi tiet ho chi minh ngay mai</code></td>
+</tr>
+<tr>
+<td>Công cụ tìm kiếm</td>
+<td>Xử lý truy vấn và trả kết quả</td>
+<td>Tìm các trang phù hợp và xếp thứ tự</td>
+</tr>
+<tr>
+<td>Tập tài liệu</td>
+<td>Tập hợp dữ liệu cần tìm kiếm</td>
+<td>Các trang Web, bản tin thời tiết, tệp dữ liệu</td>
+</tr>
+<tr>
+<td>Chỉ mục</td>
+<td>Cấu trúc dữ liệu tra cứu vị trí từ từ ngữ</td>
+<td>Danh sách các tài liệu có chứa từ <code>thời tiết</code></td>
+</tr>
+</tbody></table></div>
+<p>Slide 4 cũng chỉ ra rằng tập tài liệu luôn diễn ra các hoạt động thêm mới và xóa bỏ. Chỉ mục không phải là bảng cố định vĩnh viễn mà liên tục được cập nhật theo sự thay đổi của tập tài liệu.</p>
+<h3 id="detail-2-vi">Vai trò của chỉ mục đảo</h3>
+<p>Công cụ tìm kiếm không đọc lại từng tài liệu từ đầu đến cuối mỗi khi có người tìm. Thay vào đó, hệ thống xây dựng trước <strong>chỉ mục đảo (inverted index)</strong> để ghi nhận &quot;từ này xuất hiện ở những tài liệu nào và tại vị trí nào&quot;.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Góc nhìn theo tài liệu</th>
+<th>Góc nhìn theo từ (Chỉ mục đảo)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tài liệu A chứa <code>search</code>, <code>engine</code></td>
+<td><code>search</code> → Tài liệu A, Tài liệu C</td>
+</tr>
+<tr>
+<td>Tài liệu B chứa <code>crawler</code>, <code>web</code></td>
+<td><code>engine</code> → Tài liệu A, Tài liệu D</td>
+</tr>
+</tbody></table></div>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Giống như phần chỉ mục ở cuối cuốn sách: muốn tìm từ &quot;công cụ tìm kiếm&quot;, bạn tra từ này để thấy ngay các trang 15, 28, 42. Chỉ mục đảo cũng hoạt động theo đúng nguyên lý đó.</p></aside>
+<h3 id="detail-3-vi">Hai mục tiêu thiết kế cốt lõi</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 5</p>
+<p>Hai mục tiêu thiết kế hàng đầu của một công cụ tìm kiếm là:</p>
+<ul>
+<li><strong>Tính hiệu quả (effectiveness):</strong> Trả về kết quả có độ liên quan cao nhất có thể đối với câu truy vấn.</li>
+<li><strong>Tính hiệu năng (efficiency):</strong> Xử lý truy vấn của người dùng trong thời gian nhanh nhất có thể với chi phí tài nguyên tối ưu.</li>
+</ul>
+<p>Một kết quả tìm kiếm dù cực kỳ chính xác nhưng phải đợi vài phút mới có thì không ai muốn dùng; ngược lại, trả về tức thì nhưng toàn thông tin vô giá trị thì cũng vô ích. Hệ thống tìm kiếm bắt buộc phải cân bằng cả hai yếu tố này.</p>
+<h3 id="detail-4-vi">Quy trình lập chỉ mục (Indexing Process)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 6-7</p>
+<p>Ở nhánh lập chỉ mục, các tài liệu được chuẩn bị sẵn sàng trước khi có bất kỳ truy vấn nào gửi tới:</p>
+<ol>
+<li><strong>Thu thập văn bản:</strong> Thu thập email, trang Web, bài báo tin tức.</li>
+<li>Lưu trữ tài liệu gốc vào kho dữ liệu tài liệu (document data store).</li>
+<li><strong>Biến đổi văn bản:</strong> Phân tích tài liệu và chuyển thành các từ và cấu trúc phục vụ tìm kiếm.</li>
+<li><strong>Tạo chỉ mục:</strong> Xây dựng chỉ mục đảo liên kết giữa từ ngữ và vị trí tài liệu.</li>
+</ol>
+<p>Bốn khối chức năng này tuy được vẽ thành các hộp riêng biệt nhưng liên tục phối hợp và luân chuyển dữ liệu cho nhau.</p>
+<h3 id="detail-5-vi">Quy trình xử lý truy vấn (Query Process)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 6, 8</p>
+<p>Sau khi người dùng gửi yêu cầu tìm kiếm, một nhánh xử lý khác sẽ kích hoạt:</p>
+<ol>
+<li><strong>Tương tác với người dùng (User Interaction):</strong> Tiếp nhận câu truy vấn.</li>
+<li><strong>Xếp hạng (Ranking):</strong> Dùng chỉ mục để tính điểm và chấm điểm các tài liệu ứng viên.</li>
+<li>Khi cần thiết, đọc nội dung gốc từ kho lưu trữ tài liệu để tạo đoạn trích kết quả (snippet).</li>
+<li>Hiển thị kết quả ra màn hình và ghi lại nhật ký (log) các hành vi như lượt nhấp chuột.</li>
+<li><strong>Đánh giá (Evaluation):</strong> Dùng dữ liệu nhật ký và tập kiểm thử để phân tích chất lượng xếp hạng và tốc độ hệ thống.</li>
+</ol>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Dưới góc độ tính hiệu quả và tính hiệu năng, hãy giải thích vì sao thiết kế &quot;mỗi lần người dùng bấm tìm kiếm mới tải toàn bộ Web về quét&quot; là hoàn toàn bất khả thi trong thực tế.</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Về mặt hiệu năng, Web có hàng tỷ trang; việc tải về và duyệt từng trang tại thời điểm người dùng tìm kiếm sẽ mất nhiều giờ hoặc nhiều ngày, hoàn toàn không đáp ứng được yêu cầu thời gian thực. Về mặt hiệu quả, việc quét toàn bộ trong thời gian ngắn không thể kịp áp dụng các mô hình lọc spam, phân tích liên kết đồ thị phức tạp hay tính toán trọng số sâu để đưa ra kết quả chất lượng cao.</p></div></details>
+
+<h2 id="text-acquisition-vi" data-section-heading="text-acquisition">2.2 Thu thập văn bản</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 9-13</p>
+<p>Nhiệm vụ của <strong>thu thập văn bản (text acquisition)</strong> là phát hiện, thu gom các tài liệu mục tiêu và chuẩn bị sẵn sàng ở định dạng mà các khâu tiếp theo có thể sử dụng. Các thành phần chính gồm: trình thu thập (crawler), nguồn cấp (feed), chuyển đổi định dạng và kho dữ liệu tài liệu.</p>
+<h3 id="detail-6-vi">Trình thu thập (Crawler)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 10-11</p>
+<ul>
+<li><strong>Trình thu thập Web tổng quát (general Web crawler):</strong> Lần theo các liên kết siêu văn bản để thu thập lượng lớn trang Web. Thách thức lớn là đảm bảo <strong>độ bao phủ (coverage)</strong> rộng khắp và giữ cho dữ liệu luôn có <strong>độ mới (freshness)</strong>.</li>
+<li><strong>Trình thu thập trang (site crawler):</strong> Chỉ thu thập dữ liệu bên trong một trang web hoặc một tên miền nhất định để phục vụ tìm kiếm nội bộ trang.</li>
+<li><strong>Trình thu thập theo chủ đề (focused / topical crawler):</strong> Ưu tiên thu thập các trang thuộc một lĩnh vực chuyên biệt, phục vụ công cụ tìm kiếm dọc (vertical search).</li>
+<li><strong>Trình thu thập tài liệu (document crawler):</strong> Quét các thư mục trong mạng nội bộ doanh nghiệp hoặc trên máy tính cá nhân để thu thập tệp tin.</li>
+</ul>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Trình thu thập tổng quát giống nhân viên bưu điện đi khắp cả thành phố; trình thu thập trang giống nhân viên phụ trách một tòa nhà cụ thể; còn trình thu thập theo chủ đề giống như người chỉ chuyên đến các nhà sách.</p></aside>
+<h3 id="detail-7-vi">Nguồn cấp (Feed)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 12</p>
+<p><strong>Nguồn cấp (feed)</strong> là luồng dữ liệu tài liệu liên tục được bên phát hành chủ động đẩy về hệ thống. Các trang tin tức và blog thường sử dụng chuẩn RSS hoặc Atom. Thay vì để crawler phải chủ động đi dò tìm, nguồn cấp cho phép hệ thống nhận ngay các bài viết mới cập nhật theo thứ tự thời gian.</p>
+<h3 id="detail-8-vi">Chuyển đổi định dạng và bảng mã</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 12</p>
+<p>Tài liệu thu về có rất nhiều định dạng khác nhau: HTML, XML, PDF, Microsoft Word. Để đơn giản hóa các khâu xử lý phía sau, hệ thống chuyển đổi tất cả nội dung văn bản và metadata về một định dạng cấu trúc chung.</p>
+<p>Slide bài giảng đối chiếu giữa ASCII 8-bit và Unicode. Bảng mã ASCII đơn thuần không thể biểu diễn được các ngôn ngữ có dấu hoặc chữ tượng hình như tiếng Việt, tiếng Trung, tiếng Nhật. Trong thực tế, hệ thống chuẩn hóa mọi văn bản đầu vào về Unicode (thường là chuẩn mã hóa UTF-8).</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Slide nhắc tới Unicode như là &quot;các từ 16-bit&quot;. Về mặt chuẩn hóa hiện đại, Unicode định nghĩa không gian ký tự và mã điểm (code point), còn định dạng lưu trữ thực tế trên Web phổ biến nhất là UTF-8 (mã hóa độ dài biến thiên từ 1 đến 4 byte). Tiếng Việt trên Web sử dụng UTF-8 rất thuận tiện và tương thích hoàn toàn.</p></aside>
+<h3 id="detail-9-vi">Kho lưu trữ dữ liệu tài liệu (Document Data Store)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 13</p>
+<p>Kho dữ liệu tài liệu quản lý khối lượng lớn văn bản gốc và các trường thông tin có cấu trúc:</p>
+<ul>
+<li>Lưu trữ nội dung văn bản, tiêu đề, ngày tạo và các trường metadata.</li>
+<li>Lưu trữ các thông tin liên kết như danh sách liên kết ra, liên kết vào và văn bản neo (anchor text).</li>
+<li>Cho phép truy xuất nhanh nội dung tài liệu theo mã định danh (document ID) để tạo đoạn trích kết quả (snippet).</li>
+<li>Với quy mô nhỏ có thể dùng cơ sở dữ liệu quan hệ, nhưng với quy mô cực lớn cần đến các hệ thống lưu trữ phân tán chuyên dụng (như BigTable hoặc NoSQL).</li>
+</ul>
+<h2 id="text-transformation-vi" data-section-heading="text-transformation">2.3 Biến đổi văn bản</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 14-18</p>
+<p>Tài liệu sau khi thu thập nếu đưa thẳng vào chỉ mục sẽ bị lẫn các thẻ định dạng, lỗi chính tả, quảng cáo và từ rác. <strong>Biến đổi văn bản (text transformation)</strong> chuyển đổi văn bản thô thành biểu diễn chuẩn phục vụ lập chỉ mục và tìm kiếm.</p>
+<h3 id="detail-10-vi">Bộ phân tích cú pháp (Parser) và Bộ tách từ (Tokenizer)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 15</p>
+<ul>
+<li><strong>Bộ phân tích cú pháp (parser):</strong> Nhận diện cấu trúc của tài liệu như tiêu đề, các phần đề mục, liên kết, danh sách. Trong tài liệu HTML hay XML, các thẻ đánh dấu chính là manh mối nhận diện cấu trúc.</li>
+<li><strong>Bộ tách từ (tokenizer):</strong> Cắt chuỗi ký tự liên tục thành các đơn vị từ hoặc ký hiệu độc lập (token).</li>
+</ul>
+<p>Khi tách từ, hệ thống phải quy định rõ cách xử lý chữ hoa/thường, dấu gạch nối, dấu nháy đơn, dấu câu và các ký tự đặc biệt. Trong tiếng Việt, từ có thể gồm nhiều âm tiết ghép lại (từ ghép như <code>công cụ tìm kiếm</code>), do đó việc tách từ đòi hỏi kỹ thuật phân đoạn từ (word segmentation) thay vì chỉ ngắt theo khoảng trắng như tiếng Anh.</p>
+<h3 id="detail-11-vi">Loại bỏ Stopword và Stemming</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 16</p>
+<ul>
+<li><strong>Loại bỏ từ dừng (stopping):</strong> Loại bỏ các từ quá phổ biến nhưng mang ít giá trị phân biệt nội dung (trong tiếng Anh như <code>and</code>, <code>the</code>, <code>in</code>; trong tiếng Việt như <code>và</code>, <code>của</code>, <code>những</code>).</li>
+<li><strong>Rút gọn từ về gốc (stemming):</strong> Đưa các biến thể từ về cùng một dạng gốc chung (ví dụ trong tiếng Anh gom <code>computer</code>, <code>computers</code>, <code>computing</code> về <code>compute</code>).</li>
+</ul>
+<p>Cả hai kỹ thuật này đều cần áp dụng thận trọng. Ví dụ với câu truy vấn kinh điển <code>to be or not to be</code>, nếu xóa hết stopword thì truy vấn sẽ hoàn toàn rỗng. Hiệu quả của các bước này phụ thuộc vào đặc thù của từng ngôn ngữ và miền bài toán.</p>
+<h3 id="detail-12-vi">Trích xuất và phân tích liên kết</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 17</p>
+<p>Bằng cách trích xuất các liên kết và <strong>văn bản neo (anchor text)</strong> giữa các trang Web, hệ thống có thể phân tích đồ thị liên kết. Các thuật toán nổi tiếng như PageRank hay HITS dựa vào cấu trúc liên kết này để đo lường độ uy tín và mức độ phổ biến của trang.</p>
+<p>Văn bản neo là đoạn chữ chứa liên kết mà người khác dùng để trỏ tới trang web. Đoạn chữ này thường là mô tả ngắn gọn, khách quan từ góc nhìn của bên thứ ba, bổ sung thông tin rất tốt cho nội dung của trang đích. Thông tin này đóng vai trò sống còn trong tìm kiếm Web, nhưng ít quan trọng hơn trong các kho tài liệu nội bộ không có liên kết.</p>
+<h3 id="detail-13-vi">Trích xuất thông tin và Bộ phân loại</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 18</p>
+<ul>
+<li><strong>Trích xuất thông tin (information extraction):</strong> Tự động phát hiện các thực thể quan trọng trong văn bản như tên người, công ty, địa điểm, ngày tháng để phục vụ tìm kiếm nâng cao.</li>
+<li><strong>Bộ phân loại (classifier):</strong> Tự động gắn nhãn phân loại cho tài liệu.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Nhãn phân loại tiêu biểu</th>
+<th>Mục đích sử dụng</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>spam / non-spam</td>
+<td>Lọc bỏ các trang rác, trang thao túng kết quả</td>
+</tr>
+<tr>
+<td>thể thao / chính trị / kinh doanh</td>
+<td>Phân loại tin tức theo chủ đề</td>
+</tr>
+<tr>
+<td>độ khó văn bản (reading level)</td>
+<td>Hỗ trợ tìm kiếm theo trình độ người đọc</td>
+</tr>
+<tr>
+<td>sắc thái cảm xúc (sentiment)</td>
+<td>Đánh giá thái độ khen/chê của bài viết</td>
+</tr>
+<tr>
+<td>nội dung chính / quảng cáo</td>
+<td>Tách riêng phần nội dung hữu ích khỏi banner quảng cáo</td>
+</tr>
+</tbody></table></div>
+<h2 id="index-creation-vi" data-section-heading="index-creation">2.4 Tạo chỉ mục</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 19-22</p>
+<h3 id="detail-14-vi">Thống kê tài liệu và Gán trọng số</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 20</p>
+<p>Hệ thống tìm kiếm thu thập các chỉ số <strong>thống kê tài liệu (document statistics)</strong> như số lần xuất hiện của từ hay vị trí của từ. Thuật toán xếp hạng dùng các số liệu thống kê này để tính điểm cho tài liệu.</p>
+<p>Mô hình kinh điển tiêu biểu nhất là <strong>tf-idf</strong>:</p>
+<ul>
+<li><strong>Tần số từ (term frequency - tf):</strong> Số lần một từ xuất hiện trong một tài liệu cụ thể.</li>
+<li><strong>Nghịch đảo tần số tài liệu (inverse document frequency - idf):</strong> Độ hiếm của từ đó trên toàn bộ tập tài liệu.</li>
+</ul>
+<p>Một từ xuất hiện nhiều lần trong một tài liệu cụ thể nhưng lại hiếm khi xuất hiện ở các tài liệu khác thì từ đó có khả năng rất cao là từ khóa đại diện cho chủ đề của tài liệu đó.</p>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Nếu một bài viết nhắc đi nhắc lại từ <code>crawler</code> nhiều lần, từ này có thể rất quan trọng đối với bài viết đó. Nhưng nếu mọi bài viết trong lớp đều chứa từ <code>crawler</code> thì từ này không còn giá trị để phân biệt bài nào với bài nào nữa. Chỉ số tf đo &quot;mức độ nổi bật trong tài liệu&quot;, còn idf đo &quot;độ hiếm trong cả kho dữ liệu&quot;.</p></aside>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Xét ví dụ 3 tài liệu sau:</p></aside>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tài liệu</th>
+<th>Nội dung</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1</td>
+<td><code>crawler crawler web</code></td>
+</tr>
+<tr>
+<td>D2</td>
+<td><code>crawler index</code></td>
+</tr>
+<tr>
+<td>D3</td>
+<td><code>index ranking</code></td>
+</tr>
+</tbody></table></div>
+<p>Áp dụng công thức minh họa <code>tf × ln(N / df)</code> với <code>N = 3</code> (tổng số tài liệu) và <code>df</code> là số tài liệu chứa từ:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Từ</th>
+<th align="right">tf trong D1</th>
+<th align="right">df</th>
+<th align="right">idf = <code>ln(3 / df)</code></th>
+<th align="right">tf-idf trong D1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>crawler</code></td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">≈ 0.405</td>
+<td align="right">≈ 0.811</td>
+</tr>
+<tr>
+<td><code>web</code></td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">≈ 1.099</td>
+<td align="right">≈ 1.099</td>
+</tr>
+</tbody></table></div>
+<p>Từ <code>crawler</code> xuất hiện 2 lần trong D1 nhưng cũng có mặt ở D2. Ngược lại, từ <code>web</code> dù chỉ xuất hiện 1 lần trong D1 nhưng là duy nhất trong cả 3 tài liệu, do đó nhận giá trị idf rất cao và đạt điểm tf-idf lớn hơn. Trọng số sinh ra là sự kết hợp giữa tần suất trong bài và độ đặc trưng trên toàn tập dữ liệu.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Lưu ý</span><p>tf và idf có nhiều biến thể công thức khác nhau trong thực tế (cơ số logarit, chuẩn hóa theo độ dài tài liệu). Bảng tính trên là ví dụ đơn giản hóa nhằm làm rõ nguyên lý của Slide 20.</p></aside>
+<h3 id="detail-15-vi">Quá trình đảo chỉ mục (Inversion)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 21</p>
+<p><strong>Đảo chỉ mục (inversion)</strong> là thao tác chuyển đổi dữ liệu từ dạng <code>tài liệu → danh sách từ</code> sang dạng <code>từ → danh sách tài liệu</code>. Đây là bước cốt lõi trong xây dựng chỉ mục.</p>
+<p>Với lượng tài liệu khổng lồ, thời gian xây dựng và dung lượng đĩa lưu trữ là bài toán hóc búa. Hơn nữa, hệ thống phải xử lý được việc cập nhật tài liệu mới. Tệp chỉ mục đảo được tối ưu hóa cấu trúc để truy vấn nhanh nhất và thường được nén dữ liệu để tiết kiệm bộ nhớ.</p>
+<h3 id="detail-16-vi">Phân tán chỉ mục</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 22</p>
+<p>Khi dữ liệu vượt quá khả năng lưu trữ và tính toán của một máy tính, chỉ mục được phân tán ra nhiều máy chủ:</p>
+<ul>
+<li><strong>Phân hoạch theo tài liệu (document partitioning):</strong> Mỗi máy chủ quản lý chỉ mục của một nhóm tài liệu độc lập.</li>
+<li><strong>Phân hoạch theo từ (term partitioning):</strong> Mỗi máy chủ quản lý một dải từ vựng nhất định trên toàn bộ tài liệu.</li>
+<li><strong>Sao bản (replication):</strong> Sao chép cùng một phần dữ liệu ra nhiều máy để chia tải truy vấn và phòng ngừa sự cố máy chủ ngừng hoạt động.</li>
+</ul>
+<p>Trong tìm kiếm P2P hoặc tìm kiếm phân tán, chỉ mục có thể phân bổ qua nhiều trung tâm dữ liệu độc lập.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>So sánh hai cách phân hoạch với 6 tài liệu phân bổ lên 2 máy chủ:</p></aside>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Phương thức</th>
+<th>Máy chủ 1</th>
+<th>Máy chủ 2</th>
+<th>Cách xử lý truy vấn <code>crawler ranking</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Phân hoạch theo tài liệu</td>
+<td>Toàn bộ từ của D1-D3</td>
+<td>Toàn bộ từ của D4-D6</td>
+<td>Cả 2 máy cùng xử lý truy vấn, sau đó máy điều phối gom kết quả hàng đầu</td>
+</tr>
+<tr>
+<td>Phân hoạch theo từ</td>
+<td>Các từ bắt đầu từ <code>a–m</code></td>
+<td>Các từ bắt đầu từ <code>n–z</code></td>
+<td>Máy chủ 1 xử lý từ <code>crawler</code>, máy chủ 2 xử lý từ <code>ranking</code>, sau đó kết hợp danh sách</td>
+</tr>
+</tbody></table></div>
+<p>Phân hoạch theo tài liệu cho phép các máy xử lý song song độc lập và dễ mở rộng hơn, trong khi phân hoạch theo từ có thể dẫn tới nút cổ chai nếu một từ quá phổ biến tập trung vào một máy.</p>
+<h2 id="user-interaction-vi" data-section-heading="user-interaction">2.5 Tương tác với người dùng</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 23-26</p>
+<h3 id="detail-17-vi">Tiếp nhận truy vấn</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 24</p>
+<p>Bộ phận tiếp nhận truy vấn đọc câu chữ của người dùng và diễn giải theo cú pháp của ngôn ngữ truy vấn. Trên Web, đa số truy vấn rất ngắn gọn và không có cấu trúc. Trong các hệ thống chuyên môn (như thư viện, y khoa hay luật pháp), giao diện có thể cung cấp các biểu mẫu nhiều trường và hỗ trợ toán tử Boolean phức tạp (<code>AND</code>, <code>OR</code>, <code>NOT</code>).</p>
+<p>Ngôn ngữ truy vấn IR có nét tương đồng với SQL nhưng điểm khác biệt căn bản là: SQL tìm các bản ghi khớp chính xác từng trường, còn IR tìm kiếm và so khớp gần đúng trên văn bản tự do và cấu trúc ngữ nghĩa. Slide nêu ví dụ ngôn ngữ truy vấn của hệ thống Indri và Galago.</p>
+<h3 id="detail-18-vi">Chuyển đổi truy vấn (Query Transformation)</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 25</p>
+<p><strong>Chuyển đổi truy vấn (query transformation)</strong> cải thiện câu truy vấn trước khi tìm hoặc sau khi đã xem kết quả sơ bộ:</p>
+<ul>
+<li>Áp dụng cùng các bước tách từ, chuẩn hóa chữ thường và lọc từ dừng như ở khâu lập chỉ mục.</li>
+<li>Tự động sửa lỗi chính tả và đề xuất các từ khóa thay thế.</li>
+<li><strong>Mở rộng truy vấn (query expansion):</strong> Tự động thêm các từ đồng nghĩa hoặc từ liên quan vào truy vấn.</li>
+<li><strong>Phản hồi độ liên quan (relevance feedback):</strong> Dựa vào những tài liệu mà người dùng đánh giá là hữu ích để rút trích thêm từ khóa cho lần tìm tiếp theo.</li>
+</ul>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Xét câu truy vấn gốc <code>car repair</code>:</p></aside>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Phương pháp</th>
+<th>Dữ liệu đầu vào</th>
+<th>Kết quả chuyển đổi</th>
+<th>Cơ sở lựa chọn từ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Mở rộng truy vấn</td>
+<td><code>car repair</code></td>
+<td><code>car automobile repair</code></td>
+<td>Dựa vào từ điển đồng nghĩa hoặc mô hình đồng xuất hiện</td>
+</tr>
+<tr>
+<td>Phản hồi độ liên quan</td>
+<td><code>car repair</code> + bài viết bảo dưỡng mà người dùng đánh giá tốt</td>
+<td><code>car repair brake maintenance</code></td>
+<td>Lấy các từ xuất hiện nhiều trong bài viết được chọn</td>
+</tr>
+</tbody></table></div>
+<p>Mở rộng truy vấn có thể thực hiện ngay trước lượt tìm đầu tiên. Phản hồi độ liên quan cần dựa vào kết quả của lượt tìm trước. Nếu hệ thống không bắt người dùng tự chọn mà tự động coi các kết quả ở top đầu là tài liệu liên quan thì phương pháp đó được gọi là <strong>phản hồi độ liên quan giả định (pseudo-relevance feedback)</strong>.</p>
+<p>Cả hai cách đều giúp tăng độ bao phủ kết quả nhưng nếu thêm từ sai ngữ cảnh sẽ làm loãng kết quả. Ví dụ truy vấn <code>jaguar</code> nếu tự ý thêm các từ liên quan đến xe hơi sẽ gây ức chế cho người đang muốn tìm thông tin về loài báo đốm.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Nếu các kết quả hàng đầu của truy vấn <code>car repair</code> tình cờ toàn là các trang rao bán xe cũ, phương pháp phản hồi độ liên quan giả định sẽ gặp phải rủi ro gì?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Hệ thống sẽ giả định sai lầm rằng các trang bán xe là tài liệu liên quan, từ đó tự động bổ sung các từ như <code>sale</code>, <code>dealer</code>, <code>price</code> vào truy vấn. Hậu quả là kết quả tìm kiếm lần sau sẽ càng ngập tràn thông tin mua bán xe và hoàn toàn đi chệch khỏi ý định ban đầu là tìm cách sửa xe.</p></div></details>
+
+<h3 id="detail-19-vi">Hiển thị kết quả</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 26</p>
+<p>Khâu hiển thị kết quả trình bày danh sách tài liệu đã xếp hạng lên giao diện. Hệ thống tạo các <strong>đoạn trích kết quả (snippet)</strong> hiển thị ngữ cảnh xung quanh từ khóa xuất hiện và in đậm từ khóa. Tùy thuộc vào dịch vụ, trang kết quả có thể tích hợp thêm quảng cáo, cụm chủ đề liên quan hoặc biểu đồ tri thức.</p>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Việc hiển thị gợi ý sửa lỗi chính tả thuộc về &quot;xử lý thay đổi tài liệu&quot; hay &quot;xử lý thay đổi truy vấn&quot;?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Thuộc về xử lý thay đổi truy vấn, vì hệ thống đang hỗ trợ điều chỉnh và hoàn thiện biểu đạt câu hỏi của người dùng chứ không làm thay đổi nội dung các tài liệu trong kho.</p></div></details>
+
+<h2 id="ranking-vi" data-section-heading="ranking">2.6 Xếp hạng</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 27-29</p>
+<h3 id="detail-20-vi">Tính điểm (Scoring)</h3>
+<p>Khối xếp hạng tính điểm cho từng tài liệu ứng viên. Slide 28 biểu diễn công thức tính điểm cơ bản dưới dạng tích vô hướng:</p>
+<div class="formula-block" role="math" aria-label="score equals the sum over i of q sub i times d sub i">
+  <span class="formula-main">score(q, d) = Σ<sub>i</sub> q<sub>i</sub>d<sub>i</sub></span>
+</div>
+
+<ul>
+<li><code>q</code> là truy vấn, <code>d</code> là tài liệu.</li>
+<li><code>q_i</code> là trọng số của từ <code>i</code> trong truy vấn.</li>
+<li><code>d_i</code> là trọng số của từ <code>i</code> trong tài liệu.</li>
+<li>Điểm số là tổng tích trọng số của các từ chung giữa truy vấn và tài liệu.</li>
+</ul>
+<p><strong>Ví dụ tính toán:</strong> Xét từ vựng chỉ gồm 2 từ <code>search</code> và <code>engine</code>. Trọng số truy vấn là <code>(1, 1)</code>. Tài liệu A có trọng số <code>(0.8, 0.6)</code>, tài liệu B có trọng số <code>(1.0, 0.1)</code>:</p>
+<ul>
+<li>Tài liệu A: <code>1 × 0.8 + 1 × 0.6 = 1.4</code></li>
+<li>Tài liệu B: <code>1 × 1.0 + 1 × 0.1 = 1.1</code></li>
+</ul>
+<p>Theo công thức này, tài liệu A đạt điểm cao hơn và xếp trên. Trong thực tế, các mô hình xếp hạng còn kết hợp thêm độ dài tài liệu, độ hiếm của từ, chất lượng liên kết và độ tươi mới của thông tin.</p>
+<h3 id="detail-21-vi">Tối ưu hóa hiệu năng và Xử lý phân tán</h3>
+<p class="source-note"><span>SLIDE NGUỒN</span> 29</p>
+<p>Khâu xếp hạng không chỉ cần cho kết quả chuẩn xác mà phải tính toán cực nhanh. Hai khái niệm nền tảng trong danh sách chỉ mục:</p>
+<ul>
+<li><strong>Posting:</strong> Bản ghi chỉ mục ghi nhận sự xuất hiện của một từ trong một tài liệu cụ thể (gồm mã tài liệu docID, trọng số của từ, vị trí từ).</li>
+<li><strong>Danh sách posting (posting list):</strong> Danh sách tập hợp toàn bộ các posting của cùng một từ, thường được sắp xếp theo thứ tự mã tài liệu tăng dần.</li>
+</ul>
+<aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Nếu có thẻ tra cứu từ <code>search</code>, trên thẻ ghi các dòng &quot;D1 được 2 điểm, D2 được 1 điểm&quot;. Mỗi dòng là một posting, và toàn bộ tấm thẻ chính là posting list của từ <code>search</code>.</p></aside>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Xét truy vấn gồm 2 từ <code>search engine</code> (mỗi từ có trọng số bằng 1), điểm tài liệu bằng tổng trọng số của các posting tương ứng:</p></aside>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Từ</th>
+<th>Danh sách posting</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>search</code></td>
+<td><code>(D1, 2), (D2, 1)</code></td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td><code>(D1, 1), (D2, 2), (D3, 1)</code></td>
+</tr>
+</tbody></table></div>
+<p>Hai hướng duyệt posting list:</p>
+<ol>
+<li><strong>Xử lý theo từng từ (Term-at-a-time - TAAT):</strong> Duyệt trọn vẹn từng từ một, cộng dồn điểm số vào các tài liệu:</li>
+</ol>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Sau khi duyệt xong từ</th>
+<th align="right">Điểm tích lũy D1</th>
+<th align="right">Điểm tích lũy D2</th>
+<th align="right">Điểm tích lũy D3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sau từ <code>search</code></td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Sau từ <code>engine</code></td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+</tbody></table></div>
+<ol start="2">
+<li><strong>Xử lý theo từng tài liệu (Document-at-a-time - DAAT):</strong> Đồng thời trỏ con trỏ vào tất cả các posting list của các từ truy vấn, duyệt theo thứ tự docID và hoàn thành dứt điểm điểm số của từng tài liệu:</li>
+</ol>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tài liệu đang xét</th>
+<th align="right">Điểm từ <code>search</code></th>
+<th align="right">Điểm từ <code>engine</code></th>
+<th align="right">Điểm hoàn chỉnh</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>D2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>D3</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+</tbody></table></div>
+<p>Cả hai cách đều cho kết quả cuối cùng hoàn toàn giống nhau: <code>D1 = 3</code>, <code>D2 = 3</code>, <code>D3 = 1</code>. Sự khác biệt nằm ở cách thức tổ chức bộ nhớ và thuật toán tối ưu:</p>
+<ul>
+<li><strong>TAAT:</strong> Dễ xử lý bộ nhớ cho từng danh sách posting đơn lẻ, nhưng phải lưu bảng điểm tích lũy cho rất nhiều tài liệu cùng lúc.</li>
+<li><strong>DAAT:</strong> Chỉ cần tính xong điểm một tài liệu là có thể so sánh ngay với ngưỡng top-k để giữ lại hoặc bỏ qua, rất tiết kiệm bộ nhớ cho bảng điểm ứng viên.</li>
+<li><strong>Tối ưu hóa an toàn (safe optimization):</strong> Rút ngắn bước duyệt mà tuyệt đối không làm thay đổi thứ tự kết quả cuối cùng (như thuật toán WAND).</li>
+<li><strong>Tối ưu hóa không an toàn (unsafe optimization):</strong> Chấp nhận bỏ qua một số tài liệu có khả năng điểm thấp để tăng tốc độ tối đa, kết quả có thể sai lệch nhỏ so với tính toán đầy đủ.</li>
+</ul>
+<aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Trong ví dụ trên, nếu trọng số của từ <code>engine</code> trong tài liệu D2 tăng từ 2 lên 4 thì kết quả cuối cùng của TAAT và DAAT có khác nhau không?</p></aside>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Cả hai phương pháp đều cho kết quả điểm số của D2 là <code>1 + 4 = 5</code>, vượt qua D1 (3 điểm). Vì cùng dùng chung dữ liệu và quy tắc cộng điểm nên dù duyệt theo từ hay duyệt theo tài liệu thì kết quả cuối cùng luôn đồng nhất.</p></div></details>
+
+<p>Trong hệ thống phân tán, thành phần <strong>bộ điều phối truy vấn (query broker)</strong> gửi truy vấn tới các máy chủ thành phần, thu nhận các danh sách kết quả cục bộ và hợp nhất thành bảng xếp hạng toàn cục. Bộ nhớ đệm (cache) lưu lại kết quả của các truy vấn phổ biến cũng là một giải pháp then chốt để giảm tải cho hệ thống.</p>
+<h2 id="evaluation-vi" data-section-heading="evaluation">2.7 Đánh giá</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 30-31</p>
+<p>Hệ thống tìm kiếm không dừng lại sau khi lập trình xong mà liên tục được đo lường, giám sát và tối ưu hóa trong suốt quá trình vận hành.</p>
+<h3 id="detail-22-vi">Dữ liệu nhật ký (Logs)</h3>
+<p>Nhật ký ghi lại câu truy vấn, các liên kết được nhấp, thời gian dừng đọc (dwell time) và các hành vi tương tác. Dữ liệu này được dùng để:</p>
+<ul>
+<li>Cải tiến tính năng gợi ý từ khóa và sửa lỗi chính tả.</li>
+<li>Tối ưu hóa bộ nhớ đệm (query cache).</li>
+<li>Huấn luyện và tinh chỉnh mô hình xếp hạng.</li>
+<li>Cải thiện tìm kiếm quảng cáo và trải nghiệm người dùng.</li>
+</ul>
+<p>Vì nhật ký chứa thông tin hành vi cá nhân, hệ thống cần được thiết kế đảm bảo các quy định bảo vệ quyền riêng tư, ẩn danh hóa dữ liệu và kiểm soát thời gian lưu trữ.</p>
+<h3 id="detail-23-vi">Phân tích xếp hạng và Phân tích hiệu năng</h3>
+<ul>
+<li><strong>Phân tích xếp hạng (Ranking analysis):</strong> Đo lường xem các tài liệu liên quan có thực sự được đưa lên các vị trí đầu tiên hay không (đo tính hiệu quả).</li>
+<li><strong>Phân tích hiệu năng (Performance analysis):</strong> Đo lường thời gian phản hồi, thông lượng xử lý (throughput) và mức tiêu hao tài nguyên phần cứng (đo tính hiệu năng).</li>
+</ul>
+<p>Việc đo lường tách bạch hai khía cạnh này giúp các kỹ sư phát hiện sự đánh đổi (trade-off), ví dụ khi áp dụng một mô hình mới giúp xếp hạng chuẩn xác hơn nhưng lại làm hệ thống chạy chậm đi đáng kể.</p>
+<h2 id="exercise-vi" data-section-heading="exercise">Bài tập cuối chương</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 32-33</p>
+<h3 id="detail-24-vi">Bài tập 1: Khám phá các thành phần trong mã nguồn Galago</h3>
+<p>Mục tiêu của bài tập ở Slide 32 là duyệt qua cây mã nguồn của công cụ tìm kiếm Galago để nhận diện các thành phần kiến trúc đã học trong chương.</p>
+<aside class="learning-note learning-note--context"><span class="learning-note__label">Gợi ý thực hiện</span><p>Tìm kiếm các từ khóa như <code>index</code>, <code>query</code>, <code>parser</code>, <code>scorer</code> trong kho mã nguồn. Xác định các lớp (class) hoặc hàm tìm thấy thuộc về khối nào trong 6 khối chính: thu thập văn bản, biến đổi văn bản, tạo chỉ mục, tương tác với người dùng, xếp hạng hay đánh giá. Không chỉ nhìn tên gọi mà cần xem xét dữ liệu đầu vào và kết quả đầu ra của từng khối.</p></aside>
+<h3 id="detail-25-vi">Bài tập 2: Lập chỉ mục và tìm kiếm trên tập tài liệu nhỏ</h3>
+<p>Bài tập ở Slide 33 yêu cầu cài đặt một hệ thống tìm kiếm mã nguồn mở (như Lucene, Lemur/Galago hoặc Elasticsearch), lập chỉ mục vài chục tài liệu văn bản hoặc email và thực hiện truy vấn thử nghiệm.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Hạng mục thực hiện</th>
+<th>Nội dung cần ghi chép lại</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chuẩn bị tập tài liệu</td>
+<td>Số lượng tài liệu, định dạng tệp, bảng mã ký tự</td>
+</tr>
+<tr>
+<td>Tạo chỉ mục</td>
+<td>Các tham số cấu hình đã dùng và thời gian lập chỉ mục</td>
+</tr>
+<tr>
+<td>Thử nghiệm truy vấn</td>
+<td>Câu truy vấn, các kết quả hàng đầu, so sánh với mong đợi</td>
+</tr>
+<tr>
+<td>Nhận xét và phân tích</td>
+<td>Đánh giá tính hiệu quả và đề xuất cải thiện hiệu năng</td>
+</tr>
+</tbody></table></div>
+<p>Bảng hướng dẫn trên là gợi ý các bước thực hiện để hỗ trợ việc học tập có hệ thống.</p>
+<h2 id="summary-vi" data-section-heading="summary">Tổng kết</h2>
+<p class="source-note"><span>SLIDE NGUỒN</span> 34 (và toàn bộ slide 1-33)</p>
+<ul>
+<li>Hệ thống truy xuất thông tin chuyển hóa nhu cầu thông tin thành truy vấn, sử dụng chỉ mục đảo để trả về các tài liệu liên quan.</li>
+<li>Kiến trúc công cụ tìm kiếm phân tách thành hai nhánh: quy trình lập chỉ mục (chuẩn bị trước) và quy trình xử lý truy vấn (khi người dùng tìm).</li>
+<li>Sáu khối thành phần chính gồm: thu thập văn bản, biến đổi văn bản, tạo chỉ mục, tương tác với người dùng, xếp hạng và đánh giá.</li>
+<li>Hệ thống luôn phải cân bằng giữa tính hiệu quả (chất lượng kết quả) và tính hiệu năng (tốc độ và tài nguyên).</li>
+</ul>
+<h2 id="quiz-vi" data-section-heading="quiz">Câu hỏi tự kiểm tra</h2>
+<ol>
+<li>Nhu cầu thông tin (information need) khác câu truy vấn (query) như thế nào?</li>
+<li>Quy trình lập chỉ mục và quy trình xử lý truy vấn được thực hiện vào những thời điểm nào?</li>
+<li>Chỉ mục đảo (inverted index) thực hiện phép ánh xạ từ cái gì sang cái gì?</li>
+<li>Độ bao phủ (coverage) và độ mới (freshness) thể hiện những đặc tính nào của trình thu thập (crawler)?</li>
+<li>Sự khác biệt giữa bộ phân tích cú pháp (parser) và bộ tách từ (tokenizer) là gì?</li>
+<li>Chỉ số tf và idf lần lượt đại diện cho điều gì?</li>
+<li>Điểm chung giữa mở rộng truy vấn (query expansion) và phản hồi độ liên quan (relevance feedback) là gì?</li>
+<li>Phân tích xếp hạng và phân tích hiệu năng đo lường những khía cạnh nào?</li>
+<li>Posting và posting list khác nhau như thế nào?</li>
+<li>Phương pháp TAAT và DAAT khác nhau ở điểm nào và giống nhau ở điểm nào trong ví dụ tính điểm?</li>
+</ol>
+<details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><ol>
+<li>Nhu cầu thông tin là điều người dùng thực sự muốn biết trong suy nghĩ; truy vấn là chuỗi từ ngữ cụ thể mà người dùng nhập vào hệ thống để thể hiện nhu cầu đó.</li>
+<li>Lập chỉ mục được thực hiện định kỳ trước để chuẩn bị sẵn sàng dữ liệu; xử lý truy vấn diễn ra theo thời gian thực ngay khi người dùng bấm tìm kiếm.</li>
+<li>Chỉ mục đảo ánh xạ từ một từ vựng sang danh sách các tài liệu (kèm vị trí) có chứa từ đó.</li>
+<li>Độ bao phủ thể hiện tỷ lệ tài liệu thu thập được rộng đến mức nào; độ mới thể hiện mức độ cập nhật nhanh chóng các thay đổi mới nhất của tài liệu.</li>
+<li>Parser nhận diện cấu trúc phân đoạn và các trường dữ liệu của tài liệu; tokenizer chia chuỗi ký tự thành các từ và token riêng biệt.</li>
+<li>tf là tần số xuất hiện của từ trong một tài liệu cụ thể; idf là độ hiếm của từ đó trên toàn bộ tập hợp tài liệu.</li>
+<li>Cả hai đều tìm cách bổ sung thêm các từ khóa hữu ích vào câu truy vấn ban đầu để nâng cao chất lượng tìm kiếm.</li>
+<li>Phân tích xếp hạng đo lường tính hiệu quả (chất lượng và độ liên quan của kết quả); phân tích hiệu năng đo lường tốc độ, thông lượng và mức tiêu thụ tài nguyên.</li>
+<li>Posting là một bản ghi duy nhất ghi nhận thông tin của một từ trong một tài liệu; posting list là danh sách tập hợp toàn bộ các posting của từ đó.</li>
+<li>Khác nhau ở thứ tự duyệt: TAAT duyệt xong từng từ rồi cộng dồn điểm, DAAT duyệt song song theo từng tài liệu để chốt điểm dứt điểm. Giống nhau ở chỗ nếu cùng dùng chung công thức và dữ liệu thì kết quả điểm số cuối cùng hoàn toàn trùng khớp.</li>
+</ol></div></details>
+
+<h2 id="glossary-vi" data-section-heading="glossary">Bảng thuật ngữ</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>English</th>
+<th>Tiếng Việt</th>
+<th>Ý nghĩa trong chương này</th>
+<th>Slide nguồn</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Information need</td>
+<td>Nhu cầu thông tin</td>
+<td>Điều người dùng thực sự muốn biết trong suy nghĩ</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Query</td>
+<td>Truy vấn</td>
+<td>Từ ngữ hoặc điều kiện gửi vào hệ thống tìm kiếm</td>
+<td>4, 8, 24–25</td>
+</tr>
+<tr>
+<td>Document collection</td>
+<td>Tập tài liệu</td>
+<td>Tập hợp các tài liệu là đối tượng tìm kiếm của hệ thống</td>
+<td>4–5</td>
+</tr>
+<tr>
+<td>Inverted index</td>
+<td>Chỉ mục đảo</td>
+<td>Cấu trúc dữ liệu tra cứu tài liệu và vị trí từ từ vựng</td>
+<td>4, 21</td>
+</tr>
+<tr>
+<td>Effectiveness</td>
+<td>Tính hiệu quả</td>
+<td>Chất lượng trả về các kết quả có độ liên quan cao</td>
+<td>5, 31</td>
+</tr>
+<tr>
+<td>Efficiency</td>
+<td>Tính hiệu năng</td>
+<td>Tốc độ xử lý nhanh và tiết kiệm tài nguyên hệ thống</td>
+<td>5, 29, 31</td>
+</tr>
+<tr>
+<td>Text acquisition</td>
+<td>Thu thập văn bản</td>
+<td>Công đoạn tìm kiếm, thu gom và chuẩn bị tài liệu nguồn</td>
+<td>9–13</td>
+</tr>
+<tr>
+<td>Crawler</td>
+<td>Trình thu thập / Crawler</td>
+<td>Chương trình tự động lần theo liên kết để thu gom trang</td>
+<td>10–11</td>
+</tr>
+<tr>
+<td>Coverage</td>
+<td>Độ bao phủ</td>
+<td>Mức độ thu thập được đầy đủ phạm vi tài liệu cần thiết</td>
+<td>11</td>
+</tr>
+<tr>
+<td>Freshness</td>
+<td>Độ mới</td>
+<td>Tốc độ cập nhật các thay đổi mới của tài liệu vào hệ thống</td>
+<td>11</td>
+</tr>
+<tr>
+<td>Feed</td>
+<td>Nguồn cấp</td>
+<td>Luồng dữ liệu tài liệu do bên phát hành chủ động gửi về</td>
+<td>12</td>
+</tr>
+<tr>
+<td>Parser</td>
+<td>Bộ phân tích cú pháp</td>
+<td>Khâu bóc tách và nhận diện cấu trúc của tài liệu</td>
+<td>15</td>
+</tr>
+<tr>
+<td>Tokenizer</td>
+<td>Bộ tách token / tách từ</td>
+<td>Khâu phân chia chuỗi văn bản thành các đơn vị từ / token</td>
+<td>15</td>
+</tr>
+<tr>
+<td>Stopping</td>
+<td>Loại bỏ từ dừng</td>
+<td>Khâu lọc bỏ các từ quá phổ biến mang ít giá trị phân biệt</td>
+<td>16</td>
+</tr>
+<tr>
+<td>Stemming</td>
+<td>Rút gọn từ về gốc</td>
+<td>Khâu chuẩn hóa các biến thể từ ngữ về dạng gốc chung</td>
+<td>16</td>
+</tr>
+<tr>
+<td>Anchor text</td>
+<td>Văn bản neo</td>
+<td>Đoạn chữ hiển thị chứa liên kết trỏ tới trang web khác</td>
+<td>17</td>
+</tr>
+<tr>
+<td>Information extraction</td>
+<td>Trích xuất thông tin</td>
+<td>Khâu tự động rút trích các thực thể có cấu trúc từ văn bản</td>
+<td>18</td>
+</tr>
+<tr>
+<td>Classifier</td>
+<td>Bộ phân loại</td>
+<td>Khâu tự động gán nhãn thể loại hoặc tính chất cho tài liệu</td>
+<td>18</td>
+</tr>
+<tr>
+<td>tf-idf</td>
+<td>tf-idf</td>
+<td>Trọng số kết hợp giữa tần số từ và độ hiếm của từ</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Inversion</td>
+<td>Đảo chỉ mục</td>
+<td>Quá trình chuyển dữ liệu từ dạng tài liệu sang dạng chỉ mục từ</td>
+<td>21</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>Sao bản</td>
+<td>Việc sao chép dữ liệu ra nhiều máy để chia tải và dự phòng</td>
+<td>22</td>
+</tr>
+<tr>
+<td>Query expansion</td>
+<td>Mở rộng truy vấn</td>
+<td>Kỹ thuật bổ sung các từ liên quan vào câu truy vấn gốc</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Relevance feedback</td>
+<td>Phản hồi độ liên quan</td>
+<td>Kỹ thuật dùng tài liệu người dùng đã chọn để tinh chỉnh truy vấn</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Posting</td>
+<td>Posting</td>
+<td>Bản ghi chỉ mục của một từ đối với một tài liệu cụ thể</td>
+<td>21, 29</td>
+</tr>
+<tr>
+<td>Posting list</td>
+<td>Danh sách posting</td>
+<td>Danh sách các posting của cùng một từ sắp theo mã tài liệu</td>
+<td>21, 29</td>
+</tr>
+<tr>
+<td>Term-at-a-time</td>
+<td>Xử lý theo từng từ</td>
+<td>Duyệt dứt điểm từng danh sách posting của từng từ để tích lũy điểm</td>
+<td>29</td>
+</tr>
+<tr>
+<td>Document-at-a-time</td>
+<td>Xử lý theo từng tài liệu</td>
+<td>Duyệt đồng thời nhiều danh sách posting theo thứ tự tài liệu</td>
+<td>29</td>
+</tr>
+<tr>
+<td>Snippet</td>
+<td>Đoạn trích kết quả</td>
+<td>Đoạn văn ngắn trích từ tài liệu hiển thị trên trang kết quả</td>
+<td>26</td>
+</tr>
+<tr>
+<td>Query broker</td>
+<td>Bộ điều phối truy vấn</td>
+<td>Thành phần phân phối truy vấn tới các máy và gộp kết quả</td>
+<td>29</td>
+</tr>
+<tr>
+<td>Dwell time</td>
+<td>Thời gian dừng đọc</td>
+<td>Thời gian từ khi nhấp vào kết quả tìm kiếm cho đến khi quay trở lại trang kết quả.</td>
+<td>31</td>
+</tr>
+</tbody></table></div>
+
+        <footer class="lesson-footer"><span class="lesson-footer__meta"><span>SEG301m / CHƯƠNG 2</span><span class="site-credit">Made by <strong>Marcus</strong></span></span><a href="#top">Về đầu trang ↑</a></footer>
+      </article>
+      <nav class="chapter-pager" aria-label="Chapter navigation"><a class="chapter-pager__previous" href="./chapter-01.html">
+    <span>Chương trước</span>
+    <strong>01 · Truy xuất thông tin và công cụ tìm kiếm</strong>
+  </a><a class="chapter-pager__next" href="./chapter-03.html">
+    <span>Chương sau</span>
+    <strong>03 · Thu thập dữ liệu và nguồn cấp</strong>
+  </a></nav>
+    </main>
+  </div>
+</body>
+</html>
