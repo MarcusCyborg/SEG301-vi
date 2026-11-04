@@ -63,7 +63,7 @@ Slide nguồn: 5
 
 Hai mục tiêu thiết kế hàng đầu của một công cụ tìm kiếm là:
 
-- **{{term:efficiency}}:** Xử lý truy vấn của người dùng trong thời gian nhanh nhất có thể với chi phí tài nguyên tối ưu.
+- **{{term:effectiveness}}:** Trả về kết quả có độ liên quan cao nhất có thể đối với câu truy vấn.
 - **{{term:efficiency}}:** Xử lý truy vấn của người dùng trong thời gian nhanh nhất có thể với chi phí tài nguyên tối ưu.
 
 Một kết quả tìm kiếm dù cực kỳ chính xác nhưng phải đợi vài phút mới có thì không ai muốn dùng; ngược lại, trả về tức thì nhưng toàn thông tin vô giá trị thì cũng vô ích. Hệ thống tìm kiếm bắt buộc phải cân bằng cả hai yếu tố này.
