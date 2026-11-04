@@ -7,6 +7,10 @@ const TERM_STORAGE_KEY = 'seg301m-term-mode';
 const VALID_MODES = ['en', 'bilingual', 'vi'];
 const DEFAULT_MODE = 'bilingual';
 
+function isMobileView() {
+  return window.matchMedia('(max-width: 720px)').matches;
+}
+
 function readStoredTermMode() {
   try {
     const value = localStorage.getItem(TERM_STORAGE_KEY);
@@ -37,30 +41,92 @@ function updateTermMode(mode) {
 
   writeStoredTermMode(targetMode);
 
+  const switcher = document.querySelector('.term-switcher');
   const buttons = document.querySelectorAll('.term-switcher__btn');
+  const isMobile = isMobileView();
+  const isPanelOpen = switcher ? switcher.classList.contains('is-open') : false;
+
+  let currentShortLabel = 'EN+VI';
+
   buttons.forEach((btn) => {
     const isCurrent = btn.dataset.mode === targetMode;
     btn.classList.toggle('is-active', isCurrent);
     btn.setAttribute('aria-checked', String(isCurrent));
-    btn.tabIndex = isCurrent ? 0 : -1;
+
+    if (isCurrent && btn.dataset.short) {
+      currentShortLabel = btn.dataset.short;
+    }
+
+    if (isMobile && !isPanelOpen) {
+      btn.tabIndex = -1;
+    } else {
+      btn.tabIndex = isCurrent ? 0 : -1;
+    }
   });
+
+  const currentSpan = document.querySelector('.term-switcher__current');
+  if (currentSpan) {
+    currentSpan.textContent = currentShortLabel;
+  }
+
+  const toggle = document.querySelector('.term-switcher__toggle');
+  if (toggle) {
+    toggle.setAttribute('title', `Chế độ hiển thị thuật ngữ (${currentShortLabel})`);
+  }
 }
 
 function setupTermSwitcher() {
   const switcher = document.querySelector('.term-switcher');
   if (!switcher) return;
 
+  const toggle = switcher.querySelector('.term-switcher__toggle');
   const buttons = Array.from(switcher.querySelectorAll('.term-switcher__btn'));
   if (!buttons.length) return;
 
-  const docMode = document.documentElement.dataset.termMode;
-  const initialMode = (docMode && VALID_MODES.includes(docMode)) ? docMode : readStoredTermMode();
-  updateTermMode(initialMode);
+  const setPanelOpen = (open, shouldFocus) => {
+    switcher.classList.toggle('is-open', open);
+    if (toggle) {
+      toggle.setAttribute('aria-expanded', String(open));
+    }
+
+    const currentMode = document.documentElement.dataset.termMode || DEFAULT_MODE;
+    const isMobile = isMobileView();
+
+    buttons.forEach((btn) => {
+      const isCurrent = btn.dataset.mode === currentMode;
+      if (isMobile && !open) {
+        btn.tabIndex = -1;
+      } else {
+        btn.tabIndex = isCurrent ? 0 : -1;
+      }
+    });
+
+    if (shouldFocus) {
+      if (open) {
+        const activeBtn = buttons.find((btn) => btn.dataset.mode === currentMode) || buttons[0];
+        activeBtn?.focus();
+      } else if (toggle) {
+        toggle.focus();
+      }
+    }
+  };
+
+  if (toggle) {
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = switcher.classList.contains('is-open');
+      setPanelOpen(!isOpen, true);
+    });
+  }
 
   buttons.forEach((btn, index) => {
     btn.addEventListener('click', () => {
       updateTermMode(btn.dataset.mode);
-      btn.focus();
+      if (isMobileView()) {
+        setPanelOpen(false, true);
+      } else {
+        btn.focus();
+      }
     });
 
     btn.addEventListener('keydown', (e) => {
@@ -88,6 +154,18 @@ function setupTermSwitcher() {
         case 'Enter':
           e.preventDefault();
           updateTermMode(btn.dataset.mode);
+          if (isMobileView()) {
+            setPanelOpen(false, true);
+          } else {
+            btn.focus();
+          }
+          return;
+        case 'Escape':
+          if (isMobileView() && switcher.classList.contains('is-open')) {
+            e.preventDefault();
+            e.stopPropagation();
+            setPanelOpen(false, true);
+          }
           return;
         default:
           return;
@@ -101,6 +179,43 @@ function setupTermSwitcher() {
     });
   });
 
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && switcher.classList.contains('is-open')) {
+      e.preventDefault();
+      setPanelOpen(false, true);
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (switcher.classList.contains('is-open') && !switcher.contains(e.target)) {
+      setPanelOpen(false, false);
+    }
+  });
+
+  const mobileMq = window.matchMedia('(max-width: 720px)');
+  const handleViewportChange = () => {
+    if (!mobileMq.matches) {
+      switcher.classList.remove('is-open');
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+      const currentMode = document.documentElement.dataset.termMode || DEFAULT_MODE;
+      buttons.forEach((btn) => {
+        btn.tabIndex = btn.dataset.mode === currentMode ? 0 : -1;
+      });
+    } else {
+      if (!switcher.classList.contains('is-open')) {
+        buttons.forEach((btn) => {
+          btn.tabIndex = -1;
+        });
+      }
+    }
+  };
+
+  if (mobileMq.addEventListener) {
+    mobileMq.addEventListener('change', handleViewportChange);
+  } else if (mobileMq.addListener) {
+    mobileMq.addListener(handleViewportChange);
+  }
+
   window.addEventListener('storage', (e) => {
     if (e.key === TERM_STORAGE_KEY) {
       if (e.newValue && VALID_MODES.includes(e.newValue)) {
@@ -110,6 +225,10 @@ function setupTermSwitcher() {
       }
     }
   });
+
+  const docMode = document.documentElement.dataset.termMode;
+  const initialMode = (docMode && VALID_MODES.includes(docMode)) ? docMode : readStoredTermMode();
+  updateTermMode(initialMode);
 }
 
 if (backToTop) {

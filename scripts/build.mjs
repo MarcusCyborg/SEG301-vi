@@ -102,13 +102,19 @@ function chapterHeroTitle(chapter) {
   return `<em>${title}</em>`;
 }
 
+// Floating term-mode control, fixed to the right edge of the viewport.
+// Desktop/tablet: vertical pill that is always visible.
+// Mobile (<= 720px): collapsed "Aa" toggle that opens the same radiogroup in a popover.
 function termSwitcher() {
   return `<div class="term-switcher" role="group" aria-label="Chế độ hiển thị thuật ngữ">
-    <span class="term-switcher__label" id="term-switcher-label">Thuật ngữ:</span>
-    <div class="term-switcher__buttons" role="radiogroup" aria-labelledby="term-switcher-label">
-      <button type="button" role="radio" class="term-switcher__btn" data-mode="en" aria-checked="false" title="Hiển thị tiếng Anh (English)">English</button>
-      <button type="button" role="radio" class="term-switcher__btn is-active" data-mode="bilingual" aria-checked="true" title="Hiển thị song ngữ (Anh + Việt)">Anh + Việt</button>
-      <button type="button" role="radio" class="term-switcher__btn" data-mode="vi" aria-checked="false" title="Hiển thị tiếng Việt">Tiếng Việt</button>
+    <button type="button" class="term-switcher__toggle" aria-expanded="false" aria-controls="term-switcher-panel" aria-label="Chọn chế độ hiển thị thuật ngữ" title="Chế độ hiển thị thuật ngữ"><span class="term-switcher__toggle-icon" aria-hidden="true">Aa</span><span class="term-switcher__current" aria-hidden="true">EN+VI</span></button>
+    <div class="term-switcher__panel" id="term-switcher-panel">
+      <span class="term-switcher__label" id="term-switcher-label">Thuật ngữ</span>
+      <div class="term-switcher__buttons" role="radiogroup" aria-labelledby="term-switcher-label">
+        <button type="button" role="radio" class="term-switcher__btn" data-mode="en" data-short="EN" aria-checked="false" aria-label="English, chỉ hiển thị tiếng Anh" title="Hiển thị tiếng Anh (English)">EN</button>
+        <button type="button" role="radio" class="term-switcher__btn is-active" data-mode="bilingual" data-short="EN+VI" aria-checked="true" aria-label="Anh + Việt, hiển thị song ngữ" title="Hiển thị song ngữ (Anh + Việt)">EN+VI</button>
+        <button type="button" role="radio" class="term-switcher__btn" data-mode="vi" data-short="VI" aria-checked="false" aria-label="Tiếng Việt, chỉ hiển thị tiếng Việt" title="Hiển thị tiếng Việt">VI</button>
+      </div>
     </div>
   </div>`;
 }
@@ -356,9 +362,9 @@ function chapterHeader(chapter) {
   return `<header class="site-header">
     <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
     <span class="site-header__caption">${ui.siteLabel} <span aria-hidden="true">/</span> ${chapterLabel(chapter.number)}</span>
-    ${termSwitcher()}
     <a class="site-header__link" href="../index.html">${ui.chapters} <span aria-hidden="true">↗</span></a>
-  </header>`;
+  </header>
+  ${termSwitcher()}`;
 }
 
 function chapterHero(chapter) {
@@ -485,9 +491,9 @@ ${head({
   <header class="site-header home-header">
     <a class="wordmark" href="#top" aria-label="SEG301m">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
     <span class="site-header__caption">Truy xuất thông tin <span aria-hidden="true">/</span> Công cụ tìm kiếm</span>
-    ${termSwitcher()}
     <a class="site-header__link" href="#chapters">Danh sách chương <span aria-hidden="true">↓</span></a>
   </header>
+  ${termSwitcher()}
   <main id="top">
     <section class="home-hero">
       <div class="home-hero__copy">

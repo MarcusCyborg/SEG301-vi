@@ -41,16 +41,19 @@
   <header class="site-header">
     <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
     <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 7</span>
-    <div class="term-switcher" role="group" aria-label="Chế độ hiển thị thuật ngữ">
-    <span class="term-switcher__label" id="term-switcher-label">Thuật ngữ:</span>
-    <div class="term-switcher__buttons" role="radiogroup" aria-labelledby="term-switcher-label">
-      <button type="button" role="radio" class="term-switcher__btn" data-mode="en" aria-checked="false" title="Hiển thị tiếng Anh (English)">English</button>
-      <button type="button" role="radio" class="term-switcher__btn is-active" data-mode="bilingual" aria-checked="true" title="Hiển thị song ngữ (Anh + Việt)">Anh + Việt</button>
-      <button type="button" role="radio" class="term-switcher__btn" data-mode="vi" aria-checked="false" title="Hiển thị tiếng Việt">Tiếng Việt</button>
-    </div>
-  </div>
     <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
   </header>
+  <div class="term-switcher" role="group" aria-label="Chế độ hiển thị thuật ngữ">
+    <button type="button" class="term-switcher__toggle" aria-expanded="false" aria-controls="term-switcher-panel" aria-label="Chọn chế độ hiển thị thuật ngữ" title="Chế độ hiển thị thuật ngữ"><span class="term-switcher__toggle-icon" aria-hidden="true">Aa</span><span class="term-switcher__current" aria-hidden="true">EN+VI</span></button>
+    <div class="term-switcher__panel" id="term-switcher-panel">
+      <span class="term-switcher__label" id="term-switcher-label">Thuật ngữ</span>
+      <div class="term-switcher__buttons" role="radiogroup" aria-labelledby="term-switcher-label">
+        <button type="button" role="radio" class="term-switcher__btn" data-mode="en" data-short="EN" aria-checked="false" aria-label="English, chỉ hiển thị tiếng Anh" title="Hiển thị tiếng Anh (English)">EN</button>
+        <button type="button" role="radio" class="term-switcher__btn is-active" data-mode="bilingual" data-short="EN+VI" aria-checked="true" aria-label="Anh + Việt, hiển thị song ngữ" title="Hiển thị song ngữ (Anh + Việt)">EN+VI</button>
+        <button type="button" role="radio" class="term-switcher__btn" data-mode="vi" data-short="VI" aria-checked="false" aria-label="Tiếng Việt, chỉ hiển thị tiếng Việt" title="Hiển thị tiếng Việt">VI</button>
+      </div>
+    </div>
+  </div>
   <section class="hero" id="top">
     <div class="hero__inner">
       <div class="hero__copy">

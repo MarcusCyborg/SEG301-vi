@@ -8,6 +8,7 @@
     "check": "node scripts/check-terms.mjs && node scripts/check-build.mjs && node scripts/verify-chapters-08-10.mjs && node scripts/verify-chapters-11-12.mjs && node scripts/test-retrieval.mjs && node scripts/test-generated-files.mjs && node scripts/verify-responsive.mjs && node scripts/verify-term-modes.mjs",
     "check:terms": "node scripts/check-terms.mjs",
     "check:term-modes": "node scripts/verify-term-modes.mjs",
+    "check:floating-switcher": "node scripts/verify-floating-term-switcher.mjs",
     "check:phase3-qa": "node scripts/verify-phase-3-qa.mjs",
     "check:pre-deploy": "node scripts/pre-deploy-review-suite.mjs",
     "check:lessons": "node scripts/verify-chapters-08-10.mjs && node scripts/verify-chapters-11-12.mjs",
