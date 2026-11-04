@@ -10,19 +10,19 @@ SEG301m ghi chú học tập
 Sau khi học xong chương này, bạn có thể giải thích và thực hiện các nội dung sau:
 
 1. Giải thích bài toán SEO cần giải quyết và sự khác biệt giữa kết quả tìm kiếm tự nhiên (organic results) và quảng cáo trả phí (paid ads).
-2. Phân biệt rõ ba công đoạn: thu thập (crawl), lập chỉ mục (indexing) và xếp hạng (ranking), cùng vai trò của SEO trong từng khâu.
+2. Phân biệt rõ ba công đoạn: {{term:crawl}}, {{term:indexing}} và {{term:ranking}}, cùng vai trò của SEO trong từng khâu.
 3. Tính toán và tái hiện thứ tự xếp hạng của nhiều trang web dựa trên mô hình tổng trọng số giáo khoa.
 4. Phân biệt on-page SEO, off-page SEO, technical SEO; xây dựng các ví dụ cải tiến HTML và dữ liệu có cấu trúc JSON-LD.
-5. Tính toán và diễn giải các chỉ số: lượt hiển thị (impressions), lượt nhấp (clicks), tỷ lệ nhấp (CTR), lưu lượng tự nhiên (organic traffic) và thứ hạng hiển thị.
+5. Tính toán và diễn giải các chỉ số: lượt hiển thị (impressions), lượt nhấp (clicks), {{term:ctr}}, lưu lượng {{term:organic-traffic}} và thứ hạng hiển thị.
 6. Xử lý bài tập thực hành Analytics bằng kiến trúc Google Analytics 4 (GA4 Data API) hiện đại kết hợp phân tích trên dữ liệu mẫu offline.
 
 Slide nguồn: 1-3
 
 ## Kiến thức cần chuẩn bị {#prerequisites}
 
-- Thu thập (crawl) ở Chương 3 là công đoạn phát hiện và tải trang web về hệ thống.
+{{term:crawl}} ở Chương 3 là công đoạn phát hiện và tải trang web về hệ thống.
 - Chỉ mục (index) ở Chương 5 là cấu trúc giúp tra cứu nhanh tài liệu từ từ vựng.
-- Xếp hạng (ranking) ở Chương 7 tính toán điểm số so sánh từ các đặc trưng của truy vấn và tài liệu.
+{{term:ranking}} ở Chương 7 tính toán điểm số so sánh từ các đặc trưng của truy vấn và tài liệu.
 - Điểm số chỉ là giá trị ước lượng nội bộ của công cụ tìm kiếm, không đảm bảo chắc chắn sự hài lòng của người dùng.
 
 Tình huống thực tế xuyên suốt: Một trang web chuyên chia sẻ công thức bữa sáng cho sinh viên bận rộn. Người dùng tìm kiếm "bữa sáng giàu đạm nấu trong 10 phút". Chủ trang web muốn công cụ tìm kiếm phát hiện được trang, hiểu đúng nội dung và hiển thị nổi bật để người dùng lựa chọn.
@@ -40,7 +40,7 @@ Tối ưu hóa công cụ tìm kiếm (Search Engine Optimization - SEO) là t�
 | Kết quả tự nhiên (Organic results) | Công cụ tìm kiếm tự xếp hạng dựa trên độ liên quan và chất lượng | Không tốn phí cho mỗi lượt nhấp chuột | Đối tượng trọng tâm của SEO |
 | Quảng cáo trả phí (Paid ads) | Hệ thống quảng cáo đấu thầu từ khóa và nhắm mục tiêu hiển thị | Tính phí theo lượt nhấp (CPC) hoặc lượt xem | Kênh tách biệt độc lập với SEO |
 
-Việc chạy quảng cáo không làm tăng trực tiếp thứ hạng tự nhiên, và làm SEO giỏi cũng không giúp trang tự động xuất hiện ở các vị trí dành riêng cho quảng cáo. Trên trang kết quả tìm kiếm (SERP), cả hai có thể cùng xuất hiện nhưng có nhãn phân biệt và cơ chế lựa chọn hoàn toàn độc lập.
+Việc chạy quảng cáo không làm tăng trực tiếp thứ hạng tự nhiên, và làm SEO giỏi cũng không giúp trang tự động xuất hiện ở các vị trí dành riêng cho quảng cáo. Trên {{term:serp}}, cả hai có thể cùng xuất hiện nhưng có nhãn phân biệt và cơ chế lựa chọn hoàn toàn độc lập.
 
 ### Thu thập, Lập chỉ mục và Xếp hạng
 
@@ -56,9 +56,9 @@ Tính điểm các ứng viên phù hợp với truy vấn
 Hiển thị danh sách kết quả lên trang SERP
 ```
 
-- **Thu thập (Crawl):** Tìm thấy URL và kết nối tải trang web về.
-- **Lập chỉ mục (Indexing):** Phân tích nội dung và quyết định có đưa trang vào cơ sở dữ liệu tìm kiếm hay không.
-- **Xếp hạng (Ranking):** Chấm điểm các trang ứng viên cho từng truy vấn cụ thể và sắp xếp thứ tự hiển thị.
+- **{{term:ranking}}:** Chấm điểm các trang ứng viên cho từng truy vấn cụ thể và sắp xếp thứ tự hiển thị.
+- **{{term:indexing}}:** Phân tích nội dung và quyết định có đưa trang vào cơ sở dữ liệu tìm kiếm hay không.
+- **{{term:ranking}}:** Chấm điểm các trang ứng viên cho từng truy vấn cụ thể và sắp xếp thứ tự hiển thị.
 
 Ngay cả khi làm technical SEO giúp bot thu thập trang dễ dàng, điều đó vẫn không đảm bảo trang sẽ được lập chỉ mục hay được xếp thứ hạng cao. Trang có thể bị bỏ qua nếu nội dung trùng lặp, chất lượng sơ sài, bị coi là biến thể của URL khác hoặc không khớp với ý định người dùng.
 
@@ -128,7 +128,7 @@ Thứ tự xếp hạng: `Trang B > Trang A > Trang C > Trang D`. Mặc dù Tran
 
 Slide nguồn: 12-14
 
-**On-page SEO** là các hoạt động tối ưu hóa trực tiếp nội dung văn bản, cấu trúc mã HTML và trải nghiệm người dùng ngay bên trong trang web của mình.
+**{{term:on-page-seo}}** là các hoạt động tối ưu hóa trực tiếp nội dung văn bản, cấu trúc mã HTML và trải nghiệm người dùng ngay bên trong trang web của mình.
 
 ### Xây dựng nội dung khớp đúng ý định tìm kiếm
 
@@ -168,22 +168,22 @@ Sau khi tối ưu: Cấu trúc rõ ràng, cung cấp đúng thông tin người 
 - Thẻ `<title>` là thẻ phần tử tiêu đề trang độc lập, không phải là thẻ `<meta>`.
 - `meta description` đóng vai trò là đoạn tóm tắt gợi ý để công cụ tìm kiếm cân nhắc tạo snippet.
 - `h1` và `h2` phản ánh cấu trúc phân cấp nội dung logic của bài viết.
-- Liên kết nội bộ (internal link) kết nối các bài viết liên quan trong cùng trang web, hỗ trợ người dùng khám phá và giúp crawler di chuyển thuận lợi.
+- {{term:internal-link}} kết nối các bài viết liên quan trong cùng trang web, hỗ trợ người dùng khám phá và giúp crawler di chuyển thuận lợi.
 
 ## 8.5 Off-page SEO {#off-page-seo}
 
 Slide nguồn: 15-16
 
-**Off-page SEO** là các hoạt động xây dựng độ uy tín, danh tiếng và sự hiện diện của trang web từ các nguồn bên ngoài trang web của mình. Tiêu biểu nhất là xây dựng **backlink** (liên kết từ trang web khác trỏ về).
+**{{term:off-page-seo}}** là các hoạt động xây dựng độ uy tín, danh tiếng và sự hiện diện của trang web từ các nguồn bên ngoài trang web của mình. Tiêu biểu nhất là xây dựng **backlink** (liên kết từ trang web khác trỏ về).
 
 | Loại liên kết | Hướng trỏ | Vai trò chính |
 | --- | --- | --- |
-| Liên kết nội bộ (Internal link) | Giữa các trang trong cùng một website | Hỗ trợ điều hướng, cấu trúc trang và giúp bot phát hiện trang mới |
+| {{term:internal-link}} | Giữa các trang trong cùng một website | Hỗ trợ điều hướng, cấu trúc trang và giúp bot phát hiện trang mới |
 | Backlink (Inbound link) | Từ website bên ngoài trỏ về website của mình | Tín hiệu tham chiếu chứng thực độ uy tín và thu hút lưu lượng giới thiệu |
 
 Một liên kết trích dẫn nguồn công thức từ phòng nghiên cứu dinh dưỡng của trường đại học có giá trị uy tín cao gấp nhiều lần so với hàng trăm liên kết rác mua từ các diễn đàn vô danh. Chất lượng, độ liên quan và ngữ cảnh biên tập của liên kết ngoài luôn quan trọng hơn số lượng.
 
-Người dùng bấm trực tiếp vào backlink để vào trang được ghi nhận là lưu lượng giới thiệu (referral traffic), khác biệt với lưu lượng đến từ việc bấm vào kết quả tìm kiếm (organic traffic).
+Người dùng bấm trực tiếp vào backlink để vào trang được ghi nhận là {{term:referral-traffic}}, khác biệt với lưu lượng đến từ việc bấm vào kết quả {{term:organic-traffic}}.
 
 **Kiểm tra nhanh:** Việc bỏ tiền mua 100 backlink từ các trang web lạ có chắc chắn giúp tăng thứ hạng tốt hơn 10 liên kết tự nhiên từ các trang uy tín cùng ngành không?
 
@@ -198,7 +198,7 @@ Không. Thuật toán chống spam liên kết của các công cụ tìm kiếm
 
 Slide nguồn: 17-19
 
-**Technical SEO** là các hoạt động tối ưu hóa hạ tầng kỹ thuật nhằm giúp crawler dễ dàng truy cập, thu thập, phân tích và lập chỉ mục nội dung trang web, đồng thời bảo đảm trải nghiệm tải trang nhanh và ổn định trên thiết bị di động.
+**{{term:technical-seo}}** là các hoạt động tối ưu hóa hạ tầng kỹ thuật nhằm giúp crawler dễ dàng truy cập, thu thập, phân tích và lập chỉ mục nội dung trang web, đồng thời bảo đảm trải nghiệm tải trang nhanh và ổn định trên thiết bị di động.
 
 ### Cấu trúc trang web, Tốc độ và Tính thân thiện di động
 
@@ -258,7 +258,7 @@ Slide nguồn: 20-22
 | Lượt hiển thị (Impressions) | Số lần liên kết của trang xuất hiện trên kết quả tìm kiếm | 2.000 lượt |
 | Lượt nhấp chuột (Clicks) | Số lần người dùng bấm vào kết quả để vào trang | 120 lượt |
 | Tỷ lệ nhấp (CTR) | Tỉ lệ phần trăm giữa lượt nhấp và lượt hiển thị: `(clicks / impressions) × 100%` | `120 / 2.000 × 100 = 6%` |
-| Lưu lượng tự nhiên (Organic traffic) | Lượng truy cập đến từ việc nhấp vào kết quả tìm kiếm tự nhiên | Số phiên (sessions) tự nhiên trong kỳ |
+| Lưu lượng {{term:organic-traffic}} | Lượng truy cập đến từ việc nhấp vào kết quả tìm kiếm tự nhiên | Số phiên (sessions) tự nhiên trong kỳ |
 | Vị trí hiển thị (Position) | Thứ bậc trung bình của trang trên trang kết quả tìm kiếm | Vị trí trung bình 3.2 |
 
 <div class="formula-block" role="math" aria-label="CTR equals clicks divided by impressions times one hundred percent">
@@ -277,8 +277,8 @@ Một người dùng có thể tạo ra nhiều phiên trong ngày. Một lượ
 
 ### Các công cụ đo lường chuyên dụng
 
-- **Google Search Console:** Đo lường tương tác của người dùng trên trang kết quả tìm kiếm Google (lượt hiển thị, lượt nhấp, CTR, vị trí trung bình và các lỗi lập chỉ mục).
-- **Google Analytics:** Đo lường hành vi của người dùng sau khi đã đặt chân vào trang web (số phiên, thời gian xem, trang đích, kênh chuyển đổi).
+- **{{term:google-search-console}}:** Đo lường tương tác của người dùng trên trang kết quả tìm kiếm Google (lượt hiển thị, lượt nhấp, CTR, vị trí trung bình và các lỗi lập chỉ mục).
+- **{{term:google-analytics}}:** Đo lường hành vi của người dùng sau khi đã đặt chân vào trang web (số phiên, thời gian xem, trang đích, kênh chuyển đổi).
 - **Công cụ của bên thứ ba (Ahrefs, Semrush):** Phân tích ước lượng về backlink, theo dõi từ khóa đối thủ và kiểm tra kỹ thuật.
 
 ## Bài tập gốc: Phân tích lưu lượng SEO bằng Google Analytics {#analytics-practice}
@@ -498,20 +498,20 @@ organic_7 = total_sessions(rows, start_7, end_7)
 top_landing_pages = top_groups(rows, start_30, end_30, "landing_page")
 top_organic_sources = top_groups(rows, start_30, end_30, "source")
 
-print("7完了日の自然検索セッション:", organic_7)
-print("30完了日の上位ランディングページ:", top_landing_pages)
-print("30完了日の上位自然検索流入元:", top_organic_sources)
+print("Phiên tìm kiếm tự nhiên trong 7 ngày hoàn chỉnh:", organic_7)
+print("Trang đích hàng đầu trong 30 ngày hoàn chỉnh:", top_landing_pages)
+print("Nguồn tìm kiếm tự nhiên hàng đầu trong 30 ngày hoàn chỉnh:", top_organic_sources)
 ```
 
 Kết quả tính toán:
 
 ```text
-7完了日の自然検索セッション: 126
-30完了日の上位ランディングページ:
+Phiên tìm kiếm tự nhiên trong 7 ngày hoàn chỉnh: 126
+Trang đích hàng đầu trong 30 ngày hoàn chỉnh:
 [('/breakfast/protein/', 80), ('/breakfast/quick/', 40),
  ('/breakfast/oats/', 29), ('/breakfast/toast/', 21),
  ('/breakfast/eggs/', 19)]
-30完了日の上位自然検索流入元:
+Nguồn tìm kiếm tự nhiên hàng đầu trong 30 ngày hoàn chỉnh:
 [('google', 122), ('bing', 33), ('duckduckgo', 20),
  ('ecosia', 8), ('yahoo', 8)]
 ```
@@ -542,7 +542,7 @@ Tiêu đề và `<h1>` cần chứa từ khóa trọng tâm nhưng phải diễn
 
 ### Bài tập 2: Tính toán và phân tích chỉ số CTR
 
-Một trang web đạt 2.400 lượt hiển thị và nhận được 96 lượt nhấp chuột trong tháng. Hãy tính tỷ lệ nhấp (CTR). Nếu sang tháng tiếp theo, tỷ lệ này tăng lên 5.0%, liệu có thể khẳng định chắc chắn rằng dự án SEO đã thành công rực rỡ không?
+Một trang web đạt 2.400 lượt hiển thị và nhận được 96 lượt nhấp chuột trong tháng. Hãy tính {{term:ctr}}. Nếu sang tháng tiếp theo, tỷ lệ này tăng lên 5.0%, liệu có thể khẳng định chắc chắn rằng dự án SEO đã thành công rực rỡ không?
 
 <details>
 <summary>Xem đáp án gợi ý</summary>
@@ -556,7 +556,7 @@ Tỷ lệ nhấp ban đầu là `CTR = (96 / 2.400) × 100% = 4.0%`. Việc tăn
 Slide nguồn: 26
 
 - SEO là quá trình cải tiến kỹ thuật, nội dung và danh tiếng giúp người dùng và công cụ tìm kiếm tìm thấy và đánh giá đúng trang web.
-- Thu thập (crawl), lập chỉ mục (index) và xếp hạng (rank) là ba công đoạn độc lập; tối ưu kỹ thuật không đảm bảo việc được lên top.
+{{term:crawl}}, lập chỉ mục (index) và xếp hạng (rank) là ba công đoạn độc lập; tối ưu kỹ thuật không đảm bảo việc được lên top.
 - Mô hình tổng trọng số giáo khoa giúp hiểu nguyên lý kết hợp đa đặc trưng nhưng không đại diện cho công thức bí mật của công cụ tìm kiếm thực tế.
 - On-page SEO tập trung vào nội dung và mã HTML; Off-page SEO tập trung vào liên kết trích dẫn bên ngoài; Technical SEO tập trung vào hạ tầng truy cập, tốc độ và dữ liệu cấu trúc.
 - Google Search Console, Google Analytics và công cụ bên thứ ba phục vụ các mục đích quan sát đo lường ở các điểm chạm khác nhau.
@@ -567,7 +567,7 @@ Slide nguồn: 26
 1. Kết quả tìm kiếm tự nhiên (organic) khác kết quả quảng cáo trả phí (paid ads) ở điểm mấu chốt nào?
 2. Một trang web có thể được crawler thu thập thành công thì có chắc chắn sẽ được đưa vào chỉ mục không?
 3. Vì sao gọi `<title>` là thẻ meta lại là cách dùng từ thiếu chuẩn xác về mặt kỹ thuật?
-4. Liên kết nội bộ (internal link) và backlink khác nhau như thế nào về hướng trỏ?
+4. {{term:internal-link}} và backlink khác nhau như thế nào về hướng trỏ?
 5. Khi lượt hiển thị bằng 0 (`impressions = 0`), tỷ lệ nhấp CTR được xử lý như thế nào?
 6. Google Search Console và Google Analytics phân chia phạm vi đo lường như thế nào?
 7. Nhúng dữ liệu có cấu trúc JSON-LD vào mã nguồn có đảm bảo trang web chắc chắn xuất hiện kết quả nhiều định dạng (rich results) không?
@@ -580,7 +580,7 @@ Slide nguồn: 26
 3. Vì `<title>` là một phần tử HTML độc lập với cú pháp `<title>...</title>`, còn thẻ meta có cú pháp hoàn toàn khác `<meta name="..." content="...">`.
 4. Liên kết nội bộ kết nối giữa các trang bên trong cùng một website; backlink là liên kết từ một website bên ngoài khác trỏ về website của mình.
 5. Khi mẫu số bằng 0, phép chia không xác định trong toán học, do đó hệ thống không được gán là 0% mà phải hiển thị là `N/A` (không áp dụng).
-6. Search Console đo lường tương tác trên trang kết quả tìm kiếm (SERP) trước khi người dùng vào trang; Google Analytics đo lường hành vi của người dùng sau khi đã đặt chân vào bên trong website.
+6. Search Console đo lường tương tác trên {{term:serp}} trước khi người dùng vào trang; Google Analytics đo lường hành vi của người dùng sau khi đã đặt chân vào bên trong website.
 7. Hoàn toàn không đảm bảo. Công cụ tìm kiếm còn xét duyệt tính xác thực của dữ liệu hiển thị, chất lượng tổng thể của trang web và chính sách hiển thị của thuật toán tại thời điểm đó.
 
 </details>
@@ -593,7 +593,7 @@ Slide nguồn: 26
 
 | English | Tiếng Việt | Ý nghĩa trong chương này |
 | --- | --- | --- |
-| Search Engine Optimization | Tối ưu hóa công cụ tìm kiếm (SEO) | Quá trình tối ưu giúp trang web được tìm thấy và xếp hạng tốt hơn |
+| Search Engine Optimization | {{term:seo}} | Quá trình tối ưu giúp trang web được tìm thấy và xếp hạng tốt hơn |
 | SERP | Trang kết quả tìm kiếm | Giao diện hiển thị danh sách kết quả tự nhiên và quảng cáo |
 | Organic result | Kết quả tự nhiên | Kết quả xếp hạng khách quan không phải vị trí mua quảng cáo |
 | On-page SEO | On-page SEO | Hoạt động tối ưu hóa trực tiếp nội dung và mã HTML của trang web |
@@ -604,7 +604,7 @@ Slide nguồn: 26
 | Structured data | Dữ liệu có cấu trúc | Định dạng dữ liệu chuẩn hóa giúp máy móc hiểu ngữ nghĩa trang |
 | JSON-LD | JSON-LD | Cú pháp nhúng dữ liệu có cấu trúc dưới dạng khối JSON trong thẻ script |
 | Impression | Lượt hiển thị | Số lần trang web xuất hiện trên trang kết quả tìm kiếm |
-| Click-through rate | Tỷ lệ nhấp (CTR) | Tỉ lệ phần trăm giữa lượt nhấp chuột và lượt hiển thị |
+| Click-through rate | {{term:ctr}} | Tỉ lệ phần trăm giữa lượt nhấp chuột và lượt hiển thị |
 | Organic traffic | Lưu lượng tự nhiên | Lượng truy cập đến từ việc nhấp vào kết quả tìm kiếm tự nhiên |
 | Landing page | Trang đích | Trang web đầu tiên mà người dùng đặt chân tới trong một phiên |
 | Referral traffic | Lưu lượng giới thiệu | Lượng truy cập đến từ các liên kết giới thiệu trên trang web khác |

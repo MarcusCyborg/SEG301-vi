@@ -9,10 +9,10 @@ SEG301m ghi chú học tập
 
 Sau khi học xong chương này, bạn có thể giải thích và tính toán các nội dung sau:
 
-1. Giải thích vì sao tìm kiếm xã hội (social search) là khái niệm rộng hơn việc chỉ tìm kiếm bài đăng trên mạng xã hội.
+1. Giải thích vì sao {{term:social-search}} là khái niệm rộng hơn việc chỉ tìm kiếm bài đăng trên mạng xã hội.
 2. Phân biệt metadata thủ công, thẻ người dùng và lập chỉ mục tự động; nêu rõ các loại thẻ và giới hạn của chúng.
 3. Cập nhật lặp ít nhất hai vòng điểm uy tín (authority) và điểm trung tâm (hub) của thuật toán HITS trên đồ thị có hướng nhỏ.
-4. So sánh điểm số trong hệ thống hỏi đáp cộng đồng (community QA) khi dùng mô hình dịch (translation model) kết hợp làm mượt Dirichlet.
+4. So sánh điểm số trong hệ thống hỏi đáp cộng đồng (community QA) khi dùng {{term:translation-model}} kết hợp làm mượt Dirichlet.
 5. Tính khoảng cách Euclidean, hệ số tương quan Pearson, giá trị dự đoán và MSE trong lọc cộng tác dựa trên người dùng (user-based collaborative filtering).
 6. Nêu rõ biểu diễn nguồn tài nguyên, chọn lựa nguồn tài nguyên và hợp nhất kết quả trong tìm kiếm P2P và tìm kiếm tổng hợp (metasearch).
 
@@ -23,7 +23,7 @@ Slide nguồn: 1-3
 - Áp dụng PageRank và liên kết có hướng từ Chương 4, chỉ mục từ Chương 5, mô hình ngôn ngữ từ Chương 7.
 - Sử dụng các thước đo xếp hạng từ Chương 9. Vì MAE và MSE chưa được định nghĩa chi tiết ở Chương 9 nên sẽ được định nghĩa cụ thể trong Mục 11.4 của chương này.
 - Vận dụng khoảng cách, độ tương quan, sự khác biệt giữa phân cụm và láng giềng gần nhất từ Chương 10.
-- Điểm số (score) không được gọi là xác suất trừ khi công thức được định nghĩa tường minh dưới dạng một phân phối xác suất.
+{{term:score}} không được gọi là xác suất trừ khi công thức được định nghĩa tường minh dưới dạng một phân phối xác suất.
 
 Trong toàn bộ chương này, chúng ta sẽ theo dõi ví dụ xuyên suốt: nhóm sinh viên cùng nhau tìm kiếm "tài liệu nghiên cứu để xây dựng công cụ tìm kiếm nội bộ trường học". Các sinh viên sẽ gắn thẻ cho tài liệu, tra cứu diễn đàn hỏi đáp, nhận gợi ý từ đánh giá của bạn học và tìm kiếm liên nguồn qua nhiều kho dữ liệu.
 
@@ -31,7 +31,7 @@ Trong toàn bộ chương này, chúng ta sẽ theo dõi ví dụ xuyên suốt:
 
 Slide nguồn: 4
 
-Tìm kiếm xã hội (social search) là hướng tiếp cận trong đó con người và cộng đồng trực tiếp tham gia vào quá trình tìm kiếm, và thông tin sinh ra từ các hoạt động của họ được tận dụng làm tín hiệu tìm kiếm. Thẻ (tag), dấu trang (bookmark), đánh giá (rating), câu trả lời, lượt chia sẻ và mối quan hệ liên kết (link) giữa người dùng đều là những manh mối giá trị cho hệ thống.
+{{term:social-search}} là hướng tiếp cận trong đó con người và cộng đồng trực tiếp tham gia vào quá trình tìm kiếm, và thông tin sinh ra từ các hoạt động của họ được tận dụng làm tín hiệu tìm kiếm. Thẻ (tag), dấu trang (bookmark), đánh giá (rating), câu trả lời, lượt chia sẻ và mối quan hệ liên kết (link) giữa người dùng đều là những manh mối giá trị cho hệ thống.
 
 Vì vậy, social search không chỉ đơn thuần là "tìm bài viết trên mạng xã hội". Các trường hợp sau đây đều là tìm kiếm sử dụng tín hiệu xã hội:
 
@@ -59,9 +59,9 @@ Slide nguồn: 5-9
 
 ### Metadata thủ công, thẻ và lập chỉ mục tự động
 
-Trong danh mục thư viện truyền thống, chuyên viên biên mục nhập tên tác giả, tiêu đề, đề mục chủ đề theo những quy tắc nghiêm ngặt. Đây là ví dụ tiêu biểu của lập chỉ mục thủ công (manual indexing). Cách làm này kiểm soát chất lượng rất tốt, nhưng tốn nhiều thời gian và đòi hỏi chuyên môn cao.
+Trong danh mục thư viện truyền thống, chuyên viên biên mục nhập tên tác giả, tiêu đề, đề mục chủ đề theo những quy tắc nghiêm ngặt. Đây là ví dụ tiêu biểu của {{term:manual-indexing}}. Cách làm này kiểm soát chất lượng rất tốt, nhưng tốn nhiều thời gian và đòi hỏi chuyên môn cao.
 
-Thẻ người dùng (user tag) là các nhãn ngắn gọn do người dùng tự do gán cho đối tượng. Khác với hệ thống phân loại chuyên môn dùng từ vựng kiểm soát (controlled vocabulary), gắn thẻ tự do cho phép đông đảo người dùng cùng tham gia đóng góp từng chút một (folksonomy). Ngược lại, lập chỉ mục tự động (automatic indexing) dùng chương trình máy tính để phân tích nội dung, tiêu đề, liên kết và metadata.
+{{term:user-tag}} là các nhãn ngắn gọn do người dùng tự do gán cho đối tượng. Khác với hệ thống phân loại chuyên môn dùng từ vựng kiểm soát (controlled vocabulary), gắn thẻ tự do cho phép đông đảo người dùng cùng tham gia đóng góp từng chút một (folksonomy). Ngược lại, lập chỉ mục tự động (automatic indexing) dùng chương trình máy tính để phân tích nội dung, tiêu đề, liên kết và metadata.
 
 | Phương pháp | Người thực hiện | Ưu điểm chính | Hạn chế chính |
 | --- | --- | --- | --- |
@@ -181,7 +181,7 @@ Slide nguồn: 10-16
 
 ### Cộng đồng trực tuyến và cộng đồng Web
 
-Cộng đồng trực tuyến (online community) là tập hợp các thực thể có chung mục tiêu, mối quan tâm hoặc thuộc tính, tương tác với nhau trong môi trường mạng. Thực thể ở đây có thể là người dùng, trang web hoặc hội nhóm. Trong tìm kiếm, cần phân biệt rõ ba loại thông tin:
+{{term:online-community}} là tập hợp các thực thể có chung mục tiêu, mối quan tâm hoặc thuộc tính, tương tác với nhau trong môi trường mạng. Thực thể ở đây có thể là người dùng, trang web hoặc hội nhóm. Trong tìm kiếm, cần phân biệt rõ ba loại thông tin:
 
 - Đối tượng (object): người dùng, trang web, câu hỏi, câu trả lời.
 - Thuộc tính (attribute): chủ đề, thời điểm đăng, chuyên môn, đánh giá.
@@ -193,8 +193,8 @@ Một tập hợp các trang web liên kết với nhau về cùng một chủ �
 
 Thuật toán HITS (Hyperlink-Induced Topic Search) bắt đầu bằng việc tìm tập gốc (root set) liên quan đến truy vấn, mở rộng thành tập cơ sở (base set) bằng cách thêm các trang được liên kết đến hoặc liên kết tới tập gốc, rồi tính toán lặp hai loại điểm số trên đồ thị con này:
 
-- Điểm uy tín (authority score): Trang càng được nhiều trung tâm tốt trỏ tới thì điểm uy tín càng cao.
-- Điểm trung tâm (hub score): Trang càng trỏ tới nhiều trang uy tín tốt thì điểm trung tâm càng cao.
+- {{term:hub-score}}: Trang càng trỏ tới nhiều trang uy tín tốt thì điểm trung tâm càng cao.
+{{term:hub-score}}: Trang càng trỏ tới nhiều trang uy tín tốt thì điểm trung tâm càng cao.
 
 Cạnh `X → Y` biểu thị `X` đặt liên kết trỏ tới `Y`. Quá trình cập nhật điểm authority dùng các cạnh đi vào, còn cập nhật điểm hub dùng các cạnh đi ra.
 
@@ -252,7 +252,7 @@ PageRank thường được tính toán như một điểm số dừng duy nhấ
 
 Điều kiện dừng có thể đặt là `max(|a^(k) - a^(k-1)|, |h^(k) - h^(k-1)|) < 10^-6` hoặc tối đa 100 vòng. Nếu một đỉnh không có cạnh nào và vector bằng 0 thì không thể chuẩn hóa, khi đó cần có quy tắc xử lý (ví dụ gán điểm bằng 0).
 
-Nếu việc tìm tập gốc (root set) không chính xác, tập cơ sở (base set) có thể bị mở rộng sang các chủ đề khác (topic drift). Hơn nữa, các trang trại liên kết (link farm) và liên kết chéo nhân tạo có thể thao túng điểm số, nên một trang có điểm HITS cao chưa chắc đã là trang thông tin công tâm và chính xác.
+Nếu việc tìm tập gốc (root set) không chính xác, tập cơ sở (base set) có thể bị mở rộng sang các chủ đề khác (topic drift). Hơn nữa, các {{term:link-farm}} và liên kết chéo nhân tạo có thể thao túng điểm số, nên một trang có điểm HITS cao chưa chắc đã là trang thông tin công tâm và chính xác.
 
 ### Hỏi đáp dựa trên cộng đồng (Community-based QA)
 
@@ -354,7 +354,7 @@ Trong cấu hình này, ứng viên A1 (có chứa trực tiếp cả hai từ) 
 
 ### Tìm kiếm cộng tác (Collaborative searching)
 
-Tìm kiếm cộng tác (collaborative searching) là quá trình một nhóm người có chung mục tiêu cùng nhau thực hiện hoạt động tìm kiếm. Cần phân biệt rõ khái niệm này với lọc cộng tác (collaborative filtering) vốn là kỹ thuật gợi ý dựa trên lịch sử đánh giá của người dùng tương đồng.
+{{term:collaborative-searching}} là quá trình một nhóm người có chung mục tiêu cùng nhau thực hiện hoạt động tìm kiếm. Cần phân biệt rõ khái niệm này với {{term:collaborative-filtering}} vốn là kỹ thuật gợi ý dựa trên lịch sử đánh giá của người dùng tương đồng.
 
 Ví dụ trong bài tập nhóm: sinh viên A phụ trách "thẻ xã hội", sinh viên B phụ trách "hỏi đáp cộng đồng", sinh viên C phụ trách "quyền riêng tư". Nhóm dùng một bảng chung để lưu lại các câu truy vấn đã dùng, nguồn tài liệu được chọn, lý do bác bỏ tài liệu không phù hợp và đoạn trích dẫn quan trọng, tránh tình trạng nhiều người làm trùng việc. Cuối cùng, cả nhóm cùng kiểm tra lại đơn vị phát hành, ngày tháng và tính xác thực của các bằng chứng.
 
@@ -369,11 +369,11 @@ Slide nguồn: 17-22
 
 ### Lọc tài liệu
 
-Trong bài toán lọc tài liệu (document filtering), nhu cầu thông tin của người dùng được lưu trữ lâu dài dưới dạng hồ sơ (profile). Khi các tài liệu mới liên tục đổ về hệ thống theo thời gian thực, hệ thống sẽ so khớp tài liệu với hồ sơ đó. Cơ chế ra quyết định (decision mechanism) dựa trên điểm số để quyết định có gửi thông báo cho người dùng hay không.
+Trong bài toán {{term:document-filtering}}, nhu cầu thông tin của người dùng được lưu trữ lâu dài dưới dạng hồ sơ (profile). Khi các tài liệu mới liên tục đổ về hệ thống theo thời gian thực, hệ thống sẽ so khớp tài liệu với hồ sơ đó. Cơ chế ra quyết định (decision mechanism) dựa trên điểm số để quyết định có gửi thông báo cho người dùng hay không.
 
 Nếu áp dụng quy tắc đơn giản `score ≥ threshold`, việc hạ thấp ngưỡng sẽ giúp bắt được nhiều tài liệu hơn nhưng lại làm tăng thông báo rác (dương tính giả). Ngược lại, nâng ngưỡng cao sẽ giảm thông báo thừa nhưng lại dễ bỏ sót tài liệu quan trọng (âm tính giả). Nếu hồ sơ không được cập nhật định kỳ thì không bắt kịp sự thay đổi mối quan tâm của người dùng, nhưng nếu cập nhật quá nhạy theo từng lượt nhấp chuột nhất thời thì hệ thống sẽ bị thiên lệch quá mức.
 
-Gợi ý dựa trên nội dung (content-based recommendation) so sánh thuộc tính, từ ngữ của mục với hồ sơ người dùng. Gợi ý lọc cộng tác (collaborative filtering) khai thác mối quan hệ đánh giá giữa người dùng và các mục. Ngoài ra còn có các phương pháp lai (hybrid) kết hợp cả hai hướng tiếp cận.
+Gợi ý dựa trên nội dung (content-based recommendation) so sánh thuộc tính, từ ngữ của mục với hồ sơ người dùng. Gợi ý {{term:collaborative-filtering}} khai thác mối quan hệ đánh giá giữa người dùng và các mục. Ngoài ra còn có các phương pháp lai (hybrid) kết hợp cả hai hướng tiếp cận.
 
 ### Ma trận người dùng - mục (User-Item Matrix)
 
@@ -439,7 +439,7 @@ Vì thang đánh giá tối đa là 5, giá trị `5.050` được cắt gọn (
 - Tổng trọng số tương đồng bằng 0: không thể tính giá trị trung bình có trọng số.
 - Người dùng mới hoặc mục mới (vấn đề khởi động nguội - cold start): chưa có bất kỳ dữ liệu đánh giá nào, cần dựa vào thuộc tính nội dung hoặc khảo sát sở thích ban đầu.
 
-Sẽ rất thiếu công bằng nếu một phương pháp loại bỏ các trường hợp lỗi ra khỏi tập đánh giá còn phương pháp kia thì không. Khi so sánh các mô hình, phải dùng chung tập cặp kiểm thử và báo cáo kèm theo độ phủ (coverage) cùng tỷ lệ kích hoạt cơ chế fallback.
+Sẽ rất thiếu công bằng nếu một phương pháp loại bỏ các trường hợp lỗi ra khỏi tập đánh giá còn phương pháp kia thì không. Khi so sánh các mô hình, phải dùng chung tập cặp kiểm thử và báo cáo kèm theo độ {{term:coverage}} cùng tỷ lệ kích hoạt cơ chế fallback.
 
 ### Sai số tuyệt đối, MAE, MSE, RMSE
 
@@ -470,10 +470,10 @@ Slide nguồn: 23-25
 Trong tìm kiếm phân tán (distributed search), dữ liệu tìm kiếm nằm rải rác ở nhiều nguồn tài nguyên khác nhau. Ngoài các bước tìm kiếm thông thường, hệ thống cần xử lý thêm ba công đoạn:
 
 1. Biểu diễn nguồn tài nguyên (resource representation): Mô tả nội dung từng nguồn nắm giữ thông qua vốn từ vựng, số lượng tài liệu hoặc mẫu trích xuất.
-2. Chọn lựa nguồn tài nguyên (resource selection): Chọn ra các nguồn phù hợp nhất với câu truy vấn.
-3. Hợp nhất kết quả (result merging): Gộp các danh sách kết quả từ nhiều nguồn thành một danh sách xếp hạng thống nhất.
+3. {{term:result-merging}}: Gộp các danh sách kết quả từ nhiều nguồn thành một danh sách xếp hạng thống nhất.
+3. {{term:result-merging}}: Gộp các danh sách kết quả từ nhiều nguồn thành một danh sách xếp hạng thống nhất.
 
-Công cụ tìm kiếm tổng hợp (metasearch engine) gửi truy vấn đến một số công cụ tìm kiếm hoàn chỉnh độc lập, rồi tổng hợp kết quả trả về của từng bên. Trong khi đó, tìm kiếm P2P (mạng ngang hàng) gồm rất nhiều nút (node) phân tán, mỗi nút chỉ quản lý một lượng dữ liệu nhỏ và chỉ biết thông tin về các nút láng giềng lân cận.
+{{term:metasearch-engine}} gửi truy vấn đến một số công cụ tìm kiếm hoàn chỉnh độc lập, rồi tổng hợp kết quả trả về của từng bên. Trong khi đó, tìm kiếm P2P (mạng ngang hàng) gồm rất nhiều nút (node) phân tán, mỗi nút chỉ quản lý một lượng dữ liệu nhỏ và chỉ biết thông tin về các nút láng giềng lân cận.
 
 | Kiến trúc | Đặc điểm | Vai trò của Hub / Super-peer |
 | --- | --- | --- |
@@ -634,7 +634,7 @@ Các quy tắc xử lý trong kịch bản:
 5. Chỉ dùng tập huấn luyện để tính độ tương đồng, điểm trung bình, chọn láng giềng và tối ưu tham số. Tuyệt đối không nhìn trước điểm số của tập kiểm thử.
 6. Nếu một trong hai người dùng có phương sai bằng 0, không đủ số mục chung, hoặc không có láng giềng nào có độ tương đồng dương, hệ thống sẽ kích hoạt cơ chế dự phòng lấy điểm trung bình huấn luyện của người dùng đó. Nếu người dùng đó cũng không có điểm huấn luyện thì lấy điểm trung bình toàn cục.
 7. Giá trị dự đoán được cắt gọn vào đúng khoảng thang điểm chỉ định trong câu lệnh. Không tự ý áp đặt thang điểm 1 đến 5 cho các tập dữ liệu khác nhau.
-8. Tính toán cả MSE và MAE trên toàn bộ tập kiểm thử. Tỷ lệ dự đoán thành công không cần dự phòng được ghi nhận là độ phủ (coverage), song song với tỷ lệ kích hoạt cơ chế dự phòng.
+8. Tính toán cả MSE và MAE trên toàn bộ tập kiểm thử. Tỷ lệ dự đoán thành công không cần dự phòng được ghi nhận là độ {{term:coverage}}, song song với tỷ lệ kích hoạt cơ chế dự phòng.
 
 Nếu sửa đổi giá trị đánh giá trong tập kiểm thử thành các con số khác thì ma trận huấn luyện, độ tương đồng, điểm trung bình, danh sách láng giềng được chọn và giá trị dự đoán đều không hề thay đổi. Thứ duy nhất thay đổi là sai số đánh giá ở bước cuối cùng. Dữ liệu kiểm định chỉ phục vụ chọn tham số, không được dùng làm dữ liệu kiểm thử.
 
@@ -658,7 +658,7 @@ Slide nguồn: 27
 2. Trong công thức suy luận thẻ, trọng số của một từ có `df = N` sẽ bằng bao nhiêu?
 3. Khi có liên kết `X → Y`, cạnh này đóng góp vào bước cập nhật điểm số nào của X và Y?
 4. Vì sao không được hoán đổi vị trí giữa `P(w|t)` và `P(t|w)`?
-5. Điểm khác biệt cơ bản giữa tìm kiếm cộng tác (collaborative searching) và lọc cộng tác (collaborative filtering) là gì?
+5. Điểm khác biệt cơ bản giữa {{term:collaborative-searching}} và {{term:collaborative-filtering}} là gì?
 6. Điều gì sẽ xảy ra nếu chọn láng giềng trong tương quan Pearson chỉ dựa trên độ lớn tuyệt đối mà bỏ qua dấu âm?
 7. Vì sao không thể chỉ dựa vào chỉ số MSE để đánh giá toàn diện chất lượng của hệ thống gợi ý top-N?
 8. Vì sao không thể so sánh trực tiếp điểm số thô từ hai công cụ tìm kiếm khác nhau gửi về?
@@ -687,8 +687,8 @@ Slide nguồn: 27
 | Tag cloud | Đám mây thẻ | Danh sách hiển thị trực quan các thẻ với kích thước tương ứng trọng số |
 | Online community | Cộng đồng trực tuyến | Nhóm thực thể có chung mục tiêu hoặc mối quan tâm, tương tác qua mạng |
 | HITS | HITS | Thuật toán cập nhật tương hỗ điểm authority và hub từ đồ thị liên kết |
-| Authority score | Điểm uy tín (authority) | Mức độ một trang được nhiều trang trung tâm tốt trỏ tới |
-| Hub score | Điểm trung tâm (hub) | Mức độ một trang trỏ tới nhiều trang uy tín tốt |
+| Authority score | {{term:authority-score}} | Mức độ một trang được nhiều trang trung tâm tốt trỏ tới |
+| Hub score | {{term:hub-score}} | Mức độ một trang trỏ tới nhiều trang uy tín tốt |
 | Community-based QA | Hỏi đáp cộng đồng | Phương thức hỏi đáp dựa trên cộng đồng người dùng hoặc tra cứu kho lưu trữ hỏi đáp |
 | Translation model | Mô hình dịch | Mô hình sử dụng xác suất tương ứng giữa từ ngữ và các cách diễn đạt tương đương |
 | Collaborative searching | Tìm kiếm cộng tác | Hoạt động phân công và phối hợp tìm kiếm trong một nhóm người |
@@ -696,7 +696,7 @@ Slide nguồn: 27
 | Collaborative filtering | Lọc cộng tác | Phương pháp dự đoán đánh giá chưa biết dựa trên quan hệ đánh giá của người dùng tương đồng |
 | Co-rated items | Mục đánh giá chung | Tập hợp các mục mà cả hai người dùng đều đã cho điểm |
 | Pearson correlation | Hệ số tương quan Pearson | Thước đo mức độ tương đồng trong xu hướng biến thiên điểm số so với điểm trung bình |
-| Mean squared error | Sai số toàn phương trung bình (MSE) | Giá trị trung bình của bình phương các sai số dự đoán |
+| Mean squared error | {{term:mean-squared-error}} | Giá trị trung bình của bình phương các sai số dự đoán |
 | Metasearch engine | Công cụ tìm kiếm tổng hợp | Hệ thống hợp nhất kết quả từ nhiều công cụ tìm kiếm độc lập |
 | Peer-to-peer | Mạng ngang hàng (P2P) | Kiến trúc trong đó các nút phân tán cùng chia sẻ dữ liệu và xử lý tìm kiếm |
 | Resource selection | Chọn lựa nguồn tài nguyên | Quá trình lựa chọn các nguồn thông tin phù hợp nhất để gửi truy vấn |

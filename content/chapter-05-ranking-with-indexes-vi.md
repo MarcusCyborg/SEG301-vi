@@ -11,7 +11,7 @@ Sau khi học xong chương này, bạn có thể giải thích và thực hiệ
 
 1. Trình bày mối quan hệ giữa đầu vào, đặc trưng, điểm số và đầu ra của mô hình xếp hạng.
 2. Từ văn bản thô, xây dựng chỉ mục đảo kèm tần số từ và thông tin vị trí; thực hiện truy vấn AND, OR và tìm kiếm cụm từ chính xác.
-3. Chuyển đổi dãy mã tài liệu thành dãy khoảng cách (d-gap), mã hóa và giải mã bằng mã tiền tố (prefix code), mã đơn phân (unary code) và mã byte biến thiên (variable-byte code).
+3. Chuyển đổi dãy mã tài liệu thành dãy {{term:gap-encoding}}, mã hóa và giải mã bằng {{term:prefix-code}}, mã đơn phân (unary code) và mã byte biến thiên (variable-byte code).
 4. Giải thích quy trình xây dựng, hợp nhất (merge), phân tán và cập nhật chỉ mục quy mô lớn.
 5. Tính toán điểm số đồng nhất giữa hai phương pháp duyệt theo từ (TAAT) và duyệt theo tài liệu (DAAT); giải thích cơ chế tìm kiếm top-k và cắt tỉa an toàn (safe pruning).
 
@@ -19,12 +19,12 @@ Slide nguồn: 1-3
 
 ## Kiến thức cần chuẩn bị {#prerequisites}
 
-- **Tài liệu (Document):** Trang web hoặc tệp tin là đối tượng tìm kiếm.
+- **{{term:document}}:** Trang web hoặc tệp tin là đối tượng tìm kiếm.
 - **Token:** Đơn vị chuỗi ký tự thu được sau khi phân tách văn bản.
-- **Từ chỉ mục (Index term):** Từ ngữ được chuẩn hóa đưa vào bảng chỉ mục.
+- **{{term:index-term}}:** Từ ngữ được chuẩn hóa đưa vào bảng chỉ mục.
 - **Tần số từ (Term frequency - tf):** Số lần xuất hiện của từ trong một tài liệu cụ thể.
 - **Tần số tài liệu (Document frequency - df):** Số lượng tài liệu có chứa từ đó.
-- **Xếp hạng (Ranking):** Quá trình tính điểm và sắp xếp các tài liệu ứng viên theo thứ tự ưu tiên.
+- **{{term:ranking}}:** Quá trình tính điểm và sắp xếp các tài liệu ứng viên theo thứ tự ưu tiên.
 
 **Giải thích dễ hiểu:** Vào thư viện tìm "sách về các loài cá", nếu phải lật từng trang của mọi cuốn sách để đọc thì quá chậm. Nếu có sẵn bảng tra cứu "từ 'fish' nằm ở sách số 1, 2, 4", thủ thư sẽ đến thẳng các cuốn sách đó. Chỉ mục đảo của công cụ tìm kiếm hoạt động theo đúng cơ chế này.
 
@@ -46,7 +46,7 @@ Tài liệu ứng viên và điểm số
 Kết quả xếp hạng cuối cùng
 ```
 
-Chương 6 tiếp theo sẽ nghiên cứu cách giao tiếp với người dùng và hiển thị đoạn trích (snippet). Chương 7 sẽ đi sâu vào các mô hình toán học tính điểm truy xuất.
+Chương 6 tiếp theo sẽ nghiên cứu cách giao tiếp với người dùng và hiển thị {{term:snippet}}. Chương 7 sẽ đi sâu vào các mô hình toán học tính điểm truy xuất.
 
 ## 5.1 Mô hình trừu tượng của xếp hạng {#abstract-ranking-model}
 
@@ -141,7 +141,7 @@ Kết quả của cụm từ `"tropical fish"` là `{D1, D4}`. Nếu chỉ mục
 
 ### Trường dữ liệu, Extent và Điểm số tính sẵn
 
-- **Trường (Field):** Vùng dữ liệu có ngữ nghĩa như tiêu đề (title), thân bài (body), người gửi.
+- **{{term:field}}:** Vùng dữ liệu có ngữ nghĩa như tiêu đề (title), thân bài (body), người gửi.
 - **Extent:** Khoảng vị trí liên tục được biểu diễn dưới dạng nửa mở `[start, end)`. Ví dụ `[5, 9)` chứa các vị trí 5, 6, 7, 8.
 
 Lưu trữ sẵn tf, vị trí, trường và các đặc trưng tính trước vào posting giúp giảm tải tính toán khi có truy vấn. Tuy nhiên, việc lưu quá nhiều thông tin phụ sẽ làm phình to kích thước chỉ mục và giảm tính linh hoạt nếu sau này muốn thay đổi công thức xếp hạng.
@@ -181,7 +181,7 @@ Khi đọc dữ liệu, hệ thống chỉ cần tính mảng cộng dồn: `1`,
 
 ### Mã tiền tố (Prefix Code)
 
-Slide 17 minh họa nếu ghép tùy tiện các mã có độ dài khác nhau mà không có dấu phân tách thì bên giải mã sẽ không biết từ mã kết thúc ở đâu. **Mã tiền tố (prefix code)** bảo đảm không có từ mã nào là tiền tố của một từ mã khác, cho phép giải mã tức thì từ trái sang phải mà không cần ký tự phân cách:
+Slide 17 minh họa nếu ghép tùy tiện các mã có độ dài khác nhau mà không có dấu phân tách thì bên giải mã sẽ không biết từ mã kết thúc ở đâu. **{{term:prefix-code}}** bảo đảm không có từ mã nào là tiền tố của một từ mã khác, cho phép giải mã tức thì từ trái sang phải mà không cần ký tự phân cách:
 
 | Giá trị | Từ mã (code) |
 | ---: | --- |
@@ -306,8 +306,8 @@ Trong hệ thống phân tán, các nút Mapper đọc dữ liệu và phát ra 
 
 | Phương thức | Nội dung mỗi máy chủ nắm giữ | Luồng xử lý truy vấn | Cách hợp nhất kết quả |
 | --- | --- | --- | --- |
-| Phân hoạch theo tài liệu (Document partition) | Một tập hợp tài liệu con, lưu đủ mọi từ của tập đó | Máy môi giới gửi cùng một truy vấn tới toàn bộ các shard | Hợp nhất danh sách top-k của các shard theo điểm số |
-| Phân hoạch theo từ (Term partition) | Một dải từ vựng nhất định, lưu đủ posting của từ đó trên toàn bộ tài liệu | Chỉ gửi truy vấn tới các máy chủ phụ trách các từ đó | Các máy trao đổi posting hoặc điểm bộ phận để hợp nhất |
+| {{term:term-partition}} | Một dải từ vựng nhất định, lưu đủ posting của từ đó trên toàn bộ tài liệu | Chỉ gửi truy vấn tới các máy chủ phụ trách các từ đó | Các máy trao đổi posting hoặc điểm bộ phận để hợp nhất |
+| {{term:term-partition}} | Một dải từ vựng nhất định, lưu đủ posting của từ đó trên toàn bộ tài liệu | Chỉ gửi truy vấn tới các máy chủ phụ trách các từ đó | Các máy trao đổi posting hoặc điểm bộ phận để hợp nhất |
 
 Với truy vấn `tropical fish`, trong mô hình phân hoạch theo tài liệu, máy chủ A, B, C độc lập chấm điểm các tài liệu của mình, sau đó bộ môi giới (broker) gộp các danh sách ứng viên để chọn ra top-k toàn cục. Trong mô hình phân hoạch theo từ, máy chủ quản lý từ `tropical` và máy chủ quản lý từ `fish` phải truyền dữ liệu cho nhau qua mạng để tìm các tài liệu chung.
 
@@ -315,8 +315,8 @@ Với truy vấn `tropical fish`, trong mô hình phân hoạch theo tài liệu
 
 Có hai chiến lược chính để xử lý tài liệu mới cập nhật:
 
-- **Hợp nhất chỉ mục (Index merging):** Tạo các chỉ mục phụ kích thước nhỏ cho tài liệu mới, sau đó định kỳ hợp nhất vào chỉ mục chính (base index).
-- **Hợp nhất kết quả (Result merging):** Giữ riêng chỉ mục chính và chỉ mục phụ; khi có truy vấn thì tìm kiếm trên cả hai chỉ mục và gộp kết quả tại thời điểm tìm kiếm.
+- **{{term:result-merging}}:** Giữ riêng chỉ mục chính và chỉ mục phụ; khi có truy vấn thì tìm kiếm trên cả hai chỉ mục và gộp kết quả tại thời điểm tìm kiếm.
+- **{{term:result-merging}}:** Giữ riêng chỉ mục chính và chỉ mục phụ; khi có truy vấn thì tìm kiếm trên cả hai chỉ mục và gộp kết quả tại thời điểm tìm kiếm.
 
 **Kiểm tra nhanh:** Trong hệ thống phân hoạch theo tài liệu, để lấy được top 10 tài liệu toàn cục, có đủ không nếu mỗi shard chỉ gửi về đúng 1 tài liệu có điểm cao nhất của mình?
 
@@ -375,7 +375,7 @@ Vì cùng áp dụng chung dữ liệu posting và công thức tính điểm n�
 
 ### Tìm kiếm top-k, Ngưỡng điểm và Cắt tỉa (Pruning)
 
-Trong bài toán truy xuất top-k, hệ thống duy trì một hàng đợi ưu tiên (priority queue) chứa `k` tài liệu điểm cao nhất hiện tại. **Chỉ sau khi đã thu thập đủ `k` tài liệu đầu tiên**, điểm số của tài liệu đứng thứ `k` mới được dùng làm **ngưỡng điểm (score threshold)** để loại trừ các ứng viên phía sau.
+Trong bài toán truy xuất top-k, hệ thống duy trì một hàng đợi ưu tiên (priority queue) chứa `k` tài liệu điểm cao nhất hiện tại. **Chỉ sau khi đã thu thập đủ `k` tài liệu đầu tiên**, điểm số của tài liệu đứng thứ `k` mới được dùng làm **{{term:score-threshold}}** để loại trừ các ứng viên phía sau.
 
 Gọi cận trên (upper bound) điểm số tiềm năng của một tài liệu là "điểm tích lũy hiện tại + điểm tối đa mà các từ chưa xử lý có thể đóng góp thêm". Điều kiện cắt tỉa an toàn (safe pruning):
 
@@ -460,7 +460,7 @@ Slide nguồn: 43
 
 - Khâu xếp hạng kết hợp đặc trưng tài liệu `f_i(D)` với trọng số truy vấn `g_i(Q)` để tạo điểm số so sánh.
 - Chỉ mục đảo cho phép tra cứu nhanh docID, tần số tf, vị trí xuất hiện và các trường dữ liệu từ từ vựng.
-- Tìm kiếm cụm từ bắt buộc phải sử dụng chỉ mục vị trí (positional index) để kiểm tra thứ tự và khoảng cách giữa các từ.
+- Tìm kiếm cụm từ bắt buộc phải sử dụng chỉ mục {{term:positional-index}} để kiểm tra thứ tự và khoảng cách giữa các từ.
 - Biến đổi d-gap thu nhỏ giá trị số nguyên; các mã prefix, unary, variable-byte mã hóa các khoảng cách gap thành chuỗi bit/byte tối ưu.
 - Chỉ mục quy mô lớn được xây dựng bằng thuật toán sắp xếp từng khối (block merge), xử lý phân tán MapReduce và phân hoạch theo tài liệu hoặc theo từ.
 - TAAT và DAAT cho cùng một kết quả điểm số nhưng khác nhau về quản lý bộ nhớ. Cắt tỉa an toàn top-k đòi hỏi phải chứng minh ứng viên không thể vượt qua ngưỡng điểm ngay cả khi có trường hợp hòa điểm.
@@ -480,7 +480,7 @@ Slide nguồn: 43
 1. `tf` đếm số lần xuất hiện của từ trong một tài liệu; `df` đếm số lượng tài liệu có chứa từ đó.
 2. Vì các số nguyên docID liên tiếp có khoảng cách chênh lệch (gap) nhỏ hơn rất nhiều so với giá trị tuyệt đối của docID, giúp mã hóa được bằng ít bit hơn.
 3. Bit cao nhất nhận giá trị `1` báo hiệu đây là byte cuối cùng của số nguyên; bit `0` báo hiệu vẫn còn các byte phía sau.
-4. Được hợp nhất tại máy chủ môi giới truy vấn (query broker) hoặc nút điều phối trung tâm.
+4. Được hợp nhất tại máy chủ môi giới {{term:query-broker}} hoặc nút điều phối trung tâm.
 5. Cắt tỉa chính xác bảo đảm top-k không thay đổi so với tính toán đầy đủ; cắt tỉa xấp xỉ chấp nhận rủi ro bỏ sót tài liệu tốt để tối đa hóa tốc độ.
 6. Vì nếu đạt cùng điểm 4, quy tắc hòa điểm ưu tiên docID nhỏ hơn sẽ đưa `D2` lên xếp trên `D9`. Chỉ có thể loại bỏ khi cận trên strictly nhỏ hơn ngưỡng điểm (`upper bound < threshold`).
 
@@ -498,7 +498,7 @@ Chương này đã hoàn thiện cơ chế tra cứu posting và tính điểm k
 | Posting / posting list | Bản ghi vị trí / Danh sách bản ghi | Bản ghi một tài liệu / Danh sách các bản ghi của cùng một từ |
 | Positional index | Chỉ mục vị trí | Chỉ mục đảo lưu trữ vị trí offset của token trong văn bản |
 | Field / extent | Trường dữ liệu / Extent | Vùng dữ liệu có ngữ nghĩa / Khoảng vị trí liên tục |
-| Gap encoding | Mã hóa khoảng cách (d-gap) | Chuyển dãy docID tăng dần thành dãy hiệu số liền kề |
+| Gap encoding | {{term:gap-encoding}} | Chuyển dãy docID tăng dần thành dãy hiệu số liền kề |
 | Prefix code | Mã tiền tố | Bộ mã không có từ mã nào là tiền tố của từ mã khác |
 | Unary code | Mã đơn phân | Mã hóa số nguyên k bằng k bit 1 kết thúc bằng bit 0 |
 | Variable-byte code | Mã byte biến thiên | Mã nén theo byte gồm 7 bit dữ liệu và 1 bit cờ kết thúc |

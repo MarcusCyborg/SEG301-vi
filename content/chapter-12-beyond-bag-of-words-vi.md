@@ -12,7 +12,7 @@ Sau khi học xong chương này, bạn có thể giải thích và thực hiệ
 1. Nêu rõ những thông tin mô hình túi từ giữ lại và những thông tin bị mất qua các ví dụ cụ thể.
 2. Tính điểm số trong mô hình truy xuất dựa trên đặc trưng (feature-based retrieval) và giải thích sự thay đổi thứ bậc khi thay đổi trọng số.
 3. Phân chia tập huấn luyện (training data), tập kiểm định (validation data), tập kiểm thử (test data) và chọn ứng viên tham số từ kết quả đánh giá.
-4. Giải thích bốn cấu trúc phụ thuộc từ (term dependence) và phân biệt cụm từ với tính gần kề (proximity).
+4. Giải thích bốn cấu trúc {{term:term-dependence}} và phân biệt cụm từ với {{term:proximity}}.
 5. Phân biệt đơn vị kết quả trả về giữa truy xuất phần tử XML, truy xuất thực thể và hệ thống hỏi đáp (QA).
 6. Nêu rõ biểu diễn văn bản cho hình ảnh, video, âm thanh cùng giới hạn của OCR và nhận dạng tiếng nói.
 7. Giải thích lý do mỗi dịch vụ tìm kiếm cần biểu diễn, xếp hạng và tiêu chí đánh giá khác nhau.
@@ -37,9 +37,9 @@ Việc BoW bỏ qua thứ tự từ không có nghĩa là các mô hình dựa t
 - Thực thể và quan hệ giữa con người, tổ chức, địa danh.
 - Đặc trưng hình ảnh, đặc trưng âm thanh, văn bản trích xuất từ OCR hoặc bản gỡ băng từ nhận dạng tiếng nói.
 
-Khái niệm "Vượt ra ngoài mô hình túi từ" không chỉ gói gọn trong biểu diễn vector nhúng (embedding) hay mô hình ngôn ngữ lớn (LLM). Trọng tâm cốt lõi của slide bài giảng tập trung vào: mô hình đặc trưng, phụ thuộc từ, cấu trúc tài liệu, thực thể, hỏi đáp (QA) và dữ liệu đa phương tiện.
+Khái niệm "Vượt ra ngoài mô hình túi từ" không chỉ gói gọn trong biểu diễn vector nhúng (embedding) hay mô hình ngôn ngữ lớn (LLM). Trọng tâm cốt lõi của slide bài giảng tập trung vào: mô hình đặc trưng, phụ thuộc từ, cấu trúc tài liệu, thực thể, {{term:question-answering}} và dữ liệu đa phương tiện.
 
-**Kiểm tra nhanh:** Việc mô hình BoW không dùng thứ tự từ có đồng nghĩa với việc không dùng tần số xuất hiện của từ (term frequency) không?
+**Kiểm tra nhanh:** Việc mô hình BoW không dùng thứ tự từ có đồng nghĩa với việc không dùng {{term:term-frequency}} không?
 
 <details>
 <summary>Xem đáp án gợi ý</summary>
@@ -278,7 +278,7 @@ Toán tử `about(...)` là toán tử tìm kiếm nội dung trong ngôn ngữ 
 
 Slide nguồn: 10
 
-Trong truy xuất thực thể (entity search), đối tượng trả về cho truy vấn không phải là danh sách các tài liệu, mà là danh sách các thực thể cụ thể như con người, tổ chức, địa danh. Quy trình tối thiểu gồm ba giai đoạn:
+Trong {{term:entity-search}}, đối tượng trả về cho truy vấn không phải là danh sách các tài liệu, mà là danh sách các thực thể cụ thể như con người, tổ chức, địa danh. Quy trình tối thiểu gồm ba giai đoạn:
 
 1. Nhận dạng thực thể có tên (named entity recognition, NER): Tìm các từ hoặc cụm từ đại diện cho thực thể (mention) trong văn bản.
 2. Liên kết và định danh thực thể (entity linking / resolution): Xác định từ đó trỏ tới thực thể cụ thể nào trong thế giới thực, hoặc xác định xem hai cách gọi khác nhau có cùng chỉ một thực thể hay không.
@@ -360,7 +360,7 @@ Bước phân tích câu hỏi không chỉ nắm bắt chủ đề mà còn ư�
 
 ### Ví dụ minh họa hoàn chỉnh
 
-Xét câu hỏi: "Trong thuật toán HITS, một trang có điểm uy tín (authority score) cao là trang như thế nào?". Kiểu câu trả lời mong đợi là định nghĩa hoặc giải thích nguyên lý.
+Xét câu hỏi: "Trong thuật toán HITS, một trang có {{term:authority-score}} cao là trang như thế nào?". Kiểu câu trả lời mong đợi là định nghĩa hoặc giải thích nguyên lý.
 
 | Đoạn văn ứng viên | Nội dung | Đánh giá |
 | --- | --- | --- |
@@ -372,7 +372,7 @@ Khi chọn P1, câu trả lời của mô hình hỏi đáp dạng trích xuất
 
 Đoạn P2 chứa từ khóa HITS nhưng không trả lời trọng tâm câu hỏi. Khi các đoạn văn ứng viên mâu thuẫn nhau như P3, hệ thống phải đối chiếu độ tin cậy của nguồn và tổng hợp nhiều bằng chứng; nếu không đủ cơ sở xác thực thì cần trả lời là "chưa thể xác định".
 
-Công cụ tìm kiếm thông thường trả về danh sách tài liệu; hỏi đáp dạng trích xuất trả về một đoạn liên tục (span) trong văn bản nguồn; còn hỏi đáp dạng tạo sinh (generative QA) có thể tổng hợp thành câu văn mới nhưng tiềm ẩn nguy cơ ảo giác (hallucination) nếu thêm thắt chi tiết ngoài nguồn. Tài liệu bài học này bám sát luồng phân tích - truy xuất - lựa chọn trong slide bài giảng kinh điển.
+Công cụ tìm kiếm thông thường trả về danh sách tài liệu; hỏi đáp dạng trích xuất trả về một đoạn liên tục (span) trong văn bản nguồn; còn {{term:generative-qa}} có thể tổng hợp thành câu văn mới nhưng tiềm ẩn nguy cơ ảo giác (hallucination) nếu thêm thắt chi tiết ngoài nguồn. Tài liệu bài học này bám sát luồng phân tích - truy xuất - lựa chọn trong slide bài giảng kinh điển.
 
 Câu hỏi dài chưa chắc đã đem lại kết quả tốt hơn. Nếu câu hỏi chứa quá nhiều từ thừa, giả định sai hoặc lồng ghép nhiều câu hỏi cùng lúc, khâu truy xuất đoạn văn sẽ gặp nhiều khó khăn.
 
@@ -389,7 +389,7 @@ Các phương tiện truyền thông phi văn bản vẫn có thể được tì
 | Video bài giảng | Tiêu đề, đề mục, bản gỡ băng âm thanh, khung hình tiêu biểu | `giải thích Dirichlet smoothing` | Nhận dạng tiếng nói nhận sai thuật ngữ chuyên môn hoặc tạp âm |
 | Âm nhạc và âm thanh | Metadata, lời bài hát, giọng nói, đặc trưng âm học | `bài hát giọng nữ`, `tiếng vỗ tay` | Nhận dạng tiếng nói không nhận diện được giai điệu hay âm thanh môi trường |
 
-Công nghệ nhận dạng ký tự quang học (OCR) chuyển đổi chữ viết trong ảnh thành văn bản, nhưng không thể tự động hiểu toàn bộ bối cảnh, quan hệ giữa các vật thể hay cảm xúc trong bức ảnh. Công nghệ nhận dạng tiếng nói (speech recognition) chuyển lời nói thành văn bản, nhưng để phân biệt nhạc cụ, nhịp điệu, giai điệu hay tiếng động môi trường thì bắt buộc phải dùng các đặc trưng âm học chuyên biệt.
+Công nghệ {{term:optical-character-recognition}} chuyển đổi chữ viết trong ảnh thành văn bản, nhưng không thể tự động hiểu toàn bộ bối cảnh, quan hệ giữa các vật thể hay cảm xúc trong bức ảnh. Công nghệ {{term:speech-recognition}} chuyển lời nói thành văn bản, nhưng để phân biệt nhạc cụ, nhịp điệu, giai điệu hay tiếng động môi trường thì bắt buộc phải dùng các đặc trưng âm học chuyên biệt.
 
 Trong tìm kiếm ảnh và âm thanh dựa trên nội dung, hệ thống có thể kết hợp thêm màu sắc, hình dạng, vector nhúng hình ảnh và đặc trưng phổ âm thanh.
 
@@ -440,7 +440,7 @@ Với truy vấn `jaguar speed`, hãy thiết kế ba hệ thống tìm kiếm: 
 
 1. Nêu ít nhất hai nét nghĩa khác nhau của từ `jaguar`.
 2. Xác định đơn vị kết quả trả về của từng hệ thống.
-3. Chọn ít nhất hai đặc trưng bổ sung ngoài mô hình túi từ (BoW).
+3. Chọn ít nhất hai đặc trưng bổ sung ngoài {{term:bow}}.
 4. Đưa ra một trường hợp thất bại tiềm ẩn và chỉ số đánh giá tương ứng.
 
 <details>
@@ -471,7 +471,7 @@ Slide nguồn: 27
 3. Toán tử `arg max_Λ E(...)` trả về đối tượng gì?
 4. Cạnh nối giữa các từ truy vấn khác nhau như thế nào giữa phụ thuộc tuần tự và phụ thuộc hoàn toàn?
 5. Vì sao không được mặc định coi `about(...)` là hàm có sẵn của XPath tiêu chuẩn?
-6. Nhận dạng thực thể có tên (NER) khác với xếp hạng thực thể ở điểm nào?
+6. Nhận {{term:ner}} khác với xếp hạng thực thể ở điểm nào?
 7. Vì sao một đoạn văn chứa đầy đủ từ khóa của câu hỏi chưa chắc đã là đáp án đúng trong hệ thống QA?
 8. Vì sao công nghệ OCR đơn thuần không thể giúp tìm kiếm toàn diện mọi nội dung của một bức ảnh?
 
@@ -498,18 +498,18 @@ Slide nguồn: 27
 | Feature function | Hàm đặc trưng | Hàm ánh xạ cặp đối tượng thành giá trị đặc trưng số thực |
 | Parameter vector | Vector tham số | Vector `Λ` chứa các trọng số của từng đặc trưng |
 | Term dependence | Phụ thuộc từ | Mối quan hệ về thứ tự, khoảng cách gần kề hoặc đồng xuất hiện giữa các từ |
-| Markov Random Field | Trường ngẫu nhiên Markov (MRF) | Mô hình đồ thị vô hướng biểu diễn sự phụ thuộc giữa các biến |
+| Markov Random Field | {{term:mrf}} | Mô hình đồ thị vô hướng biểu diễn sự phụ thuộc giữa các biến |
 | Sequential dependence | Phụ thuộc tuần tự | Cấu trúc chỉ khai thác sự phụ thuộc giữa các từ truy vấn nằm liền kề |
 | Proximity | Tính gần kề | Mức độ các từ truy vấn xuất hiện gần nhau trong văn bản |
 | Document structure | Cấu trúc tài liệu | Cách tổ chức tài liệu thành tiêu đề, tác giả, đề mục, phần thân |
 | XML retrieval | Truy xuất XML | Tìm kiếm kết hợp đồng thời điều kiện nội dung và điều kiện cấu trúc XML |
 | CAS query | Truy vấn nội dung và cấu trúc | Truy vấn chỉ định đồng thời cả yêu cầu nội dung và vị trí cấu trúc tài liệu |
-| Named entity recognition | Nhận dạng thực thể có tên (NER) | Bước trích xuất tên người, tổ chức, địa danh từ văn bản |
+| Named entity recognition | Nhận {{term:ner}} | Bước trích xuất tên người, tổ chức, địa danh từ văn bản |
 | Entity linking | Liên kết thực thể | Bước xác định thực thể được nhắc đến tương ứng với thực thể cụ thể nào |
 | Entity search | Truy xuất thực thể | Tìm kiếm trả về danh sách các thực thể được xếp hạng thay vì tài liệu |
 | Pseudo-document | Tài liệu giả | Biểu diễn văn bản nhân tạo gom từ ngữ cảnh xung quanh thực thể |
 | Question answering | Hệ thống hỏi đáp (QA) | Hệ thống trả về câu trả lời trực tiếp và cụ thể cho câu hỏi của người dùng |
 | Passage retrieval | Truy xuất đoạn văn | Bước tìm các câu hoặc đoạn văn có khả năng chứa câu trả lời |
-| Optical Character Recognition | Nhận dạng ký tự quang học (OCR) | Công nghệ chuyển đổi chữ viết trong hình ảnh thành văn bản |
+| Optical Character Recognition | {{term:optical-character-recognition}} | Công nghệ chuyển đổi chữ viết trong hình ảnh thành văn bản |
 | Speech recognition | Nhận dạng tiếng nói | Công nghệ chuyển đổi lời nói âm thanh thành văn bản |
 | Multimedia retrieval | Truy xuất đa phương tiện | Tìm kiếm trên các định dạng hình ảnh, video, âm thanh phi văn bản |

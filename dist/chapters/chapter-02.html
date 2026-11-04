@@ -5,7 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163b3c">
   <meta name="description" content="Theo dõi các thành phần của công cụ tìm kiếm từ khâu thu thập tài liệu đến xếp hạng và đánh giá.">
+  <meta property="og:title" content="CHƯƠNG 2 Kiến trúc của công cụ tìm kiếm | SEG301m">
+  <meta property="og:description" content="Theo dõi các thành phần của công cụ tìm kiếm từ khâu thu thập tài liệu đến xếp hạng và đánh giá.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="CHƯƠNG 2 Kiến trúc của công cụ tìm kiếm | SEG301m">
+  <meta name="twitter:description" content="Theo dõi các thành phần của công cụ tìm kiếm từ khâu thu thập tài liệu đến xếp hạng và đánh giá.">
   <title>CHƯƠNG 2 Kiến trúc của công cụ tìm kiếm | SEG301m</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
@@ -13,16 +20,35 @@
   <link rel="stylesheet" href="../tutor.css?v=20261104-vi">
   <link rel="stylesheet" href="../assets/katex/katex.min.css?v=20261104-vi">
   <link rel="stylesheet" href="../assets/highlight.css?v=20261104-vi">
-  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang"}</script>
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('seg301m-term-mode');
+        var mode = (saved === 'en' || saved === 'vi' || saved === 'bilingual') ? saved : 'bilingual';
+        document.documentElement.setAttribute('data-term-mode', mode);
+      } catch (e) {
+        document.documentElement.setAttribute('data-term-mode', 'bilingual');
+      }
+    })();
+  </script>
+  <script id="locale-data" type="application/json">{"page":"chapter","glossary":{"label":"Tìm thuật ngữ","placeholder":"Nhập từ tiếng Việt hoặc tiếng Anh","count":"Đang hiển thị {shown} / {total} thuật ngữ"},"backToTop":"Về đầu trang","termsList":[{"id":"a-b-testing","en":"a/b testing","vi":"thử nghiệm A/B","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"additive-smoothing","en":"additive smoothing","vi":"làm mịn cộng","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"age","en":"age","vi":"chỉ số age","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"agglomerative-clustering","en":"agglomerative clustering","vi":"phân cụm tích tụ","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"anchor-text","en":"anchor text","vi":"văn bản neo","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"ap","en":"AP","vi":"độ chính xác trung bình (AP)","aliases":["Average Precision"],"category":"acronym","preserveEnglish":false},{"id":"application-based-model","en":"application-based model","vi":"mô hình theo ứng dụng","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"ascii","en":"ASCII","vi":"ASCII","aliases":["American Standard Code for Information Interchange"],"category":"acronym","preserveEnglish":true},{"id":"authority-score","en":"authority score","vi":"điểm uy tín","aliases":["authority"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"average-linkage","en":"average linkage","vi":"liên kết trung bình","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"average-precision","en":"average precision","vi":"độ chính xác trung bình","aliases":["AP"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"backlink","en":"backlink","vi":"liên kết ngược","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"bag-of-words","en":"bag of words","vi":"mô hình túi từ","aliases":["BoW"],"category":"information-retrieval","preserveEnglish":false},{"id":"bigtable","en":"BigTable","vi":"BigTable","aliases":["Google BigTable"],"category":"tech-library-name","preserveEnglish":true},{"id":"binary-independence-model","en":"binary independence model","vi":"mô hình độc lập nhị phân","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"bm25","en":"BM25","vi":"BM25","aliases":["Okapi BM25","Best Matching 25"],"category":"acronym","preserveEnglish":true},{"id":"boolean-retrieval","en":"boolean retrieval","vi":"truy xuất boolean","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"bounce-rate","en":"bounce rate","vi":"tỷ lệ thoát","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"bow","en":"BoW","vi":"mô hình túi từ (BoW)","aliases":["Bag of Words"],"category":"acronym","preserveEnglish":false},{"id":"canonical-tag","en":"canonical tag","vi":"thẻ canonical","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"cas-query","en":"CAS query","vi":"truy vấn CAS","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"categorization","en":"categorization","vi":"phân loại","aliases":["Classification"],"category":"core-concept","preserveEnglish":false},{"id":"centroid","en":"centroid","vi":"trọng tâm","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"character-encoding","en":"character encoding","vi":"mã hóa ký tự","aliases":["Character encoding"],"category":"core-concept","preserveEnglish":false},{"id":"checksum","en":"checksum","vi":"mã kiểm tra","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"classification","en":"classification","vi":"phân loại","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"classifier","en":"classifier","vi":"bộ phân loại","aliases":["classifiers"],"category":"core-concept","preserveEnglish":false},{"id":"click-through-rate","en":"click-through rate","vi":"tỷ lệ nhấp","aliases":["CTR"],"category":"web-search","preserveEnglish":false},{"id":"clustering","en":"clustering","vi":"phân cụm","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"co-rated-items","en":"co-rated items","vi":"mục đánh giá chung","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"collaborative-filtering","en":"collaborative filtering","vi":"lọc cộng tác","aliases":["CF"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"collaborative-searching","en":"collaborative searching","vi":"tìm kiếm cộng tác","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"community-based-qa","en":"community-based qa","vi":"hỏi đáp cộng đồng","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"complete-linkage","en":"complete linkage","vi":"liên kết đầy đủ","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"confusion-matrix","en":"confusion matrix","vi":"ma trận nhầm lẫn","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"convergence","en":"convergence","vi":"sự hội tụ","aliases":["Convergence"],"category":"core-concept","preserveEnglish":false},{"id":"cosine-similarity","en":"cosine similarity","vi":"độ tương đồng cosine","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"coverage","en":"coverage","vi":"độ bao phủ","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"crawl","en":"crawl","vi":"thu thập web","aliases":["Crawling"],"category":"web-search","preserveEnglish":false},{"id":"crawler","en":"crawler","vi":"trình thu thập","aliases":["crawlers"],"category":"web-search","preserveEnglish":false},{"id":"crawling","en":"crawling","vi":"thu thập web","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"cross-language-search","en":"cross-language search","vi":"tìm kiếm xuyên ngôn ngữ","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"ctr","en":"CTR","vi":"tỷ lệ nhấp (CTR)","aliases":["Click-Through Rate"],"category":"acronym","preserveEnglish":false},{"id":"daat","en":"DAAT","vi":"duyệt theo từng tài liệu (DAAT)","aliases":["Document-at-a-Time"],"category":"acronym","preserveEnglish":false},{"id":"damerau-levenshtein-distance","en":"Damerau-Levenshtein distance","vi":"khoảng cách Damerau-Levenshtein","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"dcg","en":"DCG","vi":"độ tăng tích lũy chiết khấu (DCG)","aliases":["Discounted Cumulative Gain"],"category":"acronym","preserveEnglish":false},{"id":"decision-boundary","en":"decision boundary","vi":"ranh giới quyết định","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"deep-web","en":"deep web","vi":"web ẩn","aliases":["Hidden Web","Deep Web"],"category":"web-search","preserveEnglish":false},{"id":"desktop-search","en":"desktop search","vi":"tìm kiếm trên máy tính cá nhân","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"diameter","en":"diameter","vi":"đường kính cụm","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"dice-coefficient","en":"Dice coefficient","vi":"hệ số Dice","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"dirichlet-smoothing","en":"Dirichlet smoothing","vi":"làm mịn Dirichlet","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"discounted-cumulative-gain","en":"discounted cumulative gain","vi":"độ tăng ích tích lũy chiết khấu","aliases":["DCG"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"discriminative-model","en":"discriminative model","vi":"mô hình phân biệt","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"discriminative-power","en":"discriminative power","vi":"khả năng phân biệt","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"divisive-clustering","en":"divisive clustering","vi":"phân cụm phân chia","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"dns","en":"DNS","vi":"DNS","aliases":["Domain Name System"],"category":"acronym","preserveEnglish":true},{"id":"document","en":"document","vi":"tài liệu","aliases":["documents"],"category":"core-concept","preserveEnglish":false},{"id":"document-at-a-time","en":"document-at-a-time","vi":"xử lý theo từng tài liệu","aliases":["DAAT"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"document-collection","en":"document collection","vi":"tập tài liệu","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"document-filtering","en":"document filtering","vi":"lọc tài liệu","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"document-frequency","en":"document frequency","vi":"tần suất tài liệu","aliases":["df","DF"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"document-partition","en":"document partition","vi":"phân vùng theo tài liệu","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"document-structure","en":"document structure","vi":"cấu trúc tài liệu","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"dwell-time","en":"dwell time","vi":"thời gian dừng đọc","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"edit-distance","en":"edit distance","vi":"khoảng cách biên tập","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"effectiveness","en":"effectiveness","vi":"tính hiệu quả","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"efficiency","en":"efficiency","vi":"tính hiệu năng","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"elasticsearch","en":"Elasticsearch","vi":"Elasticsearch","aliases":["ES"],"category":"tech-library-name","preserveEnglish":true},{"id":"elbow-method","en":"elbow method","vi":"phương pháp điểm khuỷu tay","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"elias-code","en":"Elias code","vi":"mã Elias","aliases":["Elias gamma","Elias delta","mã hóa Elias"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"enterprise-search","en":"enterprise search","vi":"tìm kiếm doanh nghiệp","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"entity-linking","en":"entity linking","vi":"liên kết thực thể","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"entity-search","en":"entity search","vi":"truy xuất thực thể","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"entropy","en":"entropy","vi":"độ hỗn loạn","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"expert-search","en":"expert search","vi":"tìm kiếm chuyên gia","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"extractive-qa","en":"extractive QA","vi":"hỏi đáp dạng trích xuất","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"f1","en":"F1","vi":"F1","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":true},{"id":"fallout","en":"fallout","vi":"tỷ lệ dương tính giả","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"false-negative","en":"false negative","vi":"âm tính giả","aliases":["False negative"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"false-positive","en":"false positive","vi":"dương tính giả","aliases":["False positive"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"feature","en":"feature","vi":"đặc trưng","aliases":["features"],"category":"core-concept","preserveEnglish":false},{"id":"feature-function","en":"feature function","vi":"hàm đặc trưng","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"feature-selection","en":"feature selection","vi":"lựa chọn đặc trưng","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"feed","en":"feed","vi":"nguồn cấp","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"field","en":"field","vi":"trường dữ liệu","aliases":["extent","fields"],"category":"core-concept","preserveEnglish":false},{"id":"fingerprint","en":"fingerprint","vi":"dấu vân tay","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"focused-crawling","en":"focused crawling","vi":"thu thập theo chủ đề","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"freshness","en":"freshness","vi":"độ mới","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"frontier","en":"frontier","vi":"hàng đợi biên","aliases":["Frontier"],"category":"web-search","preserveEnglish":false},{"id":"full-dependence-model","en":"full dependence model","vi":"mô hình phụ thuộc toàn phần","aliases":["FDM"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"galago","en":"Galago","vi":"Galago","aliases":[],"category":"tech-library-name","preserveEnglish":true},{"id":"gap-encoding","en":"gap encoding","vi":"mã hóa khoảng cách","aliases":["d-gap"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"generative-model","en":"generative model","vi":"mô hình sinh","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"generative-qa","en":"generative QA","vi":"hỏi đáp dạng tạo sinh","aliases":["generative question answering","hỏi đáp sinh"],"category":"information-retrieval","preserveEnglish":false},{"id":"geometric-mean-average-precision","en":"geometric mean average precision","vi":"điểm trung bình nhân gmap","aliases":["GMAP"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"get","en":"GET","vi":"GET","aliases":[],"category":"web-search","preserveEnglish":true},{"id":"gmap","en":"GMAP","vi":"độ chính xác trung bình nhân (GMAP)","aliases":["Geometric Mean Average Precision"],"category":"acronym","preserveEnglish":false},{"id":"golomb-code","en":"Golomb code","vi":"mã Golomb","aliases":["mã Golomb-Rice","mã hóa Golomb"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"google","en":"Google","vi":"Google","aliases":["Google Search"],"category":"tech-library-name","preserveEnglish":true},{"id":"google-analytics","en":"Google Analytics","vi":"Google Analytics","aliases":["GA"],"category":"tech-library-name","preserveEnglish":true},{"id":"google-search-console","en":"Google Search Console","vi":"Google Search Console","aliases":["GSC"],"category":"tech-library-name","preserveEnglish":true},{"id":"hadoop","en":"Hadoop","vi":"Hadoop","aliases":["Apache Hadoop"],"category":"tech-library-name","preserveEnglish":true},{"id":"hard-margin","en":"hard margin","vi":"lề cứng","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"hash","en":"hash","vi":"hàm băm","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"head","en":"HEAD","vi":"HEAD","aliases":[],"category":"web-search","preserveEnglish":true},{"id":"heaps-law","en":"Heaps' law","vi":"định luật Heaps","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"hidden-markov-model","en":"Hidden Markov Model","vi":"mô hình Markov ẩn","aliases":["HMM"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"hierarchical-clustering","en":"hierarchical clustering","vi":"phân cụm phân cấp","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"hinge-loss","en":"hinge loss","vi":"hàm mất mát hinge","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"hits","en":"HITS","vi":"HITS","aliases":["Hyperlink-Induced Topic Search"],"category":"algorithm-model-formula","preserveEnglish":true},{"id":"hmm","en":"HMM","vi":"mô hình Markov ẩn (HMM)","aliases":["Hidden Markov Model"],"category":"acronym","preserveEnglish":false},{"id":"hostname","en":"hostname","vi":"tên máy chủ","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"html","en":"HTML","vi":"HTML","aliases":["HyperText Markup Language"],"category":"acronym","preserveEnglish":true},{"id":"http","en":"HTTP","vi":"HTTP","aliases":["Hypertext Transfer Protocol"],"category":"acronym","preserveEnglish":true},{"id":"hub-score","en":"hub score","vi":"điểm trung tâm","aliases":["hub"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"hyperplane","en":"hyperplane","vi":"siêu phẳng","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"ideal-dcg","en":"ideal dcg","vi":"dcg lý tưởng","aliases":["IDCG"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"impression","en":"impression","vi":"lượt hiển thị","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"index-merging","en":"index merging","vi":"hợp nhất chỉ mục","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"index-term","en":"index term","vi":"từ khóa chỉ mục","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"indexing","en":"indexing","vi":"lập chỉ mục","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"indri","en":"Indri","vi":"Indri","aliases":[],"category":"tech-library-name","preserveEnglish":true},{"id":"inference-network","en":"inference network","vi":"mạng suy luận","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"information-extraction","en":"information extraction","vi":"trích xuất thông tin","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"information-gain","en":"information gain","vi":"độ tăng thông tin","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"information-need","en":"information need","vi":"nhu cầu thông tin","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"information-retrieval","en":"information retrieval","vi":"truy xuất thông tin","aliases":["IR"],"category":"core-concept","preserveEnglish":false},{"id":"inlink","en":"inlink","vi":"liên kết trỏ đến","aliases":["Inlink"],"category":"web-search","preserveEnglish":false},{"id":"internal-link","en":"internal link","vi":"liên kết nội bộ","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"interpolated-precision","en":"interpolated precision","vi":"độ chính xác nội suy","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"inversion","en":"inversion","vi":"đảo chỉ mục","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"inverted-index","en":"inverted index","vi":"chỉ mục đảo","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"ir","en":"IR","vi":"truy xuất thông tin","aliases":["Information Retrieval","IR"],"category":"acronym","preserveEnglish":false},{"id":"jelinek-mercer-smoothing","en":"Jelinek-Mercer smoothing","vi":"làm mịn Jelinek-Mercer","aliases":["JM smoothing"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"json-ld","en":"JSON-LD","vi":"JSON-LD","aliases":["JavaScript Object Notation for Linked Data"],"category":"acronym","preserveEnglish":true},{"id":"k-means","en":"K-means","vi":"K-means","aliases":["k-means clustering"],"category":"algorithm-model-formula","preserveEnglish":true},{"id":"kendall-tau","en":"Kendall tau","vi":"hệ số Kendall tau","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"kl-divergence","en":"KL divergence","vi":"phân kỳ KL","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"krovetz-stemmer","en":"Krovetz stemmer","vi":"bộ stemmer Krovetz","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"landing-page","en":"landing page","vi":"trang đích","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"laplace-smoothing","en":"Laplace smoothing","vi":"làm mịn Laplace","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"last-modified","en":"last-modified","vi":"thời điểm cập nhật cuối","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"latent-dirichlet-allocation","en":"latent dirichlet allocation","vi":"phân bổ dirichlet tiềm ẩn","aliases":["LDA"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"latent-semantic-indexing","en":"latent semantic indexing","vi":"lập chỉ mục ngữ nghĩa tiềm ẩn","aliases":["LSI"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"lda","en":"LDA","vi":"phân bổ Dirichlet tiềm ẩn (LDA)","aliases":["Latent Dirichlet Allocation"],"category":"acronym","preserveEnglish":false},{"id":"learning-to-rank","en":"learning to rank","vi":"học xếp hạng","aliases":["LTR"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"lemmatization","en":"lemmatization","vi":"chuẩn hóa từ điển","aliases":["Lemmatization"],"category":"core-concept","preserveEnglish":false},{"id":"lemur","en":"Lemur","vi":"Lemur","aliases":["Lemur Project"],"category":"tech-library-name","preserveEnglish":true},{"id":"levenshtein-distance","en":"Levenshtein distance","vi":"khoảng cách Levenshtein","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"lexical-analysis","en":"lexical analysis","vi":"phân tích từ vựng","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"likelihood","en":"likelihood","vi":"hàm hợp lý","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"link-farm","en":"link farm","vi":"trang trại liên kết","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"link-spam","en":"link spam","vi":"spam liên kết","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"linkage","en":"linkage","vi":"quy tắc liên kết","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"listwise-ltr","en":"listwise LTR","vi":"học xếp hạng theo danh sách (listwise LTR)","aliases":["listwise learning to rank"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"lsi","en":"LSI","vi":"lập chỉ mục ngữ nghĩa tiềm ẩn (LSI)","aliases":["Latent Semantic Indexing","LSA"],"category":"acronym","preserveEnglish":false},{"id":"ltr","en":"LTR","vi":"học xếp hạng (LTR)","aliases":["Learning to Rank"],"category":"acronym","preserveEnglish":false},{"id":"lucene","en":"Lucene","vi":"Lucene","aliases":["Apache Lucene"],"category":"tech-library-name","preserveEnglish":true},{"id":"macro-average","en":"macro-average","vi":"trung bình macro","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"manual-indexing","en":"manual indexing","vi":"lập chỉ mục thủ công","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"map","en":"MAP","vi":"độ chính xác trung bình (MAP)","aliases":["Mean Average Precision"],"category":"acronym","preserveEnglish":false},{"id":"mapreduce","en":"MapReduce","vi":"MapReduce","aliases":[],"category":"tech-library-name","preserveEnglish":true},{"id":"margin","en":"margin","vi":"lề","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"markov-property","en":"Markov property","vi":"tính chất Markov","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"markov-random-field","en":"Markov random field","vi":"trường ngẫu nhiên Markov","aliases":["MRF"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"maxscore","en":"MaxScore","vi":"MaxScore","aliases":[],"category":"algorithm-model-formula","preserveEnglish":true},{"id":"mean-average-precision","en":"mean average precision","vi":"điểm trung bình map","aliases":["MAP"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"mean-reciprocal-rank","en":"mean reciprocal rank","vi":"điểm trung bình mrr","aliases":["MRR"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"mean-squared-error","en":"mean squared error","vi":"sai số toàn phương trung bình","aliases":["MSE"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"metasearch-engine","en":"metasearch engine","vi":"công cụ tìm kiếm tổng hợp","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"micro-average","en":"micro-average","vi":"trung bình micro","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"minhash","en":"MinHash","vi":"MinHash","aliases":[],"category":"algorithm-model-formula","preserveEnglish":true},{"id":"mrf","en":"MRF","vi":"trường ngẫu nhiên Markov (MRF)","aliases":["Markov Random Field"],"category":"acronym","preserveEnglish":false},{"id":"mrr","en":"MRR","vi":"thứ hạng nghịch đảo trung bình (MRR)","aliases":["Mean Reciprocal Rank"],"category":"acronym","preserveEnglish":false},{"id":"multimedia-information-retrieval","en":"multimedia information retrieval","vi":"truy xuất thông tin đa phương tiện","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"multimedia-retrieval","en":"multimedia retrieval","vi":"truy xuất đa phương tiện","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"multinomial-naive-bayes","en":"multinomial Naive Bayes","vi":"Naive Bayes đa thức","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"n-gram","en":"n-gram","vi":"n-gram","aliases":[],"category":"core-concept","preserveEnglish":true},{"id":"named-entity","en":"named entity","vi":"thực thể định danh","aliases":["Named entity"],"category":"information-retrieval","preserveEnglish":false},{"id":"named-entity-recognition","en":"named entity recognition","vi":"nhận dạng thực thể có tên","aliases":["NER"],"category":"information-retrieval","preserveEnglish":false},{"id":"ndcg","en":"NDCG","vi":"độ tăng tích lũy chiết khấu chuẩn hóa (NDCG)","aliases":["Normalized Discounted Cumulative Gain"],"category":"acronym","preserveEnglish":false},{"id":"near-duplicate","en":"near duplicate","vi":"trùng lặp gần","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"ner","en":"NER","vi":"nhận dạng thực thể có tên (NER)","aliases":["Named Entity Recognition"],"category":"acronym","preserveEnglish":false},{"id":"nofollow","en":"nofollow","vi":"nofollow","aliases":[],"category":"web-search","preserveEnglish":true},{"id":"noise","en":"noise","vi":"nhiễu nội dung","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"noise-removal","en":"noise removal","vi":"loại bỏ nhiễu","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"noisy-channel-model","en":"noisy channel model","vi":"mô hình kênh nhiễu","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"normalized-dcg","en":"normalized dcg","vi":"điểm dcg chuẩn hóa","aliases":["NDCG"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"noun-phrase","en":"noun phrase","vi":"cụm danh từ","aliases":["noun phrases"],"category":"core-concept","preserveEnglish":false},{"id":"null-hypothesis","en":"null hypothesis","vi":"giả thuyết vô hiệu","aliases":["H0"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"ocr","en":"OCR","vi":"nhận dạng ký tự quang học (OCR)","aliases":["Optical Character Recognition"],"category":"acronym","preserveEnglish":false},{"id":"off-page-seo","en":"off-page seo","vi":"off-page seo","aliases":[],"category":"web-search","preserveEnglish":true},{"id":"on-page-seo","en":"on-page seo","vi":"on-page seo","aliases":[],"category":"web-search","preserveEnglish":true},{"id":"online-community","en":"online community","vi":"cộng đồng trực tuyến","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"online-testing","en":"online testing","vi":"thử nghiệm trực tuyến","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"open-graph","en":"Open Graph","vi":"Open Graph","aliases":["OG"],"category":"tech-library-name","preserveEnglish":true},{"id":"optical-character-recognition","en":"optical character recognition","vi":"nhận dạng ký tự quang học","aliases":["OCR"],"category":"information-retrieval","preserveEnglish":false},{"id":"ordered-unordered-window","en":"ordered / unordered window","vi":"cửa sổ có / không thứ tự","aliases":["Ordered window","Unordered window"],"category":"information-retrieval","preserveEnglish":false},{"id":"organic-result","en":"organic result","vi":"kết quả tìm kiếm tự nhiên","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"organic-traffic","en":"organic traffic","vi":"lưu lượng tìm kiếm tự nhiên","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"outlink","en":"outlink","vi":"liên kết trỏ ra","aliases":["Outlink"],"category":"web-search","preserveEnglish":false},{"id":"p-value","en":"p-value","vi":"giá trị p","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"p2p","en":"P2P","vi":"mạng ngang hàng (P2P)","aliases":["Peer-to-Peer"],"category":"acronym","preserveEnglish":false},{"id":"pagerank","en":"PageRank","vi":"PageRank","aliases":["PR"],"category":"algorithm-model-formula","preserveEnglish":true},{"id":"paid-advertisement","en":"paid advertisement","vi":"quảng cáo trả phí","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"pairwise-ltr","en":"pairwise LTR","vi":"học xếp hạng theo cặp (pairwise LTR)","aliases":["pairwise learning to rank","Ranking SVM"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"parameter-vector","en":"parameter vector","vi":"vector tham số","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"parser","en":"parser","vi":"bộ phân tích cú pháp","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"part-of-speech-tagger","en":"part-of-speech tagger","vi":"bộ gắn thẻ từ loại","aliases":["POS tagger"],"category":"core-concept","preserveEnglish":false},{"id":"passage-retrieval","en":"passage retrieval","vi":"truy xuất đoạn văn","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"pearson-correlation","en":"Pearson correlation","vi":"tương quan Pearson","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"peer-to-peer","en":"peer-to-peer","vi":"mạng ngang hàng","aliases":["P2P"],"category":"information-retrieval","preserveEnglish":false},{"id":"per-host-queue","en":"per-host queue","vi":"hàng đợi riêng theo từng máy chủ","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"personalization","en":"personalization","vi":"cá nhân hóa","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"pointwise-ltr","en":"pointwise LTR","vi":"học xếp hạng theo điểm (pointwise LTR)","aliases":["pointwise learning to rank"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"politeness-policy","en":"politeness policy","vi":"chính sách lịch sự","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"pooling","en":"pooling","vi":"phương pháp pooling","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"porter-stemmer","en":"Porter stemmer","vi":"bộ stemmer Porter","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"pos","en":"POS","vi":"gán nhãn từ loại (POS)","aliases":["Part of Speech"],"category":"acronym","preserveEnglish":false},{"id":"position-bias","en":"position bias","vi":"định kiến vị trí","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"positional-index","en":"positional index","vi":"chỉ mục theo vị trí","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"post","en":"POST","vi":"POST","aliases":[],"category":"web-search","preserveEnglish":true},{"id":"posterior","en":"posterior","vi":"xác suất hậu nghiệm","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"posting","en":"posting","vi":"posting","aliases":["posting list","postings"],"category":"indexing-ranking-evaluation","preserveEnglish":true},{"id":"posting-list","en":"posting list","vi":"danh sách posting","aliases":["posting lists"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"precision","en":"precision","vi":"độ chính xác","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"precision-k","en":"precision@k","vi":"độ chính xác tại k (Precision@k)","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"prefix-code","en":"prefix code","vi":"mã tiền tố","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"prior","en":"prior","vi":"xác suất tiên nghiệm","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"probabilistic-retrieval-model","en":"probabilistic retrieval model","vi":"mô hình truy xuất xác suất","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"proximity","en":"proximity","vi":"tính gần kề","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"pseudo-document","en":"pseudo-document","vi":"tài liệu giả","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"pseudo-relevance-feedback","en":"pseudo-relevance feedback","vi":"phản hồi độ liên quan giả định","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"pull-feed","en":"pull feed","vi":"nguồn cấp kiểu kéo","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"purity","en":"purity","vi":"độ tinh khiết","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"push-feed","en":"push feed","vi":"nguồn cấp kiểu đẩy","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"qa","en":"QA","vi":"hỏi đáp (QA)","aliases":["Question Answering"],"category":"acronym","preserveEnglish":false},{"id":"query","en":"query","vi":"truy vấn","aliases":["queries"],"category":"core-concept","preserveEnglish":false},{"id":"query-broker","en":"query broker","vi":"bộ điều phối truy vấn","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"query-drift","en":"query drift","vi":"trôi lệch truy vấn","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"query-expansion","en":"query expansion","vi":"mở rộng truy vấn","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"query-latency","en":"query latency","vi":"độ trễ truy vấn","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"query-likelihood","en":"query likelihood","vi":"khả năng xảy ra truy vấn","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"query-log","en":"query log","vi":"nhật ký truy vấn","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"query-suggestion","en":"query suggestion","vi":"gợi ý truy vấn","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"query-throughput","en":"query throughput","vi":"thông lượng truy vấn","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"query-transformation","en":"query transformation","vi":"biến đổi truy vấn","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"question-answering","en":"question answering","vi":"hỏi đáp","aliases":["QA"],"category":"core-concept","preserveEnglish":false},{"id":"radius","en":"radius","vi":"bán kính cụm","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"random-access","en":"random access","vi":"truy cập ngẫu nhiên","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"random-surfer","en":"random surfer","vi":"người lướt web ngẫu nhiên","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"ranking","en":"ranking","vi":"xếp hạng","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"ranking-svm","en":"Ranking SVM","vi":"Ranking SVM","aliases":[],"category":"algorithm-model-formula","preserveEnglish":true},{"id":"recall","en":"recall","vi":"độ thu hồi","aliases":["độ bao phủ","độ gợi nhớ","recall"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"reciprocal-rank","en":"reciprocal rank","vi":"thứ hạng nghịch đảo","aliases":["RR"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"referral-traffic","en":"referral traffic","vi":"lưu lượng giới thiệu","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"relevance","en":"relevance","vi":"độ liên quan","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"relevance-feedback","en":"relevance feedback","vi":"phản hồi độ liên quan","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"relevance-judgment","en":"relevance judgment","vi":"phán quyết độ liên quan","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"replication","en":"replication","vi":"sao bản","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"resource-selection","en":"resource selection","vi":"chọn lựa nguồn tài nguyên","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"result-clustering","en":"result clustering","vi":"phân cụm kết quả","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"result-merging","en":"result merging","vi":"hợp nhất kết quả","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"retrieval-model","en":"retrieval model","vi":"mô hình truy xuất","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"revisit","en":"revisit","vi":"thu thập lại","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"robots-txt","en":"robots.txt","vi":"robots.txt","aliases":[],"category":"web-search","preserveEnglish":true},{"id":"rocchio-algorithm","en":"Rocchio algorithm","vi":"thuật toán Rocchio","aliases":["Rocchio"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"rr","en":"RR","vi":"thứ hạng nghịch đảo (RR)","aliases":["Reciprocal Rank"],"category":"acronym","preserveEnglish":false},{"id":"scalability","en":"scalability","vi":"khả năng mở rộng","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"schema-org","en":"Schema.org","vi":"Schema.org","aliases":[],"category":"tech-library-name","preserveEnglish":true},{"id":"scheme","en":"scheme","vi":"giao thức url","aliases":["Scheme"],"category":"web-search","preserveEnglish":false},{"id":"score","en":"score","vi":"điểm","aliases":["scores"],"category":"core-concept","preserveEnglish":false},{"id":"score-threshold","en":"score threshold","vi":"ngưỡng điểm số","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"search-engine","en":"search engine","vi":"công cụ tìm kiếm","aliases":["search engines"],"category":"core-concept","preserveEnglish":false},{"id":"search-engine-optimization","en":"search engine optimization","vi":"tối ưu hóa công cụ tìm kiếm","aliases":["SEO"],"category":"core-concept","preserveEnglish":false},{"id":"search-engineer","en":"search engineer","vi":"kỹ sư tìm kiếm","aliases":["Search engineers"],"category":"core-concept","preserveEnglish":false},{"id":"selective-dissemination","en":"selective dissemination","vi":"phân phối có chọn lọc","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"seo","en":"SEO","vi":"tối ưu hóa công cụ tìm kiếm (SEO)","aliases":["Search Engine Optimization"],"category":"acronym","preserveEnglish":false},{"id":"sequential-dependence","en":"sequential dependence","vi":"phụ thuộc tuần tự","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"sequential-dependence-model","en":"sequential dependence model","vi":"mô hình phụ thuộc tuần tự","aliases":["SDM"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"serp","en":"SERP","vi":"trang kết quả tìm kiếm (SERP)","aliases":["Search Engine Results Page"],"category":"acronym","preserveEnglish":false},{"id":"shingle","en":"shingle","vi":"cụm từ liên tiếp","aliases":["N-gram shingle","shingles"],"category":"web-search","preserveEnglish":false},{"id":"silhouette-coefficient","en":"silhouette coefficient","vi":"hệ số bóng","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"simhash","en":"SimHash","vi":"SimHash","aliases":[],"category":"algorithm-model-formula","preserveEnglish":true},{"id":"single-linkage","en":"single linkage","vi":"liên kết đơn","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"sitemap","en":"sitemap","vi":"sơ đồ trang","aliases":["sitemap.xml","sơ đồ trang web"],"category":"web-search","preserveEnglish":false},{"id":"skip-pointer","en":"skip pointer","vi":"con trỏ nhảy","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"smoothing","en":"smoothing","vi":"làm mịn","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"snippet","en":"snippet","vi":"đoạn trích kết quả","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"social-search","en":"social search","vi":"tìm kiếm xã hội","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"soft-margin","en":"soft margin","vi":"lề mềm","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"solr","en":"Solr","vi":"Solr","aliases":["Apache Solr"],"category":"tech-library-name","preserveEnglish":true},{"id":"spam","en":"spam","vi":"spam","aliases":[],"category":"web-search","preserveEnglish":true},{"id":"speech-recognition","en":"speech recognition","vi":"nhận dạng tiếng nói","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"spelling-correction","en":"spelling correction","vi":"sửa lỗi chính tả","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"stemmer","en":"stemmer","vi":"bộ stemmer","aliases":["stemmers"],"category":"core-concept","preserveEnglish":false},{"id":"stemming","en":"stemming","vi":"rút gọn từ về gốc","aliases":["Stemmer"],"category":"core-concept","preserveEnglish":false},{"id":"stopping","en":"stopping","vi":"loại bỏ từ dừng","aliases":["Stopword"],"category":"core-concept","preserveEnglish":false},{"id":"stopword","en":"stopword","vi":"từ dừng","aliases":["stopwords"],"category":"core-concept","preserveEnglish":false},{"id":"structured-data","en":"structured data","vi":"dữ liệu có cấu trúc","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"summarization","en":"summarization","vi":"tóm tắt","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"support-vector","en":"support vector","vi":"vector hỗ trợ","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"support-vector-machine","en":"support vector machine","vi":"máy vector hỗ trợ","aliases":["SVM"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"svm","en":"SVM","vi":"máy vector hỗ trợ (SVM)","aliases":["Support Vector Machine"],"category":"acronym","preserveEnglish":false},{"id":"taat","en":"TAAT","vi":"duyệt theo từng từ (TAAT)","aliases":["Term-at-a-Time"],"category":"acronym","preserveEnglish":false},{"id":"tablet","en":"Tablet","vi":"Tablet","aliases":[],"category":"tech-library-name","preserveEnglish":true},{"id":"tag-cloud","en":"tag cloud","vi":"đám mây thẻ","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"technical-seo","en":"technical seo","vi":"technical seo","aliases":[],"category":"web-search","preserveEnglish":true},{"id":"term-at-a-time","en":"term-at-a-time","vi":"xử lý theo từng từ","aliases":["TAAT"],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"term-dependence","en":"term dependence","vi":"phụ thuộc từ","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"term-frequency","en":"term frequency","vi":"tần suất từ","aliases":["tf","TF"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"term-partition","en":"term partition","vi":"phân vùng theo thuật ngữ","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"terrier","en":"Terrier","vi":"Terrier","aliases":[],"category":"tech-library-name","preserveEnglish":true},{"id":"test-collection","en":"test collection","vi":"bộ sưu tập kiểm thử","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"test-set","en":"test set","vi":"tập kiểm thử","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"text-acquisition","en":"text acquisition","vi":"thu thập văn bản","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"text-transformation","en":"text transformation","vi":"biến đổi văn bản","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"tf-idf","en":"TF-IDF","vi":"TF-IDF","aliases":["tf-idf","TF.IDF","Term Frequency-Inverse Document Frequency"],"category":"acronym","preserveEnglish":true},{"id":"thread","en":"thread","vi":"luồng xử lý","aliases":["threads"],"category":"core-concept","preserveEnglish":false},{"id":"tokenization","en":"tokenization","vi":"tách token","aliases":[],"category":"core-concept","preserveEnglish":false},{"id":"tokenizer","en":"tokenizer","vi":"bộ tách token","aliases":["Tokenization","bộ tách từ"],"category":"core-concept","preserveEnglish":false},{"id":"top-k","en":"top-k","vi":"top-k kết quả","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"topic-detection-and-tracking","en":"topic detection and tracking","vi":"phát hiện và theo dõi chủ đề","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"training-set","en":"training set","vi":"tập huấn luyện","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"translation-model","en":"translation model","vi":"mô hình dịch","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"trec","en":"TREC","vi":"TREC","aliases":["Text REtrieval Conference"],"category":"tech-library-name","preserveEnglish":true},{"id":"twitter-cards","en":"Twitter Cards","vi":"Twitter Cards","aliases":[],"category":"tech-library-name","preserveEnglish":true},{"id":"unary-code","en":"unary code","vi":"mã unari","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"uri","en":"URI","vi":"URI","aliases":["Uniform Resource Identifier"],"category":"acronym","preserveEnglish":true},{"id":"url","en":"URL","vi":"URL","aliases":["Uniform Resource Locator"],"category":"acronym","preserveEnglish":true},{"id":"user-tag","en":"user tag","vi":"thẻ người dùng","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"utf-8","en":"UTF-8","vi":"UTF-8","aliases":["Unicode Transformation Format 8-bit"],"category":"acronym","preserveEnglish":true},{"id":"validation-set","en":"validation set","vi":"tập kiểm định","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"variable-byte-code","en":"variable-byte code","vi":"mã byte khả biến","aliases":[],"category":"indexing-ranking-evaluation","preserveEnglish":false},{"id":"vector-space-model","en":"vector space model","vi":"mô hình không gian vector","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"viterbi-algorithm","en":"Viterbi algorithm","vi":"thuật toán Viterbi","aliases":["Viterbi"],"category":"algorithm-model-formula","preserveEnglish":false},{"id":"wand","en":"WAND","vi":"WAND","aliases":["Weak AND"],"category":"algorithm-model-formula","preserveEnglish":true},{"id":"web-crawler","en":"web crawler","vi":"trình thu thập web","aliases":[],"category":"web-search","preserveEnglish":false},{"id":"wikipedia","en":"Wikipedia","vi":"Wikipedia","aliases":[],"category":"tech-library-name","preserveEnglish":true},{"id":"wordnet","en":"WordNet","vi":"WordNet","aliases":[],"category":"tech-library-name","preserveEnglish":true},{"id":"xml","en":"XML","vi":"XML","aliases":["Extensible Markup Language"],"category":"acronym","preserveEnglish":true},{"id":"xml-retrieval","en":"xml retrieval","vi":"truy xuất XML","aliases":[],"category":"information-retrieval","preserveEnglish":false},{"id":"zipf-s-law","en":"Zipf's law","vi":"định luật Zipf","aliases":[],"category":"algorithm-model-formula","preserveEnglish":false}]}</script>
   <script src="../app.js?v=20261104-vi" defer></script>
   <script src="../tutor.js?v=20261104-vi" defer></script>
 </head>
-<body data-page="chapter" data-language="vi">
+<body data-page="chapter" data-language="vi" data-term-mode="bilingual">
   <a class="skip-link" href="#learning-goals-vi">Chuyển đến bài học</a>
   <div class="reading-progress" aria-hidden="true"><span></span></div>
   <header class="site-header">
     <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
     <span class="site-header__caption">GHI CHÚ HỌC TẬP <span aria-hidden="true">/</span> CHƯƠNG 2</span>
+    <div class="term-switcher" role="group" aria-label="Chế độ hiển thị thuật ngữ">
+    <span class="term-switcher__label" id="term-switcher-label">Thuật ngữ:</span>
+    <div class="term-switcher__buttons" role="radiogroup" aria-labelledby="term-switcher-label">
+      <button type="button" role="radio" class="term-switcher__btn" data-mode="en" aria-checked="false" title="Hiển thị tiếng Anh (English)">English</button>
+      <button type="button" role="radio" class="term-switcher__btn is-active" data-mode="bilingual" aria-checked="true" title="Hiển thị song ngữ (Anh + Việt)">Anh + Việt</button>
+      <button type="button" role="radio" class="term-switcher__btn" data-mode="vi" aria-checked="false" title="Hiển thị tiếng Việt">Tiếng Việt</button>
+    </div>
+  </div>
     <a class="site-header__link" href="../index.html">Xem tất cả chương <span aria-hidden="true">↗</span></a>
   </header>
   <section class="hero" id="top">
@@ -86,23 +112,23 @@
 <li>Trình bày mối quan hệ giữa nhu cầu thông tin, truy vấn, tập tài liệu và chỉ mục.</li>
 <li>Phân biệt rõ quy trình lập chỉ mục và quy trình xử lý truy vấn.</li>
 <li>Giải thích 6 khối thành phần chính cấu tạo nên công cụ tìm kiếm theo luồng dữ liệu.</li>
-<li>Phân biệt hiệu năng tìm kiếm thể hiện qua tính hiệu quả (effectiveness) và tốc độ thể hiện qua tính hiệu năng (efficiency).</li>
+<li>Phân biệt hiệu năng tìm kiếm thể hiện qua <span class="term" data-term-id="effectiveness"><span class="term__en">effectiveness</span><span class="term__vi">tính hiệu quả</span></span> và tốc độ thể hiện qua <span class="term" data-term-id="efficiency"><span class="term__en">efficiency</span><span class="term__vi">tính hiệu năng</span></span>.</li>
 </ol>
 <p class="source-note"><span>SLIDE NGUỒN</span> 1-3</p>
 <figure class="chapter-map"><a href="../assets/chapter-02-mindmap.png" target="_blank" rel="noopener"><img src="../assets/chapter-02-mindmap.png" width="1672" height="941" loading="lazy" alt="Sơ đồ tư duy bằng tiếng Anh cho Chương 2, Kiến trúc của công cụ tìm kiếm"></a><figcaption>Sơ đồ tư duy bằng tiếng Anh tóm tắt toàn bộ Chương 2. Chọn ảnh để xem kích thước đầy đủ.</figcaption></figure>
 <h2 id="prerequisites-vi" data-section-heading="prerequisites">Kiến thức cần chuẩn bị</h2>
 <p>Hãy ôn lại các thuật ngữ quan trọng đã học ở Chương 1:</p>
 <ul>
-<li><strong>Truy vấn (query):</strong> Từ ngữ hoặc điều kiện người dùng nhập vào hệ thống tìm kiếm.</li>
-<li><strong>Tài liệu (document):</strong> Trang Web, email, tệp PDF hoặc bất kỳ đơn vị dữ liệu nào cần tìm kiếm.</li>
-<li><strong>Độ liên quan (relevance):</strong> Mức độ tài liệu đáp ứng được nhu cầu thông tin của người dùng.</li>
-<li><strong>Xếp hạng (ranking):</strong> Việc sắp xếp các tài liệu hữu ích dự đoán lên các vị trí hàng đầu.</li>
+<li><strong><span class="term" data-term-id="ranking"><span class="term__en">Ranking</span><span class="term__vi">Xếp hạng</span></span>:</strong> Việc sắp xếp các tài liệu hữu ích dự đoán lên các vị trí hàng đầu.</li>
+<li><strong><span class="term" data-term-id="document"><span class="term__en">Document</span><span class="term__vi">Tài liệu</span></span>:</strong> Trang Web, email, tệp PDF hoặc bất kỳ đơn vị dữ liệu nào cần tìm kiếm.</li>
+<li><strong><span class="term" data-term-id="relevance"><span class="term__en">Relevance</span><span class="term__vi">Độ liên quan</span></span>:</strong> Mức độ tài liệu đáp ứng được nhu cầu thông tin của người dùng.</li>
+<li><strong><span class="term" data-term-id="ranking"><span class="term__en">Ranking</span><span class="term__vi">Xếp hạng</span></span>:</strong> Việc sắp xếp các tài liệu hữu ích dự đoán lên các vị trí hàng đầu.</li>
 </ul>
 <aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Công cụ tìm kiếm hoạt động tương tự như một kho hàng khổng lồ tìm món hàng phù hợp theo đơn đặt. Việc sắp xếp hàng hóa trước và đánh số từng kệ là &quot;lập chỉ mục&quot;, còn việc nhận đơn hàng rồi tra cứu vị trí kệ để lấy hàng là &quot;xử lý truy vấn&quot;.</p></aside>
 <h2 id="system-architecture-vi" data-section-heading="system-architecture">2.1 Thông tin tổng quan về kiến trúc hệ thống</h2>
 <p class="source-note"><span>SLIDE NGUỒN</span> 4-8</p>
 <h3 id="detail-1-vi">Khởi đầu từ nhu cầu muốn biết của người dùng</h3>
-<p>Quá trình tìm kiếm thực chất bắt đầu từ trước khi người dùng gõ ký tự vào ô tìm kiếm. Người dùng xuất phát từ một <strong>nhu cầu thông tin (information need)</strong>. Ví dụ, người dùng có nhu cầu &quot;muốn biết thời tiết ngày mai ở Thành phố Hồ Chí Minh&quot; và chuyển hóa nhu cầu đó thành truy vấn như <code>thoi tiet ho chi minh ngay mai</code>.</p>
+<p>Quá trình tìm kiếm thực chất bắt đầu từ trước khi người dùng gõ ký tự vào ô tìm kiếm. Người dùng xuất phát từ một <strong><span class="term" data-term-id="information-need"><span class="term__en">information need</span><span class="term__vi">nhu cầu thông tin</span></span></strong>. Ví dụ, người dùng có nhu cầu &quot;muốn biết thời tiết ngày mai ở Thành phố Hồ Chí Minh&quot; và chuyển hóa nhu cầu đó thành truy vấn như <code>thoi tiet ho chi minh ngay mai</code>.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -144,7 +170,7 @@
 </tbody></table></div>
 <p>Slide 4 cũng chỉ ra rằng tập tài liệu luôn diễn ra các hoạt động thêm mới và xóa bỏ. Chỉ mục không phải là bảng cố định vĩnh viễn mà liên tục được cập nhật theo sự thay đổi của tập tài liệu.</p>
 <h3 id="detail-2-vi">Vai trò của chỉ mục đảo</h3>
-<p>Công cụ tìm kiếm không đọc lại từng tài liệu từ đầu đến cuối mỗi khi có người tìm. Thay vào đó, hệ thống xây dựng trước <strong>chỉ mục đảo (inverted index)</strong> để ghi nhận &quot;từ này xuất hiện ở những tài liệu nào và tại vị trí nào&quot;.</p>
+<p>Công cụ tìm kiếm không đọc lại từng tài liệu từ đầu đến cuối mỗi khi có người tìm. Thay vào đó, hệ thống xây dựng trước <strong><span class="term" data-term-id="inverted-index"><span class="term__en">inverted index</span><span class="term__vi">chỉ mục đảo</span></span></strong> để ghi nhận &quot;từ này xuất hiện ở những tài liệu nào và tại vị trí nào&quot;.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -166,17 +192,17 @@
 <p class="source-note"><span>SLIDE NGUỒN</span> 5</p>
 <p>Hai mục tiêu thiết kế hàng đầu của một công cụ tìm kiếm là:</p>
 <ul>
-<li><strong>Tính hiệu quả (effectiveness):</strong> Trả về kết quả có độ liên quan cao nhất có thể đối với câu truy vấn.</li>
-<li><strong>Tính hiệu năng (efficiency):</strong> Xử lý truy vấn của người dùng trong thời gian nhanh nhất có thể với chi phí tài nguyên tối ưu.</li>
+<li><strong><span class="term" data-term-id="efficiency"><span class="term__en">Efficiency</span><span class="term__vi">Tính hiệu năng</span></span>:</strong> Xử lý truy vấn của người dùng trong thời gian nhanh nhất có thể với chi phí tài nguyên tối ưu.</li>
+<li><strong><span class="term" data-term-id="efficiency"><span class="term__en">Efficiency</span><span class="term__vi">Tính hiệu năng</span></span>:</strong> Xử lý truy vấn của người dùng trong thời gian nhanh nhất có thể với chi phí tài nguyên tối ưu.</li>
 </ul>
 <p>Một kết quả tìm kiếm dù cực kỳ chính xác nhưng phải đợi vài phút mới có thì không ai muốn dùng; ngược lại, trả về tức thì nhưng toàn thông tin vô giá trị thì cũng vô ích. Hệ thống tìm kiếm bắt buộc phải cân bằng cả hai yếu tố này.</p>
 <h3 id="detail-4-vi">Quy trình lập chỉ mục (Indexing Process)</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 6-7</p>
 <p>Ở nhánh lập chỉ mục, các tài liệu được chuẩn bị sẵn sàng trước khi có bất kỳ truy vấn nào gửi tới:</p>
 <ol>
-<li><strong>Thu thập văn bản:</strong> Thu thập email, trang Web, bài báo tin tức.</li>
+<li><strong><span class="term" data-term-id="text-acquisition"><span class="term__en">Text acquisition</span><span class="term__vi">Thu thập văn bản</span></span>:</strong> Thu thập email, trang Web, bài báo tin tức.</li>
 <li>Lưu trữ tài liệu gốc vào kho dữ liệu tài liệu (document data store).</li>
-<li><strong>Biến đổi văn bản:</strong> Phân tích tài liệu và chuyển thành các từ và cấu trúc phục vụ tìm kiếm.</li>
+<li><strong><span class="term" data-term-id="text-transformation"><span class="term__en">Text transformation</span><span class="term__vi">Biến đổi văn bản</span></span>:</strong> Phân tích tài liệu và chuyển thành các từ và cấu trúc phục vụ tìm kiếm.</li>
 <li><strong>Tạo chỉ mục:</strong> Xây dựng chỉ mục đảo liên kết giữa từ ngữ và vị trí tài liệu.</li>
 </ol>
 <p>Bốn khối chức năng này tuy được vẽ thành các hộp riêng biệt nhưng liên tục phối hợp và luân chuyển dữ liệu cho nhau.</p>
@@ -185,8 +211,8 @@
 <p>Sau khi người dùng gửi yêu cầu tìm kiếm, một nhánh xử lý khác sẽ kích hoạt:</p>
 <ol>
 <li><strong>Tương tác với người dùng (User Interaction):</strong> Tiếp nhận câu truy vấn.</li>
-<li><strong>Xếp hạng (Ranking):</strong> Dùng chỉ mục để tính điểm và chấm điểm các tài liệu ứng viên.</li>
-<li>Khi cần thiết, đọc nội dung gốc từ kho lưu trữ tài liệu để tạo đoạn trích kết quả (snippet).</li>
+<li>Khi cần thiết, đọc nội dung gốc từ kho lưu trữ tài liệu để tạo <span class="term" data-term-id="snippet"><span class="term__en">snippet</span><span class="term__vi">đoạn trích kết quả</span></span>.</li>
+<li>Khi cần thiết, <span class="term" data-term-id="snippet"><span class="term__en">snippet</span><span class="term__vi">đoạn trích kết quả</span></span>.</li>
 <li>Hiển thị kết quả ra màn hình và ghi lại nhật ký (log) các hành vi như lượt nhấp chuột.</li>
 <li><strong>Đánh giá (Evaluation):</strong> Dùng dữ liệu nhật ký và tập kiểm thử để phân tích chất lượng xếp hạng và tốc độ hệ thống.</li>
 </ol>
@@ -195,11 +221,11 @@
 
 <h2 id="text-acquisition-vi" data-section-heading="text-acquisition">2.2 Thu thập văn bản</h2>
 <p class="source-note"><span>SLIDE NGUỒN</span> 9-13</p>
-<p>Nhiệm vụ của <strong>thu thập văn bản (text acquisition)</strong> là phát hiện, thu gom các tài liệu mục tiêu và chuẩn bị sẵn sàng ở định dạng mà các khâu tiếp theo có thể sử dụng. Các thành phần chính gồm: trình thu thập (crawler), nguồn cấp (feed), chuyển đổi định dạng và kho dữ liệu tài liệu.</p>
+<p>Nhiệm vụ của <strong><span class="term" data-term-id="text-acquisition"><span class="term__en">text acquisition</span><span class="term__vi">thu thập văn bản</span></span></strong> là phát hiện, thu gom các tài liệu mục tiêu và chuẩn bị sẵn sàng ở định dạng mà các khâu tiếp theo có thể sử dụng. Các thành phần chính gồm: <span class="term" data-term-id="crawler"><span class="term__en">Crawler</span><span class="term__vi">Trình thu thập</span></span>, <span class="term" data-term-id="feed"><span class="term__en">feed</span><span class="term__vi">nguồn cấp</span></span>, chuyển đổi định dạng và kho dữ liệu tài liệu.</p>
 <h3 id="detail-6-vi">Trình thu thập (Crawler)</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 10-11</p>
 <ul>
-<li><strong>Trình thu thập Web tổng quát (general Web crawler):</strong> Lần theo các liên kết siêu văn bản để thu thập lượng lớn trang Web. Thách thức lớn là đảm bảo <strong>độ bao phủ (coverage)</strong> rộng khắp và giữ cho dữ liệu luôn có <strong>độ mới (freshness)</strong>.</li>
+<li><strong>Trình thu thập Web tổng quát (general Web crawler):</strong> Lần theo các liên kết siêu văn bản để thu thập lượng lớn trang Web. Thách thức lớn là đảm bảo <strong><span class="term" data-term-id="coverage"><span class="term__en">coverage</span><span class="term__vi">độ bao phủ</span></span></strong> rộng khắp và giữ cho dữ liệu luôn có <strong><span class="term" data-term-id="freshness"><span class="term__en">freshness</span><span class="term__vi">độ mới</span></span></strong>.</li>
 <li><strong>Trình thu thập trang (site crawler):</strong> Chỉ thu thập dữ liệu bên trong một trang web hoặc một tên miền nhất định để phục vụ tìm kiếm nội bộ trang.</li>
 <li><strong>Trình thu thập theo chủ đề (focused / topical crawler):</strong> Ưu tiên thu thập các trang thuộc một lĩnh vực chuyên biệt, phục vụ công cụ tìm kiếm dọc (vertical search).</li>
 <li><strong>Trình thu thập tài liệu (document crawler):</strong> Quét các thư mục trong mạng nội bộ doanh nghiệp hoặc trên máy tính cá nhân để thu thập tệp tin.</li>
@@ -207,7 +233,7 @@
 <aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Trình thu thập tổng quát giống nhân viên bưu điện đi khắp cả thành phố; trình thu thập trang giống nhân viên phụ trách một tòa nhà cụ thể; còn trình thu thập theo chủ đề giống như người chỉ chuyên đến các nhà sách.</p></aside>
 <h3 id="detail-7-vi">Nguồn cấp (Feed)</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 12</p>
-<p><strong>Nguồn cấp (feed)</strong> là luồng dữ liệu tài liệu liên tục được bên phát hành chủ động đẩy về hệ thống. Các trang tin tức và blog thường sử dụng chuẩn RSS hoặc Atom. Thay vì để crawler phải chủ động đi dò tìm, nguồn cấp cho phép hệ thống nhận ngay các bài viết mới cập nhật theo thứ tự thời gian.</p>
+<p><strong><span class="term" data-term-id="feed"><span class="term__en">Feed</span><span class="term__vi">Nguồn cấp</span></span></strong> là luồng dữ liệu tài liệu liên tục được bên phát hành chủ động đẩy về hệ thống. Các trang tin tức và blog thường sử dụng chuẩn RSS hoặc Atom. Thay vì để crawler phải chủ động đi dò tìm, nguồn cấp cho phép hệ thống nhận ngay các bài viết mới cập nhật theo thứ tự thời gian.</p>
 <h3 id="detail-8-vi">Chuyển đổi định dạng và bảng mã</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 12</p>
 <p>Tài liệu thu về có rất nhiều định dạng khác nhau: HTML, XML, PDF, Microsoft Word. Để đơn giản hóa các khâu xử lý phía sau, hệ thống chuyển đổi tất cả nội dung văn bản và metadata về một định dạng cấu trúc chung.</p>
@@ -218,36 +244,36 @@
 <p>Kho dữ liệu tài liệu quản lý khối lượng lớn văn bản gốc và các trường thông tin có cấu trúc:</p>
 <ul>
 <li>Lưu trữ nội dung văn bản, tiêu đề, ngày tạo và các trường metadata.</li>
-<li>Lưu trữ các thông tin liên kết như danh sách liên kết ra, liên kết vào và văn bản neo (anchor text).</li>
-<li>Cho phép truy xuất nhanh nội dung tài liệu theo mã định danh (document ID) để tạo đoạn trích kết quả (snippet).</li>
+<li>Cho phép truy xuất nhanh nội dung tài liệu theo mã định danh (document ID) để tạo <span class="term" data-term-id="snippet"><span class="term__en">snippet</span><span class="term__vi">đoạn trích kết quả</span></span>.</li>
+<li>Cho phép truy xuất nhanh nội dung tài liệu theo mã định danh (document ID) <span class="term" data-term-id="snippet"><span class="term__en">snippet</span><span class="term__vi">đoạn trích kết quả</span></span>.</li>
 <li>Với quy mô nhỏ có thể dùng cơ sở dữ liệu quan hệ, nhưng với quy mô cực lớn cần đến các hệ thống lưu trữ phân tán chuyên dụng (như BigTable hoặc NoSQL).</li>
 </ul>
 <h2 id="text-transformation-vi" data-section-heading="text-transformation">2.3 Biến đổi văn bản</h2>
 <p class="source-note"><span>SLIDE NGUỒN</span> 14-18</p>
-<p>Tài liệu sau khi thu thập nếu đưa thẳng vào chỉ mục sẽ bị lẫn các thẻ định dạng, lỗi chính tả, quảng cáo và từ rác. <strong>Biến đổi văn bản (text transformation)</strong> chuyển đổi văn bản thô thành biểu diễn chuẩn phục vụ lập chỉ mục và tìm kiếm.</p>
+<p>Tài liệu sau khi thu thập nếu đưa thẳng vào chỉ mục sẽ bị lẫn các thẻ định dạng, lỗi chính tả, quảng cáo và từ rác. <strong><span class="term" data-term-id="text-transformation"><span class="term__en">Text transformation</span><span class="term__vi">Biến đổi văn bản</span></span></strong> chuyển đổi văn bản thô thành biểu diễn chuẩn phục vụ lập chỉ mục và tìm kiếm.</p>
 <h3 id="detail-10-vi">Bộ phân tích cú pháp (Parser) và Bộ tách từ (Tokenizer)</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 15</p>
 <ul>
-<li><strong>Bộ phân tích cú pháp (parser):</strong> Nhận diện cấu trúc của tài liệu như tiêu đề, các phần đề mục, liên kết, danh sách. Trong tài liệu HTML hay XML, các thẻ đánh dấu chính là manh mối nhận diện cấu trúc.</li>
-<li><strong>Bộ tách từ (tokenizer):</strong> Cắt chuỗi ký tự liên tục thành các đơn vị từ hoặc ký hiệu độc lập (token).</li>
+<li><strong><span class="term" data-term-id="parser"><span class="term__en">Parser</span><span class="term__vi">Bộ phân tích cú pháp</span></span>:</strong> Nhận diện cấu trúc của tài liệu như tiêu đề, các phần đề mục, liên kết, danh sách. Trong tài liệu HTML hay XML, các thẻ đánh dấu chính là manh mối nhận diện cấu trúc.</li>
+<li><strong><span class="term" data-term-id="tokenizer"><span class="term__en">Tokenizer</span><span class="term__vi">Bộ tách token</span></span>:</strong> Cắt chuỗi ký tự liên tục thành các đơn vị từ hoặc ký hiệu độc lập (token).</li>
 </ul>
 <p>Khi tách từ, hệ thống phải quy định rõ cách xử lý chữ hoa/thường, dấu gạch nối, dấu nháy đơn, dấu câu và các ký tự đặc biệt. Trong tiếng Việt, từ có thể gồm nhiều âm tiết ghép lại (từ ghép như <code>công cụ tìm kiếm</code>), do đó việc tách từ đòi hỏi kỹ thuật phân đoạn từ (word segmentation) thay vì chỉ ngắt theo khoảng trắng như tiếng Anh.</p>
 <h3 id="detail-11-vi">Loại bỏ Stopword và Stemming</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 16</p>
 <ul>
-<li><strong>Loại bỏ từ dừng (stopping):</strong> Loại bỏ các từ quá phổ biến nhưng mang ít giá trị phân biệt nội dung (trong tiếng Anh như <code>and</code>, <code>the</code>, <code>in</code>; trong tiếng Việt như <code>và</code>, <code>của</code>, <code>những</code>).</li>
-<li><strong>Rút gọn từ về gốc (stemming):</strong> Đưa các biến thể từ về cùng một dạng gốc chung (ví dụ trong tiếng Anh gom <code>computer</code>, <code>computers</code>, <code>computing</code> về <code>compute</code>).</li>
+<li><strong><span class="term" data-term-id="stopping"><span class="term__en">Stopping</span><span class="term__vi">Loại bỏ từ dừng</span></span>:</strong> Loại bỏ các từ quá phổ biến nhưng mang ít giá trị phân biệt nội dung (trong tiếng Anh như <code>and</code>, <code>the</code>, <code>in</code>; trong tiếng Việt như <code>và</code>, <code>của</code>, <code>những</code>).</li>
+<li><strong><span class="term" data-term-id="stemming"><span class="term__en">Stemming</span><span class="term__vi">Rút gọn từ về gốc</span></span>:</strong> Đưa các biến thể từ về cùng một dạng gốc chung (ví dụ trong tiếng Anh gom <code>computer</code>, <code>computers</code>, <code>computing</code> về <code>compute</code>).</li>
 </ul>
 <p>Cả hai kỹ thuật này đều cần áp dụng thận trọng. Ví dụ với câu truy vấn kinh điển <code>to be or not to be</code>, nếu xóa hết stopword thì truy vấn sẽ hoàn toàn rỗng. Hiệu quả của các bước này phụ thuộc vào đặc thù của từng ngôn ngữ và miền bài toán.</p>
 <h3 id="detail-12-vi">Trích xuất và phân tích liên kết</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 17</p>
-<p>Bằng cách trích xuất các liên kết và <strong>văn bản neo (anchor text)</strong> giữa các trang Web, hệ thống có thể phân tích đồ thị liên kết. Các thuật toán nổi tiếng như PageRank hay HITS dựa vào cấu trúc liên kết này để đo lường độ uy tín và mức độ phổ biến của trang.</p>
+<p>Bằng cách trích xuất các liên kết và <strong><span class="term" data-term-id="anchor-text"><span class="term__en">anchor text</span><span class="term__vi">văn bản neo</span></span></strong> giữa các trang Web, hệ thống có thể phân tích đồ thị liên kết. Các thuật toán nổi tiếng như PageRank hay HITS dựa vào cấu trúc liên kết này để đo lường độ uy tín và mức độ phổ biến của trang.</p>
 <p>Văn bản neo là đoạn chữ chứa liên kết mà người khác dùng để trỏ tới trang web. Đoạn chữ này thường là mô tả ngắn gọn, khách quan từ góc nhìn của bên thứ ba, bổ sung thông tin rất tốt cho nội dung của trang đích. Thông tin này đóng vai trò sống còn trong tìm kiếm Web, nhưng ít quan trọng hơn trong các kho tài liệu nội bộ không có liên kết.</p>
 <h3 id="detail-13-vi">Trích xuất thông tin và Bộ phân loại</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 18</p>
 <ul>
-<li><strong>Trích xuất thông tin (information extraction):</strong> Tự động phát hiện các thực thể quan trọng trong văn bản như tên người, công ty, địa điểm, ngày tháng để phục vụ tìm kiếm nâng cao.</li>
-<li><strong>Bộ phân loại (classifier):</strong> Tự động gắn nhãn phân loại cho tài liệu.</li>
+<li><strong><span class="term" data-term-id="information-extraction"><span class="term__en">Information extraction</span><span class="term__vi">Trích xuất thông tin</span></span>:</strong> Tự động phát hiện các thực thể quan trọng trong văn bản như tên người, công ty, địa điểm, ngày tháng để phục vụ tìm kiếm nâng cao.</li>
+<li><strong><span class="term" data-term-id="classifier"><span class="term__en">Classifier</span><span class="term__vi">Bộ phân loại</span></span>:</strong> Tự động gắn nhãn phân loại cho tài liệu.</li>
 </ul>
 <div class="table-wrap"><table>
 <thead>
@@ -282,7 +308,7 @@
 <h3 id="detail-14-vi">Thống kê tài liệu và Gán trọng số</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 20</p>
 <p>Hệ thống tìm kiếm thu thập các chỉ số <strong>thống kê tài liệu (document statistics)</strong> như số lần xuất hiện của từ hay vị trí của từ. Thuật toán xếp hạng dùng các số liệu thống kê này để tính điểm cho tài liệu.</p>
-<p>Mô hình kinh điển tiêu biểu nhất là <strong>tf-idf</strong>:</p>
+<p>Mô hình kinh điển tiêu biểu nhất là <strong><span class="term term--same" data-term-id="tf-idf"><span class="term__en">TF-IDF</span><span class="term__vi">TF-IDF</span></span></strong>:</p>
 <ul>
 <li><strong>Tần số từ (term frequency - tf):</strong> Số lần một từ xuất hiện trong một tài liệu cụ thể.</li>
 <li><strong>Nghịch đảo tần số tài liệu (inverse document frequency - idf):</strong> Độ hiếm của từ đó trên toàn bộ tập tài liệu.</li>
@@ -340,7 +366,7 @@
 <aside class="learning-note learning-note--question"><span class="learning-note__label">Lưu ý</span><p>tf và idf có nhiều biến thể công thức khác nhau trong thực tế (cơ số logarit, chuẩn hóa theo độ dài tài liệu). Bảng tính trên là ví dụ đơn giản hóa nhằm làm rõ nguyên lý của Slide 20.</p></aside>
 <h3 id="detail-15-vi">Quá trình đảo chỉ mục (Inversion)</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 21</p>
-<p><strong>Đảo chỉ mục (inversion)</strong> là thao tác chuyển đổi dữ liệu từ dạng <code>tài liệu → danh sách từ</code> sang dạng <code>từ → danh sách tài liệu</code>. Đây là bước cốt lõi trong xây dựng chỉ mục.</p>
+<p><strong><span class="term" data-term-id="inversion"><span class="term__en">Inversion</span><span class="term__vi">Đảo chỉ mục</span></span></strong> là thao tác chuyển đổi dữ liệu từ dạng <code>tài liệu → danh sách từ</code> sang dạng <code>từ → danh sách tài liệu</code>. Đây là bước cốt lõi trong xây dựng chỉ mục.</p>
 <p>Với lượng tài liệu khổng lồ, thời gian xây dựng và dung lượng đĩa lưu trữ là bài toán hóc búa. Hơn nữa, hệ thống phải xử lý được việc cập nhật tài liệu mới. Tệp chỉ mục đảo được tối ưu hóa cấu trúc để truy vấn nhanh nhất và thường được nén dữ liệu để tiết kiệm bộ nhớ.</p>
 <h3 id="detail-16-vi">Phân tán chỉ mục</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 22</p>
@@ -348,7 +374,7 @@
 <ul>
 <li><strong>Phân hoạch theo tài liệu (document partitioning):</strong> Mỗi máy chủ quản lý chỉ mục của một nhóm tài liệu độc lập.</li>
 <li><strong>Phân hoạch theo từ (term partitioning):</strong> Mỗi máy chủ quản lý một dải từ vựng nhất định trên toàn bộ tài liệu.</li>
-<li><strong>Sao bản (replication):</strong> Sao chép cùng một phần dữ liệu ra nhiều máy để chia tải truy vấn và phòng ngừa sự cố máy chủ ngừng hoạt động.</li>
+<li><strong><span class="term" data-term-id="replication"><span class="term__en">Replication</span><span class="term__vi">Sao bản</span></span>:</strong> Sao chép cùng một phần dữ liệu ra nhiều máy để chia tải truy vấn và phòng ngừa sự cố máy chủ ngừng hoạt động.</li>
 </ul>
 <p>Trong tìm kiếm P2P hoặc tìm kiếm phân tán, chỉ mục có thể phân bổ qua nhiều trung tâm dữ liệu độc lập.</p>
 <aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>So sánh hai cách phân hoạch với 6 tài liệu phân bổ lên 2 máy chủ:</p></aside>
@@ -383,12 +409,12 @@
 <p>Ngôn ngữ truy vấn IR có nét tương đồng với SQL nhưng điểm khác biệt căn bản là: SQL tìm các bản ghi khớp chính xác từng trường, còn IR tìm kiếm và so khớp gần đúng trên văn bản tự do và cấu trúc ngữ nghĩa. Slide nêu ví dụ ngôn ngữ truy vấn của hệ thống Indri và Galago.</p>
 <h3 id="detail-18-vi">Chuyển đổi truy vấn (Query Transformation)</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 25</p>
-<p><strong>Chuyển đổi truy vấn (query transformation)</strong> cải thiện câu truy vấn trước khi tìm hoặc sau khi đã xem kết quả sơ bộ:</p>
+<p><strong><span class="term" data-term-id="query-transformation"><span class="term__en">Query transformation</span><span class="term__vi">Biến đổi truy vấn</span></span></strong> cải thiện câu truy vấn trước khi tìm hoặc sau khi đã xem kết quả sơ bộ:</p>
 <ul>
 <li>Áp dụng cùng các bước tách từ, chuẩn hóa chữ thường và lọc từ dừng như ở khâu lập chỉ mục.</li>
 <li>Tự động sửa lỗi chính tả và đề xuất các từ khóa thay thế.</li>
-<li><strong>Mở rộng truy vấn (query expansion):</strong> Tự động thêm các từ đồng nghĩa hoặc từ liên quan vào truy vấn.</li>
-<li><strong>Phản hồi độ liên quan (relevance feedback):</strong> Dựa vào những tài liệu mà người dùng đánh giá là hữu ích để rút trích thêm từ khóa cho lần tìm tiếp theo.</li>
+<li><strong><span class="term" data-term-id="relevance-feedback"><span class="term__en">Relevance feedback</span><span class="term__vi">Phản hồi độ liên quan</span></span>:</strong> Dựa vào những tài liệu mà người dùng đánh giá là hữu ích để rút trích thêm từ khóa cho lần tìm tiếp theo.</li>
+<li><strong><span class="term" data-term-id="relevance-feedback"><span class="term__en">Relevance feedback</span><span class="term__vi">Phản hồi độ liên quan</span></span>:</strong> Dựa vào những tài liệu mà người dùng đánh giá là hữu ích để rút trích thêm từ khóa cho lần tìm tiếp theo.</li>
 </ul>
 <aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Xét câu truy vấn gốc <code>car repair</code>:</p></aside>
 <div class="table-wrap"><table>
@@ -413,14 +439,14 @@
 <td>Lấy các từ xuất hiện nhiều trong bài viết được chọn</td>
 </tr>
 </tbody></table></div>
-<p>Mở rộng truy vấn có thể thực hiện ngay trước lượt tìm đầu tiên. Phản hồi độ liên quan cần dựa vào kết quả của lượt tìm trước. Nếu hệ thống không bắt người dùng tự chọn mà tự động coi các kết quả ở top đầu là tài liệu liên quan thì phương pháp đó được gọi là <strong>phản hồi độ liên quan giả định (pseudo-relevance feedback)</strong>.</p>
+<p>Mở rộng truy vấn có thể thực hiện ngay trước lượt tìm đầu tiên. Phản hồi độ liên quan cần dựa vào kết quả của lượt tìm trước. Nếu hệ thống không bắt người dùng tự chọn mà tự động coi các kết quả ở top đầu là tài liệu liên quan thì phương pháp đó được gọi là <strong><span class="term" data-term-id="pseudo-relevance-feedback"><span class="term__en">pseudo-relevance feedback</span><span class="term__vi">phản hồi độ liên quan giả định</span></span></strong>.</p>
 <p>Cả hai cách đều giúp tăng độ bao phủ kết quả nhưng nếu thêm từ sai ngữ cảnh sẽ làm loãng kết quả. Ví dụ truy vấn <code>jaguar</code> nếu tự ý thêm các từ liên quan đến xe hơi sẽ gây ức chế cho người đang muốn tìm thông tin về loài báo đốm.</p>
 <aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Nếu các kết quả hàng đầu của truy vấn <code>car repair</code> tình cờ toàn là các trang rao bán xe cũ, phương pháp phản hồi độ liên quan giả định sẽ gặp phải rủi ro gì?</p></aside>
 <details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Hệ thống sẽ giả định sai lầm rằng các trang bán xe là tài liệu liên quan, từ đó tự động bổ sung các từ như <code>sale</code>, <code>dealer</code>, <code>price</code> vào truy vấn. Hậu quả là kết quả tìm kiếm lần sau sẽ càng ngập tràn thông tin mua bán xe và hoàn toàn đi chệch khỏi ý định ban đầu là tìm cách sửa xe.</p></div></details>
 
 <h3 id="detail-19-vi">Hiển thị kết quả</h3>
 <p class="source-note"><span>SLIDE NGUỒN</span> 26</p>
-<p>Khâu hiển thị kết quả trình bày danh sách tài liệu đã xếp hạng lên giao diện. Hệ thống tạo các <strong>đoạn trích kết quả (snippet)</strong> hiển thị ngữ cảnh xung quanh từ khóa xuất hiện và in đậm từ khóa. Tùy thuộc vào dịch vụ, trang kết quả có thể tích hợp thêm quảng cáo, cụm chủ đề liên quan hoặc biểu đồ tri thức.</p>
+<p>Khâu hiển thị kết quả trình bày danh sách tài liệu đã xếp hạng lên giao diện. Hệ thống tạo các <strong><span class="term" data-term-id="snippet"><span class="term__en">snippet</span><span class="term__vi">đoạn trích kết quả</span></span></strong> hiển thị ngữ cảnh xung quanh từ khóa xuất hiện và in đậm từ khóa. Tùy thuộc vào dịch vụ, trang kết quả có thể tích hợp thêm quảng cáo, cụm chủ đề liên quan hoặc biểu đồ tri thức.</p>
 <aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Việc hiển thị gợi ý sửa lỗi chính tả thuộc về &quot;xử lý thay đổi tài liệu&quot; hay &quot;xử lý thay đổi truy vấn&quot;?</p></aside>
 <details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Thuộc về xử lý thay đổi truy vấn, vì hệ thống đang hỗ trợ điều chỉnh và hoàn thiện biểu đạt câu hỏi của người dùng chứ không làm thay đổi nội dung các tài liệu trong kho.</p></div></details>
 
@@ -448,8 +474,8 @@
 <p class="source-note"><span>SLIDE NGUỒN</span> 29</p>
 <p>Khâu xếp hạng không chỉ cần cho kết quả chuẩn xác mà phải tính toán cực nhanh. Hai khái niệm nền tảng trong danh sách chỉ mục:</p>
 <ul>
-<li><strong>Posting:</strong> Bản ghi chỉ mục ghi nhận sự xuất hiện của một từ trong một tài liệu cụ thể (gồm mã tài liệu docID, trọng số của từ, vị trí từ).</li>
-<li><strong>Danh sách posting (posting list):</strong> Danh sách tập hợp toàn bộ các posting của cùng một từ, thường được sắp xếp theo thứ tự mã tài liệu tăng dần.</li>
+<li><strong><span class="term term--same" data-term-id="posting"><span class="term__en">posting</span><span class="term__vi">posting</span></span>:</strong> Bản ghi chỉ mục ghi nhận sự xuất hiện của một từ trong một tài liệu cụ thể (gồm mã tài liệu docID, trọng số của từ, vị trí từ).</li>
+<li><strong><span class="term" data-term-id="posting-list"><span class="term__en">Posting list</span><span class="term__vi">Danh sách posting</span></span>:</strong> Danh sách tập hợp toàn bộ các posting của cùng một từ, thường được sắp xếp theo thứ tự mã tài liệu tăng dần.</li>
 </ul>
 <aside class="learning-note learning-note--simple"><span class="learning-note__label">Giải thích dễ hiểu</span><p>Nếu có thẻ tra cứu từ <code>search</code>, trên thẻ ghi các dòng &quot;D1 được 2 điểm, D2 được 1 điểm&quot;. Mỗi dòng là một posting, và toàn bộ tấm thẻ chính là posting list của từ <code>search</code>.</p></aside>
 <aside class="learning-note learning-note--context"><span class="learning-note__label">Giải thích thêm ngoài slide</span><p>Xét truy vấn gồm 2 từ <code>search engine</code> (mỗi từ có trọng số bằng 1), điểm tài liệu bằng tổng trọng số của các posting tương ứng:</p></aside>
@@ -471,7 +497,7 @@
 </tbody></table></div>
 <p>Hai hướng duyệt posting list:</p>
 <ol>
-<li><strong>Xử lý theo từng từ (Term-at-a-time - TAAT):</strong> Duyệt trọn vẹn từng từ một, cộng dồn điểm số vào các tài liệu:</li>
+<li><strong><span class="term" data-term-id="term-at-a-time"><span class="term__en">Term-at-a-time</span><span class="term__vi">Xử lý theo từng từ</span></span>:</strong> Duyệt trọn vẹn từng từ một, cộng dồn điểm số vào các tài liệu:</li>
 </ol>
 <div class="table-wrap"><table>
 <thead>
@@ -496,7 +522,7 @@
 </tr>
 </tbody></table></div>
 <ol start="2">
-<li><strong>Xử lý theo từng tài liệu (Document-at-a-time - DAAT):</strong> Đồng thời trỏ con trỏ vào tất cả các posting list của các từ truy vấn, duyệt theo thứ tự docID và hoàn thành dứt điểm điểm số của từng tài liệu:</li>
+<li><strong><span class="term" data-term-id="document-at-a-time"><span class="term__en">Document-at-a-time</span><span class="term__vi">Xử lý theo từng tài liệu</span></span>:</strong> Đồng thời trỏ con trỏ vào tất cả các posting list của các từ truy vấn, duyệt theo thứ tự docID và hoàn thành dứt điểm điểm số của từng tài liệu:</li>
 </ol>
 <div class="table-wrap"><table>
 <thead>
@@ -536,12 +562,12 @@
 <aside class="learning-note learning-note--question"><span class="learning-note__label">Kiểm tra nhanh</span><p>Trong ví dụ trên, nếu trọng số của từ <code>engine</code> trong tài liệu D2 tăng từ 2 lên 4 thì kết quả cuối cùng của TAAT và DAAT có khác nhau không?</p></aside>
 <details class="answer-key"><summary>Xem đáp án gợi ý</summary><div class="answer-key__body"><p>Cả hai phương pháp đều cho kết quả điểm số của D2 là <code>1 + 4 = 5</code>, vượt qua D1 (3 điểm). Vì cùng dùng chung dữ liệu và quy tắc cộng điểm nên dù duyệt theo từ hay duyệt theo tài liệu thì kết quả cuối cùng luôn đồng nhất.</p></div></details>
 
-<p>Trong hệ thống phân tán, thành phần <strong>bộ điều phối truy vấn (query broker)</strong> gửi truy vấn tới các máy chủ thành phần, thu nhận các danh sách kết quả cục bộ và hợp nhất thành bảng xếp hạng toàn cục. Bộ nhớ đệm (cache) lưu lại kết quả của các truy vấn phổ biến cũng là một giải pháp then chốt để giảm tải cho hệ thống.</p>
+<p>Trong hệ thống phân tán, thành phần <strong><span class="term" data-term-id="query-broker"><span class="term__en">query broker</span><span class="term__vi">bộ điều phối truy vấn</span></span></strong> gửi truy vấn tới các máy chủ thành phần, thu nhận các danh sách kết quả cục bộ và hợp nhất thành bảng xếp hạng toàn cục. Bộ nhớ đệm (cache) lưu lại kết quả của các truy vấn phổ biến cũng là một giải pháp then chốt để giảm tải cho hệ thống.</p>
 <h2 id="evaluation-vi" data-section-heading="evaluation">2.7 Đánh giá</h2>
 <p class="source-note"><span>SLIDE NGUỒN</span> 30-31</p>
 <p>Hệ thống tìm kiếm không dừng lại sau khi lập trình xong mà liên tục được đo lường, giám sát và tối ưu hóa trong suốt quá trình vận hành.</p>
 <h3 id="detail-22-vi">Dữ liệu nhật ký (Logs)</h3>
-<p>Nhật ký ghi lại câu truy vấn, các liên kết được nhấp, thời gian dừng đọc (dwell time) và các hành vi tương tác. Dữ liệu này được dùng để:</p>
+<p>Nhật ký ghi lại câu truy vấn, các liên kết được nhấp, <span class="term" data-term-id="dwell-time"><span class="term__en">dwell time</span><span class="term__vi">thời gian dừng đọc</span></span> và các hành vi tương tác. Dữ liệu này được dùng để:</p>
 <ul>
 <li>Cải tiến tính năng gợi ý từ khóa và sửa lỗi chính tả.</li>
 <li>Tối ưu hóa bộ nhớ đệm (query cache).</li>
@@ -597,13 +623,13 @@
 </ul>
 <h2 id="quiz-vi" data-section-heading="quiz">Câu hỏi tự kiểm tra</h2>
 <ol>
-<li>Nhu cầu thông tin (information need) khác câu truy vấn (query) như thế nào?</li>
+<li><span class="term" data-term-id="information-need"><span class="term__en">Information need</span><span class="term__vi">Nhu cầu thông tin</span></span> khác <span class="term" data-term-id="query"><span class="term__en">query</span><span class="term__vi">truy vấn</span></span> như thế nào?</li>
 <li>Quy trình lập chỉ mục và quy trình xử lý truy vấn được thực hiện vào những thời điểm nào?</li>
-<li>Chỉ mục đảo (inverted index) thực hiện phép ánh xạ từ cái gì sang cái gì?</li>
-<li>Độ bao phủ (coverage) và độ mới (freshness) thể hiện những đặc tính nào của trình thu thập (crawler)?</li>
-<li>Sự khác biệt giữa bộ phân tích cú pháp (parser) và bộ tách từ (tokenizer) là gì?</li>
+<li>Sự khác biệt giữa <span class="term" data-term-id="parser"><span class="term__en">parser</span><span class="term__vi">bộ phân tích cú pháp</span></span> và <span class="term" data-term-id="tokenizer"><span class="term__en">tokenizer</span><span class="term__vi">bộ tách token</span></span> là gì?</li>
+<li><span class="term" data-term-id="coverage"><span class="term__en">Coverage</span><span class="term__vi">Độ bao phủ</span></span> <span class="term" data-term-id="freshness"><span class="term__en">freshness</span><span class="term__vi">độ mới</span></span> <span class="term" data-term-id="crawler"><span class="term__en">crawler</span><span class="term__vi">trình thu thập</span></span>?</li>
+<li><span class="term" data-term-id="parser"><span class="term__en">Parser</span><span class="term__vi">Bộ phân tích cú pháp</span></span> <span class="term" data-term-id="tokenizer"><span class="term__en">tokenizer</span><span class="term__vi">bộ tách token</span></span> là gì?</li>
 <li>Chỉ số tf và idf lần lượt đại diện cho điều gì?</li>
-<li>Điểm chung giữa mở rộng truy vấn (query expansion) và phản hồi độ liên quan (relevance feedback) là gì?</li>
+<li>Điểm chung giữa <span class="term" data-term-id="query-expansion"><span class="term__en">query expansion</span><span class="term__vi">mở rộng truy vấn</span></span> và <span class="term" data-term-id="relevance-feedback"><span class="term__en">relevance feedback</span><span class="term__vi">phản hồi độ liên quan</span></span> là gì?</li>
 <li>Phân tích xếp hạng và phân tích hiệu năng đo lường những khía cạnh nào?</li>
 <li>Posting và posting list khác nhau như thế nào?</li>
 <li>Phương pháp TAAT và DAAT khác nhau ở điểm nào và giống nhau ở điểm nào trong ví dụ tính điểm?</li>
@@ -631,181 +657,181 @@
 <th>Slide nguồn</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody><tr data-term-id="information-need" data-aliases="">
 <td>Information need</td>
 <td>Nhu cầu thông tin</td>
 <td>Điều người dùng thực sự muốn biết trong suy nghĩ</td>
 <td>4</td>
 </tr>
-<tr>
+<tr data-term-id="query" data-aliases="queries">
 <td>Query</td>
 <td>Truy vấn</td>
 <td>Từ ngữ hoặc điều kiện gửi vào hệ thống tìm kiếm</td>
 <td>4, 8, 24–25</td>
 </tr>
-<tr>
+<tr data-term-id="document-collection" data-aliases="">
 <td>Document collection</td>
 <td>Tập tài liệu</td>
 <td>Tập hợp các tài liệu là đối tượng tìm kiếm của hệ thống</td>
 <td>4–5</td>
 </tr>
-<tr>
+<tr data-term-id="inverted-index" data-aliases="">
 <td>Inverted index</td>
 <td>Chỉ mục đảo</td>
 <td>Cấu trúc dữ liệu tra cứu tài liệu và vị trí từ từ vựng</td>
 <td>4, 21</td>
 </tr>
-<tr>
+<tr data-term-id="effectiveness" data-aliases="">
 <td>Effectiveness</td>
 <td>Tính hiệu quả</td>
 <td>Chất lượng trả về các kết quả có độ liên quan cao</td>
 <td>5, 31</td>
 </tr>
-<tr>
+<tr data-term-id="efficiency" data-aliases="">
 <td>Efficiency</td>
 <td>Tính hiệu năng</td>
 <td>Tốc độ xử lý nhanh và tiết kiệm tài nguyên hệ thống</td>
 <td>5, 29, 31</td>
 </tr>
-<tr>
+<tr data-term-id="text-acquisition" data-aliases="">
 <td>Text acquisition</td>
 <td>Thu thập văn bản</td>
 <td>Công đoạn tìm kiếm, thu gom và chuẩn bị tài liệu nguồn</td>
 <td>9–13</td>
 </tr>
-<tr>
+<tr data-term-id="crawler" data-aliases="crawlers">
 <td>Crawler</td>
 <td>Trình thu thập / Crawler</td>
 <td>Chương trình tự động lần theo liên kết để thu gom trang</td>
 <td>10–11</td>
 </tr>
-<tr>
+<tr data-term-id="coverage" data-aliases="">
 <td>Coverage</td>
 <td>Độ bao phủ</td>
 <td>Mức độ thu thập được đầy đủ phạm vi tài liệu cần thiết</td>
 <td>11</td>
 </tr>
-<tr>
+<tr data-term-id="freshness" data-aliases="">
 <td>Freshness</td>
 <td>Độ mới</td>
 <td>Tốc độ cập nhật các thay đổi mới của tài liệu vào hệ thống</td>
 <td>11</td>
 </tr>
-<tr>
+<tr data-term-id="feed" data-aliases="">
 <td>Feed</td>
 <td>Nguồn cấp</td>
 <td>Luồng dữ liệu tài liệu do bên phát hành chủ động gửi về</td>
 <td>12</td>
 </tr>
-<tr>
+<tr data-term-id="parser" data-aliases="">
 <td>Parser</td>
 <td>Bộ phân tích cú pháp</td>
 <td>Khâu bóc tách và nhận diện cấu trúc của tài liệu</td>
 <td>15</td>
 </tr>
-<tr>
+<tr data-term-id="tokenizer" data-aliases="Tokenization,bộ tách từ">
 <td>Tokenizer</td>
 <td>Bộ tách token / tách từ</td>
 <td>Khâu phân chia chuỗi văn bản thành các đơn vị từ / token</td>
 <td>15</td>
 </tr>
-<tr>
+<tr data-term-id="stopping" data-aliases="Stopword">
 <td>Stopping</td>
 <td>Loại bỏ từ dừng</td>
 <td>Khâu lọc bỏ các từ quá phổ biến mang ít giá trị phân biệt</td>
 <td>16</td>
 </tr>
-<tr>
+<tr data-term-id="stemming" data-aliases="Stemmer">
 <td>Stemming</td>
 <td>Rút gọn từ về gốc</td>
 <td>Khâu chuẩn hóa các biến thể từ ngữ về dạng gốc chung</td>
 <td>16</td>
 </tr>
-<tr>
+<tr data-term-id="anchor-text" data-aliases="">
 <td>Anchor text</td>
 <td>Văn bản neo</td>
 <td>Đoạn chữ hiển thị chứa liên kết trỏ tới trang web khác</td>
 <td>17</td>
 </tr>
-<tr>
+<tr data-term-id="information-extraction" data-aliases="">
 <td>Information extraction</td>
 <td>Trích xuất thông tin</td>
 <td>Khâu tự động rút trích các thực thể có cấu trúc từ văn bản</td>
 <td>18</td>
 </tr>
-<tr>
+<tr data-term-id="classifier" data-aliases="classifiers">
 <td>Classifier</td>
 <td>Bộ phân loại</td>
 <td>Khâu tự động gán nhãn thể loại hoặc tính chất cho tài liệu</td>
 <td>18</td>
 </tr>
-<tr>
+<tr data-term-id="tf-idf" data-aliases="tf-idf,TF.IDF,Term Frequency-Inverse Document Frequency" data-acronym="true">
 <td>tf-idf</td>
 <td>tf-idf</td>
 <td>Trọng số kết hợp giữa tần số từ và độ hiếm của từ</td>
 <td>20</td>
 </tr>
-<tr>
+<tr data-term-id="inversion" data-aliases="">
 <td>Inversion</td>
 <td>Đảo chỉ mục</td>
 <td>Quá trình chuyển dữ liệu từ dạng tài liệu sang dạng chỉ mục từ</td>
 <td>21</td>
 </tr>
-<tr>
+<tr data-term-id="replication" data-aliases="">
 <td>Replication</td>
 <td>Sao bản</td>
 <td>Việc sao chép dữ liệu ra nhiều máy để chia tải và dự phòng</td>
 <td>22</td>
 </tr>
-<tr>
+<tr data-term-id="query-expansion" data-aliases="">
 <td>Query expansion</td>
 <td>Mở rộng truy vấn</td>
 <td>Kỹ thuật bổ sung các từ liên quan vào câu truy vấn gốc</td>
 <td>25</td>
 </tr>
-<tr>
+<tr data-term-id="relevance-feedback" data-aliases="">
 <td>Relevance feedback</td>
 <td>Phản hồi độ liên quan</td>
 <td>Kỹ thuật dùng tài liệu người dùng đã chọn để tinh chỉnh truy vấn</td>
 <td>25</td>
 </tr>
-<tr>
+<tr data-term-id="posting" data-aliases="posting list,postings">
 <td>Posting</td>
 <td>Posting</td>
 <td>Bản ghi chỉ mục của một từ đối với một tài liệu cụ thể</td>
 <td>21, 29</td>
 </tr>
-<tr>
+<tr data-term-id="posting-list" data-aliases="posting lists">
 <td>Posting list</td>
 <td>Danh sách posting</td>
 <td>Danh sách các posting của cùng một từ sắp theo mã tài liệu</td>
 <td>21, 29</td>
 </tr>
-<tr>
+<tr data-term-id="term-at-a-time" data-aliases="TAAT">
 <td>Term-at-a-time</td>
 <td>Xử lý theo từng từ</td>
 <td>Duyệt dứt điểm từng danh sách posting của từng từ để tích lũy điểm</td>
 <td>29</td>
 </tr>
-<tr>
+<tr data-term-id="document-at-a-time" data-aliases="DAAT">
 <td>Document-at-a-time</td>
 <td>Xử lý theo từng tài liệu</td>
 <td>Duyệt đồng thời nhiều danh sách posting theo thứ tự tài liệu</td>
 <td>29</td>
 </tr>
-<tr>
+<tr data-term-id="snippet" data-aliases="">
 <td>Snippet</td>
 <td>Đoạn trích kết quả</td>
 <td>Đoạn văn ngắn trích từ tài liệu hiển thị trên trang kết quả</td>
 <td>26</td>
 </tr>
-<tr>
+<tr data-term-id="query-broker" data-aliases="">
 <td>Query broker</td>
 <td>Bộ điều phối truy vấn</td>
 <td>Thành phần phân phối truy vấn tới các máy và gộp kết quả</td>
 <td>29</td>
 </tr>
-<tr>
+<tr data-term-id="dwell-time" data-aliases="">
 <td>Dwell time</td>
 <td>Thời gian dừng đọc</td>
 <td>Thời gian từ khi nhấp vào kết quả tìm kiếm cho đến khi quay trở lại trang kết quả.</td>

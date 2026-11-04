@@ -11,19 +11,19 @@ Sau khi học xong chương này, bạn có thể giải thích các nội dung 
 
 1. Trình bày luồng xử lý từ văn bản thô qua phân tích cú pháp, phân tích từ vựng và gán trọng số để tạo thành từ chỉ mục.
 2. Giải thích định luật Zipf và định luật Heaps mô tả quy luật phân bố tần số từ và tốc độ tăng trưởng vốn từ vựng như thế nào.
-3. Phân biệt rõ tách token (tokenization), loại bỏ từ dừng (stopping), rút gọn gốc từ (stemming), cụm từ và n-gram.
-4. Nêu rõ lý do khai thác cấu trúc tài liệu, văn bản neo (anchor text), PageRank và chất lượng liên kết trong tìm kiếm.
-5. Giải thích các nguyên lý trích xuất thông tin dựa trên luật và dựa trên thống kê, cùng mô hình Hidden Markov Model (HMM).
+5. Giải thích các nguyên lý trích xuất thông tin dựa trên luật và dựa trên thống kê, cùng mô hình {{term:hmm}}.
+4. Nêu rõ lý do khai thác cấu trúc tài liệu, - {{term:anchor-text}}, PageRank và chất lượng liên kết trong tìm kiếm.
+5. Giải thích các nguyên lý trích xuất thông tin dựa trên luật và dựa trên thống kê, {{term:hmm}}.
 
 Slide nguồn: 1-3
 
 ## Kiến thức cần chuẩn bị {#prerequisites}
 
-- **Tài liệu (Document):** Trang web hoặc tệp tin là đối tượng tìm kiếm.
+- **{{term:document}}:** Trang web hoặc tệp tin là đối tượng tìm kiếm.
 - **Token:** Đơn vị chuỗi ký tự thu được sau khi phân tách văn bản.
-- **Từ chỉ mục (Index term):** Từ ngữ được chọn lựa, chuẩn hóa và xử lý để đưa vào chỉ mục phục vụ xếp hạng.
-- **Tần suất từ (Term frequency):** Số lần xuất hiện của một từ trong tài liệu hoặc trong toàn bộ sưu tập.
-- **Liên kết và văn bản neo:** Tham chiếu từ trang này sang trang khác; phần chữ hiển thị của liên kết gọi là văn bản neo (anchor text).
+- **Liên kết và văn bản neo:** Tham chiếu từ trang này sang trang khác; phần chữ hiển thị của liên kết gọi là {{term:anchor-text}}.
+- **{{term:term-frequency}}:** Số lần xuất hiện của một từ trong tài liệu hoặc trong toàn bộ sưu tập.
+- **Liên kết và văn bản neo:** Tham chiếu từ trang này sang trang khác; {{term:anchor-text}}.
 
 **Giải thích dễ hiểu:** Giống như người đầu bếp sơ chế nguyên liệu: nhặt rau, rửa sạch, bỏ phần rễ hư, cắt thành khúc vừa miệng trước khi nấu; công cụ tìm kiếm cũng không dùng văn bản thô ngay mà phải làm sạch và gọt giũa thành các đơn vị chuẩn xác để tìm kiếm nhanh chóng.
 
@@ -34,12 +34,12 @@ Slide nguồn: 4
 Slide 4 mô tả quy trình tiền xử lý tiêu chuẩn từ toàn văn tài liệu đến từ chỉ mục:
 
 1. **Phân tích cú pháp (Parsing):** Đọc và nhận diện cấu trúc phân đoạn của tài liệu.
-2. **Phân tích từ vựng (Lexical analysis):** Phân tích chuỗi ký tự thành các từ và ký hiệu độc lập.
-3. **Loại bỏ từ dừng (Stop-word removal):** Lọc bỏ các từ quá phổ biến mang ít giá trị phân biệt khi cần.
+3. **{{term:stopping}}:** Lọc bỏ các từ quá phổ biến mang ít giá trị phân biệt khi cần.
+3. **{{term:stopping}}:** Lọc bỏ các từ quá phổ biến mang ít giá trị phân biệt khi cần.
 4. **Phát hiện cụm từ (Phrase detection):** Nhận diện các cụm gồm nhiều từ đi liền nhau.
 5. **Rút gọn gốc từ và Lemmatization:** Đưa các biến thể hình thái về cùng dạng gốc.
 6. **Gán trọng số (Weighting):** Tính toán mức độ quan trọng của từ đối với việc xếp hạng.
-7. **Lập chỉ mục (Indexing):** Lưu trữ vào cấu trúc chỉ mục đảo.
+7. **{{term:indexing}}:** Lưu trữ vào cấu trúc chỉ mục đảo.
 
 Không phải tài liệu nào cũng bắt buộc đi qua toàn bộ các bước. Sơ đồ cho thấy hệ thống có thể linh hoạt chuyển thẳng từ toàn văn hoặc từ các khâu trung gian sang chỉ mục tùy thuộc vào yêu cầu của từng dịch vụ tìm kiếm.
 
@@ -102,7 +102,7 @@ Từ bảng số liệu này, ta rút ra ba kết luận quan trọng:
 
 Slide nguồn: 7
 
-Trên slide tác giả ghi là "Heap's Law", nhưng thông thường được gọi là **định luật Heaps (Heaps' law)**. Khi tổng số từ của bộ sưu tập tài liệu tăng lên, số lượng từ phân biệt (vốn từ vựng) cũng tăng theo:
+Trên slide tác giả ghi là "Heap's Law", nhưng thông thường được gọi là **{{term:heaps-law}}**. Khi tổng số từ của bộ sưu tập tài liệu tăng lên, số lượng từ phân biệt (vốn từ vựng) cũng tăng theo:
 
 **Giải thích dễ hiểu:** Khi đọc 100 trang sách đầu tiên, bạn sẽ liên tục bắt gặp rất nhiều từ mới. Nhưng khi đọc thêm 100 trang tiếp theo, phần lớn các từ xuất hiện là những từ bạn đã thấy trước đó, nên số lượng từ mới xuất hiện thêm sẽ chậm dần lại. Vốn từ vựng vẫn tiếp tục tăng khi đọc thêm sách, nhưng tốc độ tăng không nhanh bằng tốc độ tăng số trang.
 
@@ -129,7 +129,7 @@ Nếu tăng tổng số từ `N` lên gấp 4 lần (4 triệu token) thì `V` c
 
 Slide nguồn: 8-9
 
-**Tách token (tokenizing)** là quá trình phân chia chuỗi ký tự văn bản thành các đơn vị từ độc lập.
+**{{term:tokenization}}** là quá trình phân chia chuỗi ký tự văn bản thành các đơn vị từ độc lập.
 
 Xét câu văn mẫu:
 
@@ -153,13 +153,13 @@ Slide nguồn: 10-13
 
 ### Loại bỏ từ dừng (Stopword removal)
 
-Slide đưa ra các ví dụ trong tiếng Anh như `the`, `a`, `an`, `that`, `those` hoặc các giới từ `over`, `under`, `above`, `below`. Việc loại bỏ các **từ dừng (stopword)** này giúp giảm dung lượng chỉ mục và tăng tốc độ xử lý.
+Slide đưa ra các ví dụ trong tiếng Anh như `the`, `a`, `an`, `that`, `those` hoặc các giới từ `over`, `under`, `above`, `below`. Việc loại bỏ các **{{term:stopword}}** này giúp giảm dung lượng chỉ mục và tăng tốc độ xử lý.
 
 Tuy nhiên, việc loại bỏ quá đà sẽ làm hỏng ngữ nghĩa của truy vấn. Ví dụ với các tên riêng hoặc thành ngữ như `to be or not to be`, `The Who`, `under pressure`, các từ dừng chính là thành phần cốt lõi tạo nên ý nghĩa. Ngược lại, nếu không lọc bớt, các từ xuất hiện quá nhiều sẽ chi phối sai lệch kết quả tính điểm xếp hạng.
 
 ### Rút gọn gốc từ (Stemming)
 
-**Rút gọn gốc từ (stemming)** đưa các biến thể hình thái của một từ về một dạng gốc chung (word stem):
+**{{term:stemming}}** đưa các biến thể hình thái của một từ về một dạng gốc chung (word stem):
 
 - `cakes → cake`
 - `dogs → dog`
@@ -169,10 +169,10 @@ Tuy nhiên, việc loại bỏ quá đà sẽ làm hỏng ngữ nghĩa của tru
 
 Cần lưu ý hai dạng sai sót:
 
-- **Âm tính giả (false negative):** Lỗi bỏ sót các từ đáng lẽ phải gom về cùng gốc. Ví dụ: quy tắc cắt đuôi đơn giản không thể nhận diện `century` và `centuries` là cùng một gốc.
-- **Dương tính giả (false positive):** Lỗi gom nhầm các từ mang nghĩa khác nhau về cùng một gốc. Slide cảnh báo nguy cơ nhầm lẫn giữa đại từ `I` và động từ `is`.
+- **{{term:false-negative}}:** Lỗi bỏ sót các từ đáng lẽ phải gom về cùng gốc. Ví dụ: quy tắc cắt đuôi đơn giản không thể nhận diện `century` và `centuries` là cùng một gốc.
+- **{{term:false-positive}}:** Lỗi gom nhầm các từ mang nghĩa khác nhau về cùng một gốc. Slide cảnh báo nguy cơ nhầm lẫn giữa đại từ `I` và động từ `is`.
 
-Phân biệt giữa **Rút gọn gốc từ (stemming)** và **Chuẩn hóa từ điển (lemmatization)**:
+Phân biệt giữa **{{term:stemming}}** và **{{term:lemmatization}}**:
 
 | Từ đầu vào | Kết quả của Stemming | Kết quả của Lemmatization |
 | --- | --- | --- |
@@ -217,7 +217,7 @@ Slide nguồn: 14-16
 
 ### Cụm danh từ dựa trên từ loại (Part-of-Speech)
 
-**Cụm danh từ (noun phrase)** được định nghĩa là chuỗi gồm các danh từ liên tiếp hoặc tính từ bổ nghĩa cho danh từ. Slide 14 liệt kê các nhãn từ loại của bộ gán nhãn POS:
+**{{term:noun-phrase}}** được định nghĩa là chuỗi gồm các danh từ liên tiếp hoặc tính từ bổ nghĩa cho danh từ. Slide 14 liệt kê các nhãn từ loại của bộ gán nhãn POS:
 
 | Nhãn POS | Ý nghĩa | Ví dụ |
 | --- | --- | --- |
@@ -249,7 +249,7 @@ Mỗi miền dữ liệu có những cụm từ đặc trưng riêng, do đó h�
 
 ### Kỹ thuật N-gram
 
-**N-gram** là chuỗi gồm `n` từ (hoặc ký tự) xuất hiện liên tiếp nhau trong văn bản.
+**{{term:n-gram}}** là chuỗi gồm `n` từ (hoặc ký tự) xuất hiện liên tiếp nhau trong văn bản.
 
 Chuỗi bi-gram (2-gram) của câu `to be or not to be`:
 
@@ -265,13 +265,13 @@ Slide nguồn: 17
 
 Các trường dữ liệu trong cơ sở dữ liệu và cấu trúc thẻ trong trang Web mang ý nghĩa rất lớn cho việc tìm kiếm. Trong trang web ví dụ `Tropical fish`, từ `tropical fish` xuất hiện ở tiêu đề chính (heading) sẽ mang giá trị manh mối mạnh hơn nhiều so với việc chỉ xuất hiện vu vơ ở phần chân trang.
 
-Hệ thống tìm kiếm gán các trọng số khác nhau cho từng trường (field):
+Hệ thống tìm kiếm gán các trọng số khác nhau cho từng {{term:field}}:
 
 - tiêu đề bài viết (title)
 - tiêu đề mục chính (main heading)
 - phần thân bài (body)
 - tác giả (author)
-- văn bản neo (anchor text)
+{{term:anchor-text}}
 - ngày xuất bản (publication date)
 
 **Giải thích dễ hiểu:** Giống như trong hồ sơ xin việc, tên ứng viên được in to rõ ràng ở trên cùng mang ý nghĩa nhận diện chủ thể, khác hẳn với việc tên đó tình cờ xuất hiện một lần trong phần mô tả dự án. Cấu trúc tài liệu giúp công cụ tìm kiếm phân biệt được sự khác nhau đó.
@@ -280,7 +280,7 @@ Hệ thống tìm kiếm gán các trọng số khác nhau cho từng trường 
 
 Slide nguồn: 18-19
 
-Các từ ngữ hiển thị chứa liên kết bấm được gọi là **văn bản neo (anchor text)**, thường được phân biệt bằng gạch chân hoặc màu sắc nổi bật.
+Các từ ngữ hiển thị chứa liên kết bấm được gọi là **{{term:anchor-text}}**, thường được phân biệt bằng gạch chân hoặc màu sắc nổi bật.
 
 Văn bản neo hỗ trợ xếp hạng rất tốt vì hai lý do cốt lõi:
 
@@ -295,7 +295,7 @@ Phương pháp xếp hạng đơn giản ở Slide 19:
 
 Ví dụ, nếu hàng triệu trang web cùng đặt liên kết chứa chữ `eBay` trỏ về địa chỉ `www.ebay.com`, trang web đó sẽ tự động đạt điểm số cực cao cho truy vấn `eBay`.
 
-**Hạn chế:** So khớp chính xác không xử lý được các từ đồng nghĩa hoặc lỗi chính tả, đồng thời rất dễ bị các thủ thuật thao túng liên kết (link spam) tấn công.
+**Hạn chế:** So khớp chính xác không xử lý được các từ đồng nghĩa hoặc lỗi chính tả, đồng thời rất dễ bị các thủ thuật thao túng {{term:link-spam}} tấn công.
 
 ## 4.8 Thuật toán PageRank {#pagerank}
 
@@ -303,13 +303,13 @@ Slide nguồn: 20-22
 
 ### Mô hình người lướt web ngẫu nhiên (Random Surfer)
 
-Nếu chỉ đếm số lượng liên kết trỏ đến (inlink), kẻ xấu có thể tạo ra hàng nghìn trang rác rồi đặt liên kết trỏ về trang của mình để thao túng thứ hạng. Thuật toán **PageRank** khắc phục điều này bằng cách xem xét mức độ uy tín của trang đặt liên kết và số lượng liên kết đi ra từ trang đó.
+Nếu chỉ đếm số lượng liên kết trỏ đến (inlink), kẻ xấu có thể tạo ra hàng nghìn trang rác rồi đặt liên kết trỏ về trang của mình để thao túng thứ hạng. Thuật toán **{{term:pagerank}}** khắc phục điều này bằng cách xem xét mức độ uy tín của trang đặt liên kết và số lượng liên kết đi ra từ trang đó.
 
 **Giải thích dễ hiểu:** Hãy tưởng tượng mỗi trang web có 1 đồng tiền vàng để chia đều cho các trang mà nó trỏ tới. Nhận được tiền từ một trang uy tín lớn (có nhiều tiền) sẽ giá trị hơn nhiều so với nhận tiền từ một trang vô danh. Nếu trang đó trỏ tới 2 trang thì mỗi trang nhận một nửa; nếu chỉ trỏ tới 1 trang thì trang đó nhận trọn vẹn.
 
 Hình ảnh ẩn dụ đồng tiền này giúp ta dễ hình dung cơ chế phân phối điểm số. Trong thực tế, PageRank không phải là quá trình con người tự đặt đồng tiền lên các trang, mà là phép tính lặp để tìm "xác suất người dùng đang dừng chân tại một trang cụ thể khi liên tục di chuyển ngẫu nhiên qua các liên kết".
 
-Mô hình **người lướt web ngẫu nhiên (random surfer)** giả định một người dùng lướt mạng bằng cách bấm ngẫu nhiên vào các liên kết trên trang. Tuy nhiên, nếu chỉ đi theo liên kết, người đó có thể bị kẹt vĩnh viễn trong một nhóm các trang liên kết vòng tròn khép kín (vòng lặp vô tận). Vì vậy, mô hình bổ sung xác suất người dùng đột ngột chán nản và gõ một địa chỉ URL bất kỳ trong toàn bộ Web để nhảy tới trang mới.
+Mô hình **{{term:random-surfer}}** giả định một người dùng lướt mạng bằng cách bấm ngẫu nhiên vào các liên kết trên trang. Tuy nhiên, nếu chỉ đi theo liên kết, người đó có thể bị kẹt vĩnh viễn trong một nhóm các trang liên kết vòng tròn khép kín (vòng lặp vô tận). Vì vậy, mô hình bổ sung xác suất người dùng đột ngột chán nản và gõ một địa chỉ URL bất kỳ trong toàn bộ Web để nhảy tới trang mới.
 
 ### Ví dụ đồ thị 3 trang
 
@@ -379,7 +379,7 @@ Tổng xác suất mới: `0.3333 + 0.1917 + 0.4750 = 1.0000`. Tổng xác suấ
 
 Trang không có liên kết ra (dangling page) giống như ngõ cụt; việc phân phối đều điểm của nó ra toàn mạng giúp bảo toàn tổng xác suất không bị tiêu biến.
 
-Trạng thái **hội tụ (convergence)** đạt được khi độ biến thiên điểm số giữa hai vòng lặp liên tiếp nhỏ hơn một ngưỡng sai số rất nhỏ ấn định trước.
+Trạng thái **{{term:convergence}}** đạt được khi độ biến thiên điểm số giữa hai vòng lặp liên tiếp nhỏ hơn một ngưỡng sai số rất nhỏ ấn định trước.
 
 **Kiểm tra nhanh:** Vì sao điểm liên kết mà B nhận được từ A chỉ là `0.85 × (1/3) / 2` chứ không phải toàn bộ `0.85 × 1/3`?
 
@@ -396,7 +396,7 @@ Slide nguồn: 23-24
 
 Slide 23 minh họa trường hợp blog A trích dẫn bài viết của blog B, sau đó blog B tự động tạo liên kết trackback trỏ ngược lại A. Trên đồ thị, đây là liên kết hai chiều, khiến thuật toán khó phân biệt ai mới thực sự là nguồn phát thông tin gốc.
 
-Ngoài ra, mục bình luận trên các trang web thường bị kẻ xấu lợi dụng để chèn liên kết rác nhằm thao túng thứ hạng tìm kiếm (link spam).
+Ngoài ra, mục bình luận trên các trang web thường bị kẻ xấu lợi dụng để chèn {{term:link-spam}}.
 
 Slide 24 giới thiệu thuộc tính `rel="nofollow"` được thêm vào thẻ liên kết:
 
@@ -414,7 +414,7 @@ Slide nguồn: 25-27
 
 ### Rút trích cấu trúc từ văn bản tự nhiên
 
-**Trích xuất thông tin (information extraction)** tự động rút ra các thực thể như tên người, địa chỉ, tổ chức từ các câu văn tự nhiên và lưu trữ dưới dạng có cấu trúc.
+**{{term:information-extraction}}** tự động rút ra các thực thể như tên người, địa chỉ, tổ chức từ các câu văn tự nhiên và lưu trữ dưới dạng có cấu trúc.
 
 Ví dụ ở Slide 25 biến câu văn:
 
@@ -434,7 +434,7 @@ thành cấu trúc XML rõ ràng:
 Slide nguồn: 26
 
 - **Dựa trên luật (Rule-based):** Sử dụng từ điển tên riêng, địa danh kết hợp với các mẫu biểu thức chính quy ngữ pháp xung quanh.
-- **Dựa trên thống kê (Statistical-based):** Sử dụng mô hình xác suất học từ ngữ cảnh. Slide lấy ví dụ mô hình Hidden Markov Model (HMM).
+- **Dựa trên thống kê (Statistical-based):** Sử dụng mô hình xác suất học từ ngữ cảnh. Slide lấy ví dụ mô hình {{term:hmm}}.
 
 Từ điển nhận diện rất tốt các tên đã biết nhưng bó tay trước tên mới; mô hình thống kê tuy cần dữ liệu huấn luyện nhưng có khả năng suy luận ngữ cảnh rất linh hoạt.
 
@@ -511,13 +511,13 @@ Slide nguồn: 29 (và toàn bộ slide 1-28)
 
 ## Câu hỏi tự kiểm tra {#quiz}
 
-1. Token và từ chỉ mục (index term) có hoàn toàn đồng nhất với nhau không?
+1. Token và từ {{term:index-term}} có hoàn toàn đồng nhất với nhau không?
 2. Định luật Zipf cho biết điều gì về mối quan hệ giữa từ có tần số cao và từ có tần số thấp?
 3. Việc số mũ `β < 1` trong định luật Heaps mang ý nghĩa gì đối với tốc độ tăng vốn từ vựng?
 4. Nêu một ví dụ thực tế cho thấy việc xóa bỏ stopword sẽ làm sai lệch nghiêm trọng ý định tìm kiếm.
-5. Giải thích hiện tượng false negative và false positive trong bài toán rút gọn gốc từ (stemming).
-6. Cách tạo lập cụm danh từ (noun phrase) và n-gram khác nhau như thế nào?
-7. Vì sao văn bản neo (anchor text) lại chứa đựng thông tin khác biệt so với nội dung trong chính trang đích?
+7. Vì sao {{term:anchor-text}} lại chứa đựng thông tin khác biệt so với nội dung trong chính trang đích?
+6. {{term:noun-phrase}} và n-gram khác nhau như thế nào?
+7. {{term:anchor-text}} lại chứa đựng thông tin khác biệt so với nội dung trong chính trang đích?
 8. Vì sao trong công thức PageRank lại phải chia cho số lượng liên kết đi ra `L_v` của trang nguồn?
 9. Thuộc tính `rel="nofollow"` được tạo ra nhằm hạn chế vấn đề tiêu cực nào trên Web?
 10. Trạng thái ẩn (hidden state) trong mô hình HMM đại diện cho đối tượng gì?
@@ -546,7 +546,7 @@ Slide nguồn: 29 (và toàn bộ slide 1-28)
 | --- | --- | --- | --- |
 | Index term | Từ chỉ mục | Biểu diễn từ ngữ dùng trong cấu trúc chỉ mục và xếp hạng | 4 |
 | Lexical analysis | Phân tích từ vựng | Quá trình phân tích chuỗi ký tự thành các đơn vị từ và ký hiệu | 4 |
-| Lemmatization | Chuẩn hóa từ điển (Lemmatization) | Quá trình chuẩn hóa từ về dạng nguyên thể chuẩn trong từ điển | 4 |
+| Lemmatization | {{term:lemmatization}} | Quá trình chuẩn hóa từ về dạng nguyên thể chuẩn trong từ điển | 4 |
 | Discriminative power | Khả năng phân biệt | Mức độ hữu ích của từ trong việc phân biệt rõ ràng giữa các tài liệu khác nhau | 4 |
 | Term frequency | Tần suất từ | Số lần một từ xuất hiện trong một tài liệu cụ thể | 4–6 |
 | Document frequency | Tần suất tài liệu | Số lượng tài liệu trong bộ sưu tập có chứa từ đó | 4 |
@@ -555,21 +555,21 @@ Slide nguồn: 29 (và toàn bộ slide 1-28)
 | Tokenization | Tách token | Khâu phân chia chuỗi văn bản thành các token độc lập | 8–9 |
 | Stopword | Từ dừng | Các từ quá phổ biến mang ít giá trị phân biệt nội dung | 10 |
 | Stemmer | Bộ stemmer / Bộ rút gọn gốc từ | Chương trình cắt gọt các biến thể từ về cùng một dạng gốc | 11–13 |
-| False negative | Âm tính giả (False negative) | Lỗi bỏ sót các từ đáng lẽ phải được gom về cùng gốc | 11 |
-| False positive | Dương tính giả (False positive) | Lỗi gom nhầm các từ mang nghĩa khác nhau về cùng một gốc | 11 |
+| False positive | {{term:false-positive}} | Lỗi gom nhầm các từ mang nghĩa khác nhau về cùng một gốc | 11 |
+| False positive | {{term:false-positive}} | Lỗi gom nhầm các từ mang nghĩa khác nhau về cùng một gốc | 11 |
 | Krovetz stemmer | Bộ stemmer Krovetz | Thuật toán stemmer kết hợp giữa quy tắc cắt đuôi và từ điển | 13 |
-| Part-of-speech tagger | Bộ gắn thẻ từ loại (POS tagger) | Công cụ tự động xác định danh từ, động từ, tính từ trong câu | 14 |
+| Part-of-speech tagger | {{term:part-of-speech-tagger}} | Công cụ tự động xác định danh từ, động từ, tính từ trong câu | 14 |
 | Noun phrase | Cụm danh từ | Cụm từ có thành phần cốt lõi là danh từ | 14–15 |
 | N-gram | N-gram | Chuỗi gồm n từ hoặc n ký tự liên tiếp nhau | 16 |
 | Field | Trường dữ liệu | Vùng thông tin có cấu trúc trong tài liệu như title hay body | 17 |
 | Anchor text | Văn bản neo | Đoạn chữ chứa liên kết siêu văn bản trỏ tới trang khác | 17–19 |
-| Inlink | Liên kết trỏ đến (Inlink) | Liên kết từ các trang bên ngoài trỏ về trang đang xét | 20–21 |
-| Outlink | Liên kết trỏ ra (Outlink) | Liên kết xuất phát từ trang đang xét trỏ sang trang khác | 21–22 |
+| Outlink | {{term:outlink}} | Liên kết xuất phát từ trang đang xét trỏ sang trang khác | 21–22 |
+| Outlink | {{term:outlink}} | Liên kết xuất phát từ trang đang xét trỏ sang trang khác | 21–22 |
 | PageRank | Thuật toán PageRank | Thuật toán đo độ uy tín của trang dựa trên xác suất duyệt đồ thị | 20–22 |
 | Random surfer | Người lướt web ngẫu nhiên | Mô hình giả định người dùng bấm liên kết ngẫu nhiên kết hợp bước nhảy | 20, 22 |
-| Convergence | Sự hội tụ (Convergence) | Trạng thái mà các giá trị lặp hầu như không còn đổi khác | 22 |
+| Convergence | {{term:convergence}} | Trạng thái mà các giá trị lặp hầu như không còn đổi khác | 22 |
 | Link spam | Spam liên kết | Hành vi thao túng liên kết nhân tạo nhằm tăng điểm xếp hạng bất chính | 23–24 |
 | nofollow | Thuộc tính nofollow | Thuộc tính HTML báo cho công cụ tìm kiếm không coi liên kết là bảo chứng | 24 |
-| Named entity | Thực thể định danh (Named entity) | Đối tượng cụ thể có tên riêng như người, địa danh, tên tổ chức | 25–27 |
-| Hidden Markov Model | Mô hình Markov ẩn (HMM) | Mô hình xác suất suy luận chuỗi trạng thái ẩn từ chuỗi quan sát | 26–27 |
+| Hidden Markov Model | {{term:hmm}} | Mô hình xác suất suy luận chuỗi trạng thái ẩn từ chuỗi quan sát | 26–27 |
+| Hidden Markov Model | {{term:hmm}} | Mô hình xác suất suy luận chuỗi trạng thái ẩn từ chuỗi quan sát | 26–27 |
 | Markov property | Tính chất Markov | Giả định trạng thái tiếp theo chỉ phụ thuộc vào trạng thái hiện tại | 27 |

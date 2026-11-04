@@ -11,8 +11,8 @@ Sau khi học xong chương này, bạn có thể giải thích và tính toán 
 
 1. Trình bày lý do cần đánh giá công cụ tìm kiếm và cấu trúc của một bộ sưu tập kiểm thử (evaluation corpus / test collection).
 2. Phân tích ưu điểm và hạn chế của việc sử dụng dữ liệu nhật ký truy vấn (query logs) trong đánh giá.
-3. Tính toán các chỉ số cơ bản: Độ chính xác (Precision), Độ bao phủ (Recall), Tỷ lệ dương tính giả (Fallout) và Điểm F1.
-4. Tính toán các chỉ số xếp hạng: Precision@k, Average Precision (AP), Mean Average Precision (MAP), Mean Reciprocal Rank (MRR) và NDCG@k.
+4. Tính toán các chỉ số xếp hạng: Precision@k, Average Precision (AP), Mean Average Precision (MAP), {{term:mrr}} và NDCG@k.
+4. Tính toán các chỉ số xếp hạng: Precision@k, Average Precision (AP), Mean Average Precision (MAP), {{term:mrr}} và NDCG@k.
 5. Giải thích phương pháp nội suy đường cong Precision-Recall và hệ số tương quan hạng Kendall tau.
 6. Đo lường các chỉ số hiệu năng (latency, throughput) và thực hiện kiểm định dấu chính xác (exact sign test) để kiểm tra ý nghĩa thống kê.
 
@@ -36,8 +36,8 @@ Một công cụ tìm kiếm không thể tự khẳng định mình "tốt hơn
 - Cân bằng sự đánh đổi giữa chất lượng xếp hạng và thời gian phản hồi máy chủ.
 
 Hai khía cạnh đánh giá luôn đi song hành:
-- **Đánh giá tính hiệu quả (Effectiveness):** Trả lời câu hỏi "kết quả tìm kiếm có đúng và hữu ích với người dùng không?".
-- **Đánh giá tính hiệu năng (Efficiency):** Trả lời câu hỏi "hệ thống chạy có nhanh và tốn ít bộ nhớ không?".
+- **{{term:effectiveness}}:** Trả lời câu hỏi "kết quả tìm kiếm có đúng và hữu ích với người dùng không?".
+- **{{term:efficiency}}:** Trả lời câu hỏi "hệ thống chạy có nhanh và tốn ít bộ nhớ không?".
 
 ## 9.2 Bộ sưu tập kiểm thử (Evaluation Corpus / Test Collection) {#evaluation-corpus}
 
@@ -45,11 +45,11 @@ Slide nguồn: 6-7
 
 Mô hình kiểm thử kinh điển Cranfield chuẩn hóa việc đánh giá thông qua một bộ sưu tập kiểm thử gồm ba thành phần bắt buộc:
 
-1. **Bộ sưu tập tài liệu chuẩn (Document collection):** Tập hợp cố định các văn bản đại diện cho miền tìm kiếm.
+1. **{{term:document-collection}}:** Tập hợp cố định các văn bản đại diện cho miền tìm kiếm.
 2. **Tập hợp câu truy vấn / nhu cầu thông tin mẫu (Test queries):** Danh sách các câu hỏi tiêu biểu đại diện cho hành vi người dùng thực tế.
 3. **Phán đoán độ liên quan (Relevance judgments):** Bảng nhãn chuẩn (ground truth) do chuyên gia con người thẩm định, ghi nhận tài liệu nào liên quan đến truy vấn nào.
 
-Trong các kho dữ liệu hàng triệu trang, con người không thể đọc hết từng tài liệu để gán nhãn. Phương pháp **gộp kết quả (pooling)** lấy top-k kết quả hàng đầu từ nhiều công cụ tìm kiếm khác nhau gộp lại để chuyên gia thẩm định. Các tài liệu nằm ngoài pool thường được coi là không liên quan.
+Trong các kho dữ liệu hàng triệu trang, con người không thể đọc hết từng tài liệu để gán nhãn. Phương pháp **{{term:pooling}}** lấy top-k kết quả hàng đầu từ nhiều công cụ tìm kiếm khác nhau gộp lại để chuyên gia thẩm định. Các tài liệu nằm ngoài pool thường được coi là không liên quan.
 
 ## 9.3 Nhật ký truy vấn (Query Logs) {#logging}
 
@@ -59,7 +59,7 @@ Nhật ký truy vấn ghi lại mã phiên, câu truy vấn, các URL hiển th�
 
 Tuy nhiên, lượt nhấp chuột không phải là nhãn độ liên quan chuẩn xác tuyệt đối:
 
-- **Thiên lệch vị trí (Position bias):** Người dùng có xu hướng bấm vào các kết quả đầu tiên bất kể nội dung bên trong có thực sự hay hay không.
+- **{{term:position-bias}}:** Người dùng có xu hướng bấm vào các kết quả đầu tiên bất kể nội dung bên trong có thực sự hay hay không.
 - Chịu ảnh hưởng bởi tiêu đề giật gân và đoạn trích tóm tắt.
 - Có nhiều lượt nhấp nhầm rồi bấm nút quay lại ngay (click and bounce).
 - Nếu đoạn trích snippet đã giải đáp trọn vẹn câu hỏi, người dùng hoàn toàn thỏa mãn mà không cần nhấp chuột.
@@ -102,8 +102,8 @@ Slide nguồn: 10-11
   <span class="formula-sub">Recall = TP / (TP + FN)</span>
 </div>
 
-- **Độ chính xác (Precision):** Trong số các tài liệu hệ thống trả về, có bao nhiêu phần trăm thực sự liên quan? Mẫu số là tổng số tài liệu được lấy ra.
-- **Độ bao phủ (Recall):** Trong số toàn bộ các tài liệu liên quan tồn tại trong kho, hệ thống đã tìm ra được bao nhiêu phần trăm? Mẫu số là tổng số tài liệu liên quan trong kho (`TP + FN`).
+- **{{term:recall}}:** Trong số toàn bộ các tài liệu liên quan tồn tại trong kho, hệ thống đã tìm ra được bao nhiêu phần trăm? Mẫu số là tổng số tài liệu liên quan trong kho (`TP + FN`).
+- **{{term:recall}}:** Trong số toàn bộ các tài liệu liên quan tồn tại trong kho, hệ thống đã tìm ra được bao nhiêu phần trăm? Mẫu số là tổng số tài liệu liên quan trong kho (`TP + FN`).
 
 Với truy vấn Q1 ở ví dụ mẫu:
 
@@ -186,7 +186,7 @@ GMAP phạt rất nặng các câu truy vấn có kết quả tồi tệ (AP g�
 
 ### Nghịch đảo thứ hạng đầu tiên và MRR (Mean Reciprocal Rank)
 
-Chỉ số Reciprocal Rank (RR) lấy nghịch đảo vị trí của tài liệu liên quan đầu tiên:
+Chỉ số {{term:rr}} lấy nghịch đảo vị trí của tài liệu liên quan đầu tiên:
 
 <div class="formula-block" role="math" aria-label="reciprocal rank equals one divided by the rank of the first relevant result">
   <span class="formula-main">RR = 1 / rank<sub>first relevant</sub></span>
@@ -298,7 +298,7 @@ Slide nguồn: 17
 | Thời gian lập chỉ mục (Elapsed time) | Giây, Giờ | Thời gian thực tế để xây dựng xong chỉ mục | Cố định tập ngữ liệu, cấu hình ổ đĩa, số luồng |
 | Thời gian CPU (Processor time) | CPU giây | Tổng thời gian tiêu thụ thực tế của vi xử lý | Tách biệt với thời gian chờ I/O |
 | Thông lượng truy vấn (Throughput) | Queries / giây (QPS) | Số lượng truy vấn hệ thống xử lý được trong 1 giây | Cố định số lượng kết nối đồng thời |
-| Độ trễ truy vấn (Query latency) | Mili-giây (ms) | Thời gian phản hồi cho từng câu truy vấn | Cần báo cáo cả trung vị, p95 và p99 |
+| {{term:query-latency}} | Mili-giây (ms) | Thời gian phản hồi cho từng câu truy vấn | Cần báo cáo cả trung vị, p95 và p99 |
 | Dung lượng đĩa tạm thời | Gigabyte (GB) | Dung lượng ổ đĩa dùng cho các tệp tạm khi trộn khối | Phụ thuộc thuật toán nén và bộ nhớ đệm |
 | Dung lượng chỉ mục hoàn chỉnh | Gigabyte (GB) | Kích thước lưu trữ cuối cùng của chỉ mục đảo | Đầy đủ các trường và thông tin vị trí |
 
@@ -325,7 +325,7 @@ Khi so sánh Hệ thống A và Hệ thống B trên cùng một tập truy vấ
 - **Giả thuyết không (Null hypothesis - H0):** Không có sự khác biệt thực sự về hiệu quả giữa A và B; sự chênh lệch quan sát được chỉ là do biến động ngẫu nhiên.
 - **Giả thuyết đối (Alternative hypothesis - H1):** Có sự khác biệt thực sự giữa hai hệ thống.
 - **Mức ý nghĩa `α`:** Ngưỡng xác suất ấn định trước (thường là 0.05) để đưa ra quyết định bác bỏ H0.
-- **Giá trị p (p-value):** Xác suất quan sát thấy sự chênh lệch lớn bằng hoặc hơn mức thực tế nếu giả định H0 là đúng.
+- **{{term:p-value}}:** Xác suất quan sát thấy sự chênh lệch lớn bằng hoặc hơn mức thực tế nếu giả định H0 là đúng.
 
 Giá trị p không phải là "xác suất H0 đúng" và cũng không phải là "xác suất thuật toán B tốt hơn A".
 
@@ -356,7 +356,7 @@ Với mức ý nghĩa `α = 0.05`, vì `p = 0.109375 > 0.05`, chúng ta **chưa 
 
 Slide nguồn: 21
 
-Trong thử nghiệm A/B (A/B testing), người dùng thật được phân bổ ngẫu nhiên vào nhóm kiểm chứng A hoặc nhóm thử nghiệm B. Hệ thống đo lường các chỉ số hành vi thực tế: tỷ lệ nhấp (CTR), tỷ lệ hoàn thành tác vụ, doanh thu và thời gian phản hồi.
+Trong thử nghiệm A/B (A/B testing), người dùng thật được phân bổ ngẫu nhiên vào nhóm kiểm chứng A hoặc nhóm thử nghiệm B. Hệ thống đo lường các chỉ số hành vi thực tế: {{term:ctr}}, tỷ lệ hoàn thành tác vụ, doanh thu và thời gian phản hồi.
 
 Thử nghiệm A/B phản ánh chính xác tác động người dùng thật nhưng tốn kém và tiềm ẩn rủi ro làm giảm trải nghiệm của người dùng nếu thuật toán mới gặp lỗi. Vì vậy, chỉ những mô hình đã vượt qua khâu đánh giá ngoại tuyến (offline evaluation) khắt khe mới được đưa vào thử nghiệm A/B trực tuyến.
 
@@ -404,7 +404,7 @@ Slide nguồn: 23
 1. Vì sao không thể tự ý coi các tài liệu nằm ngoài danh sách gộp (pool) chắc chắn 100% là tài liệu không liên quan?
 2. Mẫu số của chỉ số Fallout và mẫu số của `1 - Precision` khác nhau như thế nào?
 3. Average Precision (AP) và Mean Average Precision (MAP) lấy trung bình trên những đơn vị nào?
-4. Việc chỉ số Reciprocal Rank (RR) chỉ nhìn vào tài liệu đúng đầu tiên tạo ra hạn chế gì?
+4. Việc chỉ số {{term:rr}} chỉ nhìn vào tài liệu đúng đầu tiên tạo ra hạn chế gì?
 5. Vì sao tài liệu liên quan không được lấy ra (như `D9`) vẫn ảnh hưởng trực tiếp tới giá trị IDCG?
 6. Nếu giá trị p thu được từ kiểm định là `p = 0.03`, liệu có thể khẳng định rằng "thuật toán B có 97% xác suất vượt trội hơn A" không?
 
@@ -422,7 +422,7 @@ Slide nguồn: 23
 
 ## Chuyển tiếp sang chương sau {#next-chapter}
 
-Đánh giá chất lượng không chỉ áp dụng cho xếp hạng văn bản mà còn áp dụng cho các bài toán phân loại và tổ chức dữ liệu. Chương 10 tiếp theo sẽ nghiên cứu các thuật toán Phân loại (Classification: Naive Bayes, SVM) và Phân cụm (Clustering: Phân cấp, K-means) cùng các ma trận nhầm lẫn và độ tinh khiết (Purity).
+Đánh giá chất lượng không chỉ áp dụng cho xếp hạng văn bản mà còn áp dụng cho các bài toán phân loại và tổ chức dữ liệu. Chương 10 tiếp theo sẽ nghiên cứu các thuật toán Phân loại (Classification: Naive Bayes, SVM) và Phân cụm (Clustering: Phân cấp, K-means) cùng các ma trận nhầm lẫn và {{term:purity}}.
 
 ## Bảng thuật ngữ {#glossary}
 
@@ -435,10 +435,10 @@ Slide nguồn: 23
 | Fallout | Tỷ lệ dương tính giả | Tỷ lệ tài liệu không liên quan bị hệ thống lấy nhầm |
 | F1 | Điểm F1 | Trung bình điều hòa giữa Precision và Recall |
 | Precision@k | Độ chính xác tại top k | Tỷ lệ tài liệu liên quan trong k kết quả đầu tiên |
-| Average Precision | Độ chính xác trung bình (AP) | Chỉ số tổng hợp chất lượng xếp hạng của một câu truy vấn |
+| Average Precision | {{term:average-precision}} | Chỉ số tổng hợp chất lượng xếp hạng của một câu truy vấn |
 | MAP | Mean Average Precision (MAP) | Trung bình số học của các điểm AP trên toàn bộ các câu truy vấn |
-| Reciprocal Rank | Nghịch đảo thứ hạng (RR) | Nghịch đảo vị trí của tài liệu liên quan đầu tiên tìm thấy |
-| MRR | Mean Reciprocal Rank (MRR) | Trung bình điểm RR trên toàn bộ các câu truy vấn |
+| Reciprocal Rank | {{term:rr}} | Nghịch đảo vị trí của tài liệu liên quan đầu tiên tìm thấy |
+| MRR | {{term:mrr}} | Trung bình điểm RR trên toàn bộ các câu truy vấn |
 | DCG | Độ tăng tích lũy chiết khấu | Chỉ số cộng dồn độ liên quan đa mức có chiết khấu theo vị trí |
 | NDCG | Độ tăng tích lũy chiết khấu chuẩn hóa | Tỷ lệ giữa DCG thực tế và IDCG lý tưởng |
 | Kendall tau | Hệ số Kendall tau | Thước đo mức độ đồng thuận thứ tự tương đối giữa hai danh sách |

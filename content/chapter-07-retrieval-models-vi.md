@@ -10,10 +10,10 @@ SEG301m ghi chú học tập
 Sau khi học xong chương này, bạn có thể giải thích và tính toán các nội dung sau:
 
 1. Phân biệt sự khác nhau giữa tìm kiếm Boolean và truy xuất có xếp hạng (ranked retrieval).
-2. Xây dựng vector tài liệu và truy vấn từ tf, df, idf và tính toán độ tương đồng cosine (cosine similarity).
+2. Xây dựng vector tài liệu và truy vấn từ tf, df, idf và tính toán {{term:cosine-similarity}}.
 3. Trình bày tư duy xác suất và tính điểm cho hai tài liệu theo công thức BM25 trong slide bài giảng.
-4. Giải thích hàm hợp lý của truy vấn (query likelihood), vấn đề xác suất bằng 0, làm mượt Dirichlet và điểm số logarit.
-5. Nêu rõ vai trò của mạng suy luận (inference network), tìm kiếm Web, học xếp hạng (Learning to Rank), mô hình chủ đề (topic model) và mô hình theo ứng dụng.
+5. Nêu rõ vai trò của {{term:inference-network}}, tìm kiếm Web, {{term:ltr}}, mô hình chủ đề (topic model) và mô hình theo ứng dụng.
+5. {{term:inference-network}}, tìm kiếm Web, học xếp hạng (Learning to Rank), mô hình chủ đề (topic model) và mô hình theo ứng dụng.
 
 Slide nguồn: 1-3
 
@@ -224,7 +224,7 @@ Slide nguồn: 11-15
 
 ### Xem tài liệu như nguồn sinh ra từ ngữ
 
-Mô hình ngôn ngữ unigram (unigram language model) coi mỗi tài liệu như một phân phối xác suất sinh ra các từ. Phương pháp hàm hợp lý của truy vấn (query likelihood) tính xác suất để mô hình ngôn ngữ của tài liệu sinh ra đúng câu truy vấn của người dùng:
+Mô hình ngôn ngữ unigram (unigram language model) coi mỗi tài liệu như một phân phối xác suất sinh ra các từ. {{term:query-likelihood}} tính xác suất để mô hình ngôn ngữ của tài liệu sinh ra đúng câu truy vấn của người dùng:
 
 <div class="formula-block" role="math" aria-label="P Q given D equals product of P q i given D">
   <span class="formula-main">P(Q|D) = ∏<sub>i=1</sub><sup>n</sup> P(q<sub>i</sub>|D)</span>
@@ -282,7 +282,7 @@ Cực tiểu hóa phân kỳ KL hoàn toàn tương đương với việc cực 
 
 Slide nguồn: 16-18
 
-Mạng suy luận (inference network) kết nối các tài liệu, các trường văn bản, đặc trưng từ vựng và toán tử truy vấn thành một đồ thị mạng Bayesian để truyền dẫn bằng chứng:
+{{term:inference-network}} kết nối các tài liệu, các trường văn bản, đặc trưng từ vựng và toán tử truy vấn thành một đồ thị mạng Bayesian để truyền dẫn bằng chứng:
 
 ```text
 Tài liệu D
@@ -342,10 +342,10 @@ Slide nguồn: 21-22
 
 ### Mô hình tạo sinh (Generative) và Mô hình phân biệt (Discriminative)
 
-- **Mô hình tạo sinh (Generative model):** Mô hình hóa cách dữ liệu hoặc câu truy vấn được sinh ra từ tài liệu (tiêu biểu như mô hình ngôn ngữ).
-- **Mô hình phân biệt (Discriminative model):** Học trực tiếp hàm ánh xạ từ các vector đặc trưng quan sát được sang nhãn phân loại hoặc điểm số xếp hạng.
+- **{{term:discriminative-model}}:** Học trực tiếp hàm ánh xạ từ các vector đặc trưng quan sát được sang nhãn phân loại hoặc điểm số xếp hạng.
+- **{{term:discriminative-model}}:** Học trực tiếp hàm ánh xạ từ các vector đặc trưng quan sát được sang nhãn phân loại hoặc điểm số xếp hạng.
 
-Trong **Học xếp hạng (Learning to Rank - LTR)**, mỗi mẫu dữ liệu đầu vào là một bộ:
+Trong **{{term:learning-to-rank}}**, mỗi mẫu dữ liệu đầu vào là một bộ:
 
 ```text
 (Truy vấn q, Tài liệu D, Vector đặc trưng x, Nhãn độ liên quan y)
@@ -370,7 +370,7 @@ Ba hướng tiếp cận chính trong LTR:
 Khi người dùng tìm kiếm từ `car` nhưng tài liệu chỉ chứa từ đồng nghĩa `automobile`, các mô hình so khớp từ bề mặt sẽ bỏ sót tài liệu.
 
 - **Chỉ mục ngữ nghĩa tiềm ẩn (Latent Semantic Indexing - LSI):** Sử dụng phép phân rã ma trận đại số tuyến tính (SVD) để chiếu các từ và tài liệu vào một không gian tiềm ẩn số chiều thấp, đưa các từ đồng xuất hiện về gần nhau.
-- **Phân bổ Dirichlet tiềm ẩn (Latent Dirichlet Allocation - LDA):** Mô hình xác suất tạo sinh giả định mỗi tài liệu là một phân phối hòa trộn của nhiều chủ đề (topics), và mỗi chủ đề là một phân phối xác suất sinh ra các từ vựng.
+- **{{term:latent-dirichlet-allocation}}:** Mô hình xác suất tạo sinh giả định mỗi tài liệu là một phân phối hòa trộn của nhiều chủ đề (topics), và mỗi chủ đề là một phân phối xác suất sinh ra các từ vựng.
 
 Ví dụ một bài báo về thiết bị thông minh có thể chứa 70% chủ đề công nghệ và 30% chủ đề thể thao:
 
@@ -410,7 +410,7 @@ Ví dụ trong tìm kiếm văn bản quy định của trường đại học, 
 | BM25 | tf, df, độ dài tài liệu | Bão hòa tf × IDF × chuẩn hóa độ dài | Đánh giá từ hiếm với tần số hợp lý | Baseline cực mạnh cho văn bản | Cần tinh chỉnh tham số `k1`, `b` |
 | Query likelihood | Phân phối ngôn ngữ tài liệu | Tích xác suất hoặc tổng logarit | Khả năng tài liệu sinh ra câu truy vấn | Lý thuyết tường minh, tích hợp làm mượt | Giả định unigram độc lập, cần kỹ thuật làm mượt |
 | Mạng suy luận | Đồ thị nút đặc trưng và toán tử | Niềm tin tổng hợp (Belief score) | Cây kết hợp nhiều luồng bằng chứng | Biểu diễn được cấu trúc, cụm từ, trường | Thiết kế và giải thích hệ thống phức tạp |
-| Học xếp hạng (LTR) | Vector đặc trưng truy vấn-tài liệu | Hàm xếp hạng học từ dữ liệu | Học cách kết hợp đặc trưng tối ưu | Kết hợp hàng trăm tín hiệu khác nhau | Cần tập dữ liệu huấn luyện lớn có gán nhãn |
+| {{term:ltr}} | Vector đặc trưng truy vấn-tài liệu | Hàm xếp hạng học từ dữ liệu | Học cách kết hợp đặc trưng tối ưu | Kết hợp hàng trăm tín hiệu khác nhau | Cần tập dữ liệu huấn luyện lớn có gán nhãn |
 | Mô hình chủ đề (LDA/LSI) | Không gian chủ đề số chiều thấp | Độ tương đồng trong không gian tiềm ẩn | Đồng xuất hiện cùng chủ đề tiềm ẩn | Khắc phục bất đồng từ vựng | Khó kiểm soát từ hiếm và khớp cụm từ chính xác |
 | Theo ứng dụng | Đặc trưng chuyên biệt của miền | Tùy biến theo nghiệp vụ miền | Tối ưu riêng cho từng bài toán | Khai thác sâu tri thức nghiệp vụ | Chi phí bảo trì cao, khó tái sử dụng cho miền khác |
 
@@ -425,7 +425,7 @@ Slide nguồn: 24
 Thiết kế một bộ sưu tập kiểm thử truy xuất adhoc dựa trên dữ liệu Wikipedia:
 
 1. Xây dựng danh sách nhu cầu thông tin và chuyển hóa thành các câu truy vấn.
-2. Thiết lập quy trình đánh giá độ liên quan bằng phương pháp gộp kết quả (pooling) từ nhiều công cụ tìm kiếm khác nhau.
+2. Thiết lập quy trình đánh giá độ liên quan bằng {{term:pooling}} từ nhiều công cụ tìm kiếm khác nhau.
 3. Phân chia tập truy vấn thành tập phát triển (train/tuning) và tập kiểm thử độc lập (test).
 
 <details>
@@ -448,7 +448,7 @@ Tách biệt các hàm tính IDF, thành phần tần số tài liệu và thàn
 
 ### Bài tập 3: Cơ chế phát hiện trôi truy vấn trong phản hồi giả định
 
-Xây dựng quy tắc phát hiện hiện tượng trôi truy vấn (query drift) khi tự động lấy thêm từ khóa từ top 3 tài liệu hàng đầu.
+Xây dựng quy tắc phát hiện {{term:query-drift}} khi tự động lấy thêm từ khóa từ top 3 tài liệu hàng đầu.
 
 <details>
 <summary>Xem đáp án gợi ý</summary>
@@ -464,9 +464,9 @@ Slide nguồn: 25
 - Tìm kiếm Boolean đánh giá điều kiện đúng/sai tuyệt đối và không tự động xếp thứ bậc trong dạng thức cơ bản.
 - Mô hình không gian vector biểu diễn tài liệu và truy vấn dưới dạng vector trọng số tf-idf và đo độ gần góc bằng độ tương đồng cosine.
 - Mô hình BM25 kết hợp hài hòa giữa idf, độ bão hòa tần số từ và sự chuẩn hóa theo độ dài tài liệu.
-- Phương pháp hàm hợp lý truy vấn (Query likelihood) đo xác suất tài liệu sinh ra câu truy vấn, sử dụng làm mượt Dirichlet để khắc phục vấn đề xác suất bằng 0.
-- Mạng suy luận (Inference network) kết hợp linh hoạt nhiều nguồn bằng chứng từ các trường dữ liệu và toán tử cấu trúc phức tạp.
-- Học xếp hạng (LTR) sử dụng máy học để tự động tối ưu hóa việc kết hợp hàng trăm đặc trưng khác nhau từ dữ liệu nhãn liên quan.
+- {{term:ltr}} sử dụng máy học để tự động tối ưu hóa việc kết hợp hàng trăm đặc trưng khác nhau từ dữ liệu nhãn liên quan.
+{{term:inference-network}} kết hợp linh hoạt nhiều nguồn bằng chứng từ các trường dữ liệu và toán tử cấu trúc phức tạp.
+{{term:ltr}} sử dụng máy học để tự động tối ưu hóa việc kết hợp hàng trăm đặc trưng khác nhau từ dữ liệu nhãn liên quan.
 - Mô hình chủ đề (LSI, LDA) giải quyết bài toán bất đồng từ vựng bằng cách khám phá không gian ngữ nghĩa tiềm ẩn.
 
 ## Câu hỏi tự kiểm tra {#quiz}
@@ -475,7 +475,7 @@ Slide nguồn: 25
 2. Giải thích vì sao độ tương đồng cosine không phải là một xác suất.
 3. Trong công thức BM25 của slide, điều kiện nào sẽ khiến trọng số RSJ IDF nhận giá trị âm?
 4. Dưới giả định nào thì thứ bậc của hàm hợp lý truy vấn `P(Q|D)` trùng khớp với thứ bậc của xác suất hậu nghiệm `P(D|Q)`?
-5. Dữ liệu cần thiết ở giai đoạn huấn luyện (training) và giai đoạn suy luận (inference) của bài toán Học xếp hạng (LTR) khác nhau như thế nào?
+5. Dữ liệu cần thiết ở giai đoạn huấn luyện (training) và giai đoạn suy luận (inference) của bài toán {{term:ltr}} khác nhau như thế nào?
 6. Vì sao việc cực tiểu hóa phân kỳ `KL(R||D)` lại hoàn toàn tương đương với việc cực đại hóa điểm số `Σ P(w|R) log P(w|D)`?
 7. Trong quy trình tạo sinh của mô hình LDA, đối với một vị trí từ cụ thể, chủ đề và từ ngữ được lựa chọn theo thứ tự nào?
 
@@ -494,7 +494,7 @@ Slide nguồn: 25
 
 ## Chuyển tiếp sang chương sau {#next-chapter}
 
-Chương này đã so sánh toàn diện các mô hình xếp hạng bên trong công cụ tìm kiếm. Chương 8 tiếp theo sẽ tiếp cận bài toán từ góc độ ngược lại: người sở hữu trang web cần tối ưu hóa nội dung, cấu trúc và mã nguồn như thế nào (SEO) để được công cụ tìm kiếm hiểu đúng và xếp hạng thuận lợi.
+Chương này đã so sánh toàn diện các mô hình xếp hạng bên trong công cụ tìm kiếm. Chương 8 tiếp theo sẽ tiếp cận bài toán từ góc độ ngược lại: người sở hữu trang web cần tối ưu hóa nội dung, {{term:seo}} để được công cụ tìm kiếm hiểu đúng và xếp hạng thuận lợi.
 
 ## Bảng thuật ngữ {#glossary}
 
@@ -514,9 +514,9 @@ Chương này đã so sánh toàn diện các mô hình xếp hạng bên trong 
 | Inference network | Mạng suy luận | Mô hình mạng Bayesian kết nối nhiều nguồn bằng chứng văn bản và toán tử truy vấn |
 | Generative model | Mô hình tạo sinh | Mô hình xác suất mô tả quy trình dữ liệu quan sát được sinh ra như thế nào |
 | Discriminative model | Mô hình phân biệt | Mô hình học máy dự đoán trực tiếp điểm số hoặc nhãn từ các đặc trưng quan sát |
-| Learning to rank | Học xếp hạng (LTR) | Phương pháp ứng dụng học máy để huấn luyện hàm xếp hạng từ dữ liệu thực nghiệm |
-| Support Vector Machine (SVM) | Máy vector hỗ trợ (SVM) | Thuật toán học máy tìm siêu phẳng phân cách tối ưu, ứng dụng trong học xếp hạng |
+| {{term:svm}} | {{term:svm}} | Thuật toán học máy tìm siêu phẳng phân cách tối ưu, ứng dụng trong học xếp hạng |
+| {{term:svm}} | {{term:svm}} | Thuật toán học máy tìm siêu phẳng phân cách tối ưu, ứng dụng trong học xếp hạng |
 | Ranking SVM | Ranking SVM | Thuật toán học xếp hạng theo từng cặp tài liệu dựa trên nguyên lý SVM |
-| Latent Semantic Indexing | Lập chỉ mục ngữ nghĩa tiềm ẩn (LSI) | Kỹ thuật giảm chiều ma trận từ-tài liệu để bắt trọn ngữ nghĩa đồng xuất hiện tiềm ẩn |
-| Latent Dirichlet Allocation | Phân bổ Dirichlet tiềm ẩn (LDA) | Mô hình xác suất sinh biểu diễn tài liệu dưới dạng hòa trộn của các chủ đề tiềm ẩn |
+| Latent Dirichlet Allocation | {{term:lda}} | Mô hình xác suất sinh biểu diễn tài liệu dưới dạng hòa trộn của các chủ đề tiềm ẩn |
+| Latent Dirichlet Allocation | {{term:lda}} | Mô hình xác suất sinh biểu diễn tài liệu dưới dạng hòa trộn của các chủ đề tiềm ẩn |
 | Application-based model | Mô hình theo ứng dụng | Mô hình truy xuất được tinh chỉnh riêng theo yêu cầu nghiệp vụ của miền ứng dụng |

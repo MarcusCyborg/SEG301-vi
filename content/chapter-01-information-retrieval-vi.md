@@ -30,7 +30,7 @@ Slide 4 nêu các nhóm thường giải quyết bài toán này, gồm nhà kho
 
 ### Định nghĩa truy xuất thông tin
 
-**Truy xuất thông tin (Information Retrieval, IR)** là lĩnh vực nghiên cứu việc tổ chức, xây dựng cấu trúc, lưu trữ, tìm kiếm và lấy ra thông tin. Slide 6 trình bày định nghĩa của Salton (1968) qua năm hoạt động sau:
+**{{term:information-retrieval}}** là lĩnh vực nghiên cứu việc tổ chức, xây dựng cấu trúc, lưu trữ, tìm kiếm và lấy ra thông tin. Slide 6 trình bày định nghĩa của Salton (1968) qua năm hoạt động sau:
 
 | Thuật ngữ trên slide | Nghĩa tiếng Việt | Hiểu đơn giản |
 | --- | --- | --- |
@@ -42,13 +42,13 @@ Slide 4 nêu các nhóm thường giải quyết bài toán này, gồm nhà kho
 
 ### Hệ thống so sánh điều gì khi tìm kiếm
 
-Từ hoặc câu hỏi mà người dùng nhập vào hệ thống được gọi là **truy vấn (query)**. Đối tượng được tìm kiếm, chẳng hạn một bài viết hoặc trang Web, được gọi chung là **tài liệu (document)**.
+Từ hoặc câu hỏi mà người dùng nhập vào hệ thống được gọi là **{{term:query}}**. Đối tượng được tìm kiếm, chẳng hạn một bài viết hoặc trang Web, được gọi chung là **{{term:document}}**.
 
 Slide 7 mô tả một "kho thông tin" rất lớn. Người dùng đặt truy vấn để tìm một phần thông tin quan trọng trong kho đó. Nhiệm vụ cốt lõi là hiểu và mô hình hóa cách con người so sánh các văn bản, sau đó thiết kế thuật toán để máy tính thực hiện phép so sánh này đủ chính xác.
 
 **Giải thích thêm ngoài slide:** Tài liệu có chứa đúng từ trong truy vấn chưa chắc đã hữu ích. Nếu người dùng tìm "cách trồng táo đỏ", một bài hướng dẫn trồng táo thường phù hợp hơn một trang bán chiếc đĩa có hình quả táo, dù cả hai đều có thể chứa cụm từ "táo đỏ".
 
-Mức độ một tài liệu đáp ứng nhu cầu thông tin được gọi là **độ liên quan (relevance)**. Việc sắp xếp kết quả theo mức độ hữu ích dự đoán được gọi là **xếp hạng (ranking)**.
+Mức độ một tài liệu đáp ứng nhu cầu thông tin được gọi là **{{term:relevance}}**. Việc sắp xếp kết quả theo mức độ hữu ích dự đoán được gọi là **{{term:ranking}}**.
 
 **Kiểm tra nhanh:** Với truy vấn "thức ăn cho mèo", giữa một bài viết về dinh dưỡng cho mèo và một trang bán đĩa có hình mèo, tài liệu nào thường liên quan hơn? Hãy giải thích dựa trên nhu cầu của người tìm.
 
@@ -56,7 +56,7 @@ Mức độ một tài liệu đáp ứng nhu cầu thông tin được gọi l�
 
 Slide nguồn: 8-10
 
-Slide 8 định nghĩa **công cụ tìm kiếm (search engine)** là việc áp dụng các kỹ thuật truy xuất thông tin vào những tập văn bản có quy mô lớn. Các ví dụ trên slide gồm:
+Slide 8 định nghĩa **{{term:search-engine}}** là việc áp dụng các kỹ thuật truy xuất thông tin vào những tập văn bản có quy mô lớn. Các ví dụ trên slide gồm:
 
 - công cụ tìm kiếm Web;
 - công cụ tìm kiếm trên máy tính cá nhân;
@@ -119,7 +119,7 @@ Slide nguồn: 9, 13
 Slide 13 minh họa quá trình từ lúc người dùng nhập truy vấn đến lúc nhận kết quả:
 
 1. Xác định một tập trang Web có chứa các từ trong truy vấn.
-2. Tính **điểm (score)** cho từng trang.
+2. Tính **{{term:score}}** cho từng trang.
 3. Loại bỏ các trang trùng lặp hoặc dư thừa.
 4. Tạo phần mô tả ngắn cho các trang còn lại và hiển thị kết quả.
 
@@ -157,7 +157,7 @@ Slide 15 liệt kê tám nhóm ứng dụng của truy xuất thông tin.
 
 Slide nguồn: 15-16
 
-Hệ thống xem xét nội dung tài liệu để chuyển tài liệu đến đúng nhóm người dùng, hoặc loại những tài liệu không phù hợp. **Phân phối có chọn lọc (selective dissemination)** nghĩa là chỉ đưa thông tin đến những người có mối quan tâm tương ứng.
+Hệ thống xem xét nội dung tài liệu để chuyển tài liệu đến đúng nhóm người dùng, hoặc loại những tài liệu không phù hợp. **{{term:selective-dissemination}}** nghĩa là chỉ đưa thông tin đến những người có mối quan tâm tương ứng.
 
 Slide 16 dùng một bài viết về Việt Nam và Hàn Quốc. Hệ thống chọn nhóm "politics" thay vì "business" hoặc "lifestyle", sau đó chuyển bài viết cho những người đăng ký nhóm đó.
 
@@ -165,7 +165,7 @@ Slide 16 dùng một bài viết về Việt Nam và Hàn Quốc. Hệ thống c
 
 Slide nguồn: 15, 17
 
-**Phân cụm (clustering)** gom các tài liệu giống nhau thành nhóm dựa trên dữ liệu. **Phân loại (categorization hoặc classification)** đưa tài liệu vào các nhóm đã được xác định trước.
+**{{term:clustering}}** gom các tài liệu giống nhau thành nhóm dựa trên dữ liệu. **{{term:classification}}** đưa tài liệu vào các nhóm đã được xác định trước.
 
 Slide 17 cho thấy các mẫu thuộc ba nhóm politics, business và lifestyle. Một bài viết mới về Việt Nam và Hàn Quốc được hệ thống đưa vào nhóm politics.
 
@@ -183,7 +183,7 @@ Slide nguồn: 15, 18
 
 Slide nguồn: 15, 19
 
-**Trích xuất thông tin (information extraction)** nhận diện các thực thể có tên, chẳng hạn địa điểm và ngày tháng, rồi kết hợp chúng thành bản ghi có cấu trúc mô tả quan hệ giữa các thực thể.
+**{{term:information-extraction}}** nhận diện các thực thể có tên, chẳng hạn địa điểm và ngày tháng, rồi kết hợp chúng thành bản ghi có cấu trúc mô tả quan hệ giữa các thực thể.
 
 **Ví dụ bổ sung ngoài slide:** Từ câu "Hội thảo diễn ra tại Hà Nội ngày 25 tháng 9", hệ thống có thể tạo bản ghi gồm địa điểm: Hà Nội, ngày: 25 tháng 9, sự kiện: hội thảo.
 
@@ -191,7 +191,7 @@ Slide nguồn: 15, 19
 
 Slide nguồn: 15, 20
 
-**Phát hiện và theo dõi chủ đề (topic detection and tracking)** tìm các sự kiện trong dòng tin tức hoặc nguồn thông tin liên tục, sau đó theo dõi sự kiện khi nó thay đổi theo thời gian.
+**{{term:topic-detection-and-tracking}}** tìm các sự kiện trong dòng tin tức hoặc nguồn thông tin liên tục, sau đó theo dõi sự kiện khi nó thay đổi theo thời gian.
 
 **Ví dụ bổ sung ngoài slide:** Hệ thống có thể phát hiện bản tin đầu tiên về một cơn bão, rồi gom các bài cập nhật về đường đi và thiệt hại vào cùng sự kiện.
 
@@ -199,7 +199,7 @@ Slide nguồn: 15, 20
 
 Slide nguồn: 15, 21
 
-**Tìm kiếm chuyên gia (expert search)** xác định thành viên trong một tổ chức có chuyên môn về một lĩnh vực cụ thể. Kết quả cần tìm ở đây là con người, không chỉ là tài liệu.
+**{{term:expert-search}}** xác định thành viên trong một tổ chức có chuyên môn về một lĩnh vực cụ thể. Kết quả cần tìm ở đây là con người, không chỉ là tài liệu.
 
 ### 7. Hệ thống hỏi đáp
 
@@ -213,7 +213,7 @@ Slide nguồn: 15, 22
 
 Slide nguồn: 15
 
-**Truy xuất thông tin đa phương tiện (multimedia information retrieval)** tìm kiếm trên ảnh, âm thanh, video và các dạng dữ liệu khác ngoài văn bản. Slide 15 chỉ nêu tên ứng dụng này, không cung cấp một slide diễn giải riêng.
+**{{term:multimedia-information-retrieval}}** tìm kiếm trên ảnh, âm thanh, video và các dạng dữ liệu khác ngoài văn bản. Slide 15 chỉ nêu tên ứng dụng này, không cung cấp một slide diễn giải riêng.
 
 **Ví dụ bổ sung ngoài slide:** Người dùng có thể tìm ảnh bằng mô tả "cầu đỏ bên sông" hoặc tìm đoạn video có một cảnh cụ thể. Đây là ví dụ để minh họa khái niệm, không phải ví dụ có sẵn trên slide.
 

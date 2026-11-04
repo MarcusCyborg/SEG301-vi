@@ -7,6 +7,39 @@ const root = resolve(import.meta.dirname, '..');
 const outputDir = resolve(root, 'dist');
 const chaptersDir = resolve(outputDir, 'chapters');
 const catalog = JSON.parse(await readFile(resolve(root, 'content/chapters.json'), 'utf8'));
+const termsList = JSON.parse(await readFile(resolve(root, 'content/terms.json'), 'utf8'));
+
+const termsMap = new Map();
+const termByEnLower = new Map();
+const termByViLower = new Map();
+const termByAliasLower = new Map();
+
+for (const t of termsList) {
+  if (!t.id || typeof t.id !== 'string') {
+    throw new Error(`Build error: Term record missing valid 'id'`);
+  }
+  if (!t.preserveEnglish && (!t.vi || typeof t.vi !== 'string' || t.vi.trim() === '')) {
+    throw new Error(`Build error: Term "${t.id}" has preserveEnglish: false but is missing Vietnamese translation (vi)`);
+  }
+  termsMap.set(t.id, t);
+  if (t.en) termByEnLower.set(t.en.toLowerCase(), t);
+  if (t.vi) termByViLower.set(t.vi.toLowerCase(), t);
+  for (const alias of t.aliases || []) {
+    if (alias && typeof alias === 'string') {
+      termByAliasLower.set(alias.toLowerCase(), t);
+    }
+  }
+}
+
+const termsSummary = termsList.map((item) => ({
+  id: item.id,
+  en: item.en,
+  vi: item.vi,
+  aliases: item.aliases || [],
+  category: item.category,
+  preserveEnglish: !!item.preserveEnglish
+}));
+
 const assetVersion = '20261104-vi';
 
 const ui = {
@@ -69,6 +102,160 @@ function chapterHeroTitle(chapter) {
   return `<em>${title}</em>`;
 }
 
+function termSwitcher() {
+  return `<div class="term-switcher" role="group" aria-label="Chế độ hiển thị thuật ngữ">
+    <span class="term-switcher__label" id="term-switcher-label">Thuật ngữ:</span>
+    <div class="term-switcher__buttons" role="radiogroup" aria-labelledby="term-switcher-label">
+      <button type="button" role="radio" class="term-switcher__btn" data-mode="en" aria-checked="false" title="Hiển thị tiếng Anh (English)">English</button>
+      <button type="button" role="radio" class="term-switcher__btn is-active" data-mode="bilingual" aria-checked="true" title="Hiển thị song ngữ (Anh + Việt)">Anh + Việt</button>
+      <button type="button" role="radio" class="term-switcher__btn" data-mode="vi" aria-checked="false" title="Hiển thị tiếng Việt">Tiếng Việt</button>
+    </div>
+  </div>`;
+}
+
+function isStartOfSentence(html, offset) {
+  const before = html.slice(Math.max(0, offset - 500), offset);
+  const blockMatches = [...before.matchAll(/<\/?(?:p|li|h[1-6]|div|blockquote|td|th|dt|dd|summary|br|hr|tr)\b[^>]*>/gi)];
+  let segment = before;
+  if (blockMatches.length > 0) {
+    const lastBlock = blockMatches[blockMatches.length - 1];
+    segment = before.slice(lastBlock.index + lastBlock[0].length);
+  }
+  const cleanText = segment.replace(/\{\{term:[^}]+\}\}/g, 'word').replace(/<[^>]+>/g, '').trim();
+  if (cleanText.length === 0) {
+    return true;
+  }
+  return /[.:!?…][\"')\]”’]*$/.test(cleanText);
+}
+
+const forbiddenOrMarkerRegex = /(<pre\b[\s\S]*?<\/pre>|<code\b[\s\S]*?<\/code>|<div\b[^>]*\bformula-block\b[^>]*>[\s\S]*?<\/div>|<(?:div|span)\b[^>]*\bkatex\b[^>]*>[\s\S]*?<\/(?:div|span)>|<math\b[\s\S]*?<\/math>|<[^>]+>)|(\{\{term:([^}]+)\}\})/gi;
+
+function expandMarkers(html) {
+  return html.replace(forbiddenOrMarkerRegex, (match, forbidden, marker, rawId, offset, fullString) => {
+    if (forbidden) {
+      return match;
+    }
+
+    const id = rawId.trim();
+    const term = termsMap.get(id);
+    if (!term) {
+      throw new Error(`Build error: Marker "${match}" references nonexistent term ID "${id}"`);
+    }
+
+    if (!term.preserveEnglish && (!term.vi || typeof term.vi !== 'string' || term.vi.trim() === '')) {
+      throw new Error(`Build error: Term "${id}" has preserveEnglish: false but is missing Vietnamese translation (vi)`);
+    }
+
+    const isStart = isStartOfSentence(fullString, offset);
+    let en = term.en;
+    let vi = term.vi;
+
+    if (isStart) {
+      if (!term.preserveEnglish && term.category !== 'acronym') {
+        en = en.charAt(0).toUpperCase() + en.slice(1);
+      }
+      if (!term.preserveEnglish && vi) {
+        vi = vi.charAt(0).toUpperCase() + vi.slice(1);
+      }
+    }
+
+    const isSame = term.preserveEnglish || (term.en && term.vi && term.en.toLowerCase() === term.vi.toLowerCase());
+    const classNames = isSame ? 'term term--same' : 'term';
+
+    return `<span class="${classNames}" data-term-id="${escapeHtml(term.id)}"><span class="term__en">${escapeHtml(en)}</span><span class="term__vi">${escapeHtml(vi)}</span></span>`;
+  });
+}
+
+function normalizeText(s) {
+  return s.replace(/<[^>]+>/g, '').trim().toLowerCase();
+}
+
+function findTermForCells(enText, viText) {
+  const markerMatch = (enText + ' ' + viText).match(/\{\{term:([a-z0-9-]+)\}\}/);
+  if (markerMatch && termsMap.has(markerMatch[1])) {
+    return termsMap.get(markerMatch[1]);
+  }
+
+  const dataTermMatch = (enText + ' ' + viText).match(/data-term-id="([a-z0-9-]+)"/);
+  if (dataTermMatch && termsMap.has(dataTermMatch[1])) {
+    return termsMap.get(dataTermMatch[1]);
+  }
+
+  const normEn = normalizeText(enText);
+  const normVi = normalizeText(viText);
+
+  if (termByEnLower.has(normEn)) return termByEnLower.get(normEn);
+  if (termByAliasLower.has(normEn)) return termByAliasLower.get(normEn);
+  if (termsMap.has(normEn)) return termsMap.get(normEn);
+
+  const parenMatch = normEn.match(/^([^(]+)\s*\(([^)]+)\)$/);
+  if (parenMatch) {
+    const base = parenMatch[1].trim();
+    const paren = parenMatch[2].trim();
+    if (termByEnLower.has(base)) return termByEnLower.get(base);
+    if (termByAliasLower.has(base)) return termByAliasLower.get(base);
+    if (termByEnLower.has(paren)) return termByEnLower.get(paren);
+    if (termByAliasLower.has(paren)) return termByAliasLower.get(paren);
+  }
+
+  if (normEn.includes('/')) {
+    const parts = normEn.split('/').map((p) => p.trim());
+    for (const p of parts) {
+      if (termByEnLower.has(p)) return termByEnLower.get(p);
+      if (termByAliasLower.has(p)) return termByAliasLower.get(p);
+    }
+  }
+
+  if (termByViLower.has(normVi)) return termByViLower.get(normVi);
+
+  if (normVi.includes('/')) {
+    const parts = normVi.split('/').map((p) => p.trim());
+    for (const p of parts) {
+      if (termByViLower.has(p)) return termByViLower.get(p);
+    }
+  }
+
+  for (const t of termsList) {
+    if (t.en.toLowerCase() === normEn || t.vi.toLowerCase() === normVi) return t;
+    if (normEn.includes(t.en.toLowerCase()) && t.en.length > 3) return t;
+  }
+
+  return null;
+}
+
+function optimizeGlossaryTable(html) {
+  const glossaryIndex = html.indexOf('id="glossary-vi"');
+  if (glossaryIndex === -1) return html;
+
+  const tableStartIndex = html.indexOf('<table', glossaryIndex);
+  if (tableStartIndex === -1) return html;
+
+  const tableEndIndex = html.indexOf('</table>', tableStartIndex);
+  if (tableEndIndex === -1) return html;
+
+  const beforeTable = html.slice(0, tableStartIndex);
+  const tableHtml = html.slice(tableStartIndex, tableEndIndex + 8);
+  const afterTable = html.slice(tableEndIndex + 8);
+
+  const modifiedTable = tableHtml.replace(/<tr\b([^>]*)>([\s\S]*?)<\/tr>/gi, (rowMatch, trAttrs, rowContent) => {
+    if (!/<td\b/i.test(rowContent)) return rowMatch;
+
+    const cells = [...rowContent.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/gi)].map((m) => m[1]);
+    if (cells.length < 2) return rowMatch;
+
+    const term = findTermForCells(cells[0], cells[1]);
+    if (!term) return rowMatch;
+
+    const aliases = (term.aliases || []).join(',');
+    const acronymAttr = term.category === 'acronym' ? ' data-acronym="true"' : '';
+    const newAttrs = ` data-term-id="${escapeHtml(term.id)}" data-aliases="${escapeHtml(aliases)}"${acronymAttr}`;
+
+    return `<tr${trAttrs}${newAttrs}>${rowContent}</tr>`;
+  });
+
+  return beforeTable + modifiedTable + afterTable;
+}
+
 async function renderMarkdown(chapter, sourcePath) {
   const source = await readFile(resolve(root, sourcePath), 'utf8');
   const markdown = stripDocumentHeader(source);
@@ -111,7 +298,9 @@ async function renderMarkdown(chapter, sourcePath) {
   let article = marked.parse(markdown);
   article = article.replace(/<details>\s*<summary>([^<]+)<\/summary>\s*([\s\S]*?)\s*<\/details>/g, (_, summary, body) =>
     `<details class="answer-key"><summary>${summary}</summary><div class="answer-key__body">${marked.parse(body.trim())}</div></details>`);
+  article = optimizeGlossaryTable(article);
   article = article.replace(/<table>[\s\S]*?<\/table>/g, (table) => `<div class="table-wrap">${table}</div>`);
+  article = expandMarkers(article);
 
   if (chapter.asset?.insertBefore) {
     const assetPath = `../${chapter.asset.output}`;
@@ -131,7 +320,14 @@ function head({ title, description, assetPrefix, localeData }) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163b3c">
   <meta name="description" content="${escapeHtml(description)}">
+  <meta property="og:title" content="${escapeHtml(title)}">
+  <meta property="og:description" content="${escapeHtml(description)}">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="${escapeHtml(title)}">
+  <meta name="twitter:description" content="${escapeHtml(description)}">
   <title>${escapeHtml(title)}</title>
+  <link rel="icon" type="image/svg+xml" href="${assetPrefix}assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet">
@@ -139,6 +335,17 @@ function head({ title, description, assetPrefix, localeData }) {
   <link rel="stylesheet" href="${assetPrefix}tutor.css?v=${assetVersion}">
   <link rel="stylesheet" href="${assetPrefix}assets/katex/katex.min.css?v=${assetVersion}">
   <link rel="stylesheet" href="${assetPrefix}assets/highlight.css?v=${assetVersion}">
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('seg301m-term-mode');
+        var mode = (saved === 'en' || saved === 'vi' || saved === 'bilingual') ? saved : 'bilingual';
+        document.documentElement.setAttribute('data-term-mode', mode);
+      } catch (e) {
+        document.documentElement.setAttribute('data-term-mode', 'bilingual');
+      }
+    })();
+  </script>
   <script id="locale-data" type="application/json">${JSON.stringify(localeData).replace(/</g, '\\u003c')}</script>
   <script src="${assetPrefix}app.js?v=${assetVersion}" defer></script>
   <script src="${assetPrefix}tutor.js?v=${assetVersion}" defer></script>
@@ -149,6 +356,7 @@ function chapterHeader(chapter) {
   return `<header class="site-header">
     <a class="wordmark" href="../index.html" aria-label="SEG301m home">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
     <span class="site-header__caption">${ui.siteLabel} <span aria-hidden="true">/</span> ${chapterLabel(chapter.number)}</span>
+    ${termSwitcher()}
     <a class="site-header__link" href="../index.html">${ui.chapters} <span aria-hidden="true">↗</span></a>
   </header>`;
 }
@@ -206,7 +414,8 @@ async function buildLessonPage(chapter) {
   const localeData = {
     page: 'chapter',
     glossary: ui.glossary,
-    backToTop: 'Về đầu trang'
+    backToTop: 'Về đầu trang',
+    termsList: termsSummary
   };
 
   const page = `<!doctype html>
@@ -217,7 +426,7 @@ ${head({
   assetPrefix: '../',
   localeData
 })}
-<body data-page="chapter" data-language="vi">
+<body data-page="chapter" data-language="vi" data-term-mode="bilingual">
   <a class="skip-link" href="#learning-goals-vi">${ui.skip}</a>
   <div class="reading-progress" aria-hidden="true"><span></span></div>
   ${chapterHeader(chapter)}
@@ -260,7 +469,8 @@ function homePage() {
   const localeData = {
     page: 'home',
     glossary: ui.glossary,
-    backToTop: 'Về đầu trang'
+    backToTop: 'Về đầu trang',
+    termsList: termsSummary
   };
 
   return `<!doctype html>
@@ -271,10 +481,11 @@ ${head({
   assetPrefix: './',
   localeData
 })}
-<body data-page="home" data-language="vi">
+<body data-page="home" data-language="vi" data-term-mode="bilingual">
   <header class="site-header home-header">
     <a class="wordmark" href="#top" aria-label="SEG301m">SEG<span>301</span>m<span class="wordmark__dot">.</span></a>
     <span class="site-header__caption">Truy xuất thông tin <span aria-hidden="true">/</span> Công cụ tìm kiếm</span>
+    ${termSwitcher()}
     <a class="site-header__link" href="#chapters">Danh sách chương <span aria-hidden="true">↓</span></a>
   </header>
   <main id="top">
@@ -302,6 +513,7 @@ ${head({
 await rm(outputDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
 await mkdir(chaptersDir, { recursive: true });
 await mkdir(resolve(outputDir, 'assets'), { recursive: true });
+await writeFile(resolve(outputDir, '.gitignore'), '.vercel\n', 'utf8');
 
 for (const chapter of catalog.chapters) {
   await buildLessonPage(chapter);
@@ -315,6 +527,9 @@ for (const chapter of catalog.chapters) {
 await writeFile(resolve(outputDir, 'index.html'), homePage(), 'utf8');
 await copyFile(resolve(root, 'web/styles.css'), resolve(outputDir, 'styles.css'));
 await copyFile(resolve(root, 'web/app.js'), resolve(outputDir, 'app.js'));
+await copyFile(resolve(root, 'web/favicon.svg'), resolve(outputDir, 'assets/favicon.svg'));
+await copyFile(resolve(root, 'web/favicon.svg'), resolve(outputDir, 'favicon.ico'));
+await copyFile(resolve(root, 'web/favicon.svg'), resolve(outputDir, 'favicon.svg'));
 await copyFile(resolve(root, 'web/tutor/tutor.css'), resolve(outputDir, 'tutor.css'));
 await mkdir(resolve(outputDir, 'assets/katex'), { recursive: true });
 await copyFile(resolve(root, 'node_modules/katex/dist/katex.min.css'), resolve(outputDir, 'assets/katex/katex.min.css'));

@@ -9,14 +9,14 @@ SEG301m ghi chú học tập
 
 Sau khi học xong chương này, bạn có thể:
 
-1. Giải thích sự khác biệt về dữ liệu đầu vào, đầu ra và tín hiệu học tập giữa phân loại (classification) và phân cụm (clustering).
-2. Huấn luyện mô hình Multinomial Naive Bayes và phân loại câu văn mới bằng kỹ thuật làm mịn (smoothing) kết hợp thang điểm logarit.
+2. Huấn luyện mô hình Multinomial Naive Bayes và phân loại câu văn mới bằng kỹ thuật {{term:smoothing}} kết hợp thang điểm logarit.
+2. {{term:smoothing}} kết hợp thang điểm logarit.
 3. Giải thích siêu phẳng (hyperplane), lề (margin), vector hỗ trợ (support vector), lề cứng (hard margin), lề mềm (soft margin), hàm mất mát hinge (hinge loss) và siêu tham số `C` trong SVM.
-4. Tính toán độ chính xác tổng thể (accuracy), độ chính xác (precision), độ bao phủ (recall), F1, trung bình micro và trung bình macro từ ma trận nhầm lẫn (confusion matrix).
-5. Tính độ giảm độ bất định bằng độ tăng thông tin (information gain) khi một từ xuất hiện hoặc vắng mặt.
-6. Phân biệt phân cụm phân cấp (hierarchical clustering), K-means và các kỹ thuật gom nhóm dựa trên láng giềng gần nhất.
+6. Phân biệt {{term:hierarchical-clustering}}, K-means và các kỹ thuật gom nhóm dựa trên láng giềng gần nhất.
+5. {{term:information-gain}} khi một từ xuất hiện hoặc vắng mặt.
+6. {{term:hierarchical-clustering}}, K-means và các kỹ thuật gom nhóm dựa trên láng giềng gần nhất.
 7. Tính độ tinh khiết (purity), giải thích cách chọn số cụm `K` cùng những giới hạn khi đánh giá phân cụm.
-8. Phân chia 10 điểm trong bài tập gốc thành 3 cụm, tính toán tọa độ trọng tâm (centroid), đường kính (diameter) và bán kính (radius) của từng cụm.
+8. Phân chia 10 điểm trong bài tập gốc thành 3 cụm, tính toán tọa độ {{term:centroid}}, {{term:diameter}} và {{term:radius}} của từng cụm.
 
 Slide nguồn: 1–3
 
@@ -35,8 +35,8 @@ Hãy xem xét bài toán tổ chức kết quả tìm kiếm tin tức:
 
 | Phương pháp | Dữ liệu đầu vào | Quá trình học / xử lý | Dữ liệu đầu ra |
 | --- | --- | --- | --- |
-| Phân loại (classification) | Tài liệu kèm nhãn mục tiêu đã biết trước (dữ liệu huấn luyện có giám sát) | Học quy luật ánh xạ giữa các đặc trưng và nhãn lớp | Gán nhãn phù hợp (như sports, politics...) cho tài liệu mới |
-| Phân cụm (clustering) | Tài liệu và các vector đặc trưng; không sử dụng nhãn mục tiêu (học không giám sát) | Khám phá cấu trúc tự nhiên dựa trên độ tương đồng hoặc khoảng cách | Tạo ra các nhóm (cụm) chứa các tài liệu có nội dung gần gũi |
+| {{term:clustering}} | Tài liệu và các vector đặc trưng; không sử dụng nhãn mục tiêu (học không giám sát) | Khám phá cấu trúc tự nhiên dựa trên độ tương đồng hoặc khoảng cách | Tạo ra các nhóm (cụm) chứa các tài liệu có nội dung gần gũi |
+| {{term:clustering}} | Tài liệu và các vector đặc trưng; không sử dụng nhãn mục tiêu (học không giám sát) | Khám phá cấu trúc tự nhiên dựa trên độ tương đồng hoặc khoảng cách | Tạo ra các nhóm (cụm) chứa các tài liệu có nội dung gần gũi |
 
 Bộ lọc thư rác (spam filter), phân tích cảm xúc (sentiment analysis) hay gắn danh mục quảng cáo là các ví dụ điển hình của bài toán phân loại. Ngược lại, việc tự động gom nhóm danh sách kết quả tìm kiếm theo các chủ đề liên quan là ví dụ của bài toán phân cụm. Dù sau khi phân cụm con người có thể đặt tên cho từng nhóm, nhưng trong suốt quá trình hình thành cụm, thuật toán hoàn toàn không sử dụng bất kỳ nhãn mục tiêu có sẵn nào.
 
@@ -50,9 +50,9 @@ Slide nguồn: 4
   <span class="formula-main">P(C|D) = P(D|C)P(C) / P(D)</span>
 </div>
 
-- `P(C)`: **Xác suất tiên nghiệm (prior)**, phản ánh tần suất xuất hiện tự nhiên của lớp `C` trước khi nhìn thấy nội dung tài liệu.
-- `P(D|C)`: **Hàm hợp lý (likelihood)**, đo lường khả năng tài liệu `D` được sinh ra nếu biết trước nó thuộc về lớp `C`.
-- `P(C|D)`: **Xác suất hậu nghiệm (posterior)**, xác suất tài liệu thuộc về lớp `C` sau khi đã quan sát toàn bộ nội dung của `D`.
+- `P(C|D)`: **{{term:posterior}}**, xác suất tài liệu thuộc về lớp `C` sau khi đã quan sát toàn bộ nội dung của `D`.
+- `P(D|C)`: **{{term:likelihood}}**, đo lường khả năng tài liệu `D` được sinh ra nếu biết trước nó thuộc về lớp `C`.
+- `P(C|D)`: **{{term:posterior}}**, xác suất tài liệu thuộc về lớp `C` sau khi đã quan sát toàn bộ nội dung của `D`.
 - `P(D)`: Hệ số chuẩn hóa chung cho tất cả các lớp.
 
 Thuật toán Naive Bayes đưa ra giả định ngây thơ (naive) rằng: khi đã biết lớp của tài liệu, sự xuất hiện của các từ (đặc trưng) là hoàn toàn độc lập có điều kiện với nhau. Dù trong thực tế hai từ `quick` và `breakfast` thường đi liền với nhau, giả định này cho phép phân rã xác suất đồng thời thành tích các xác suất thành phần riêng rẽ. Nhờ sự đơn giản hóa này, mô hình có thể huấn luyện cực nhanh và hoạt động ổn định ngay cả trên những tập dữ liệu nhỏ.
@@ -158,11 +158,11 @@ Khi dữ liệu hoàn toàn phân tách tuyến tính, SVM tìm kiếm siêu ph�
   <span class="formula-sub">subject to y<sub>i</sub>(w·x<sub>i</sub>+b) ≥ 1</span>
 </div>
 
-Khi đó, những điểm dữ liệu huấn luyện thỏa mãn đẳng thức `y_i f(x_i) = 1` (nằm chính xác trên hai đường biên lề `f(x) = +1` hoặc `f(x) = −1`) được gọi là các **vector hỗ trợ (support vectors)**. Các điểm này đóng vai trò then chốt quyết định vị trí của ranh giới tối ưu; nếu loại bỏ hoặc dịch chuyển các điểm khác nằm xa ngoài lề (`y_i f(x_i) > 1`), vị trí của siêu phẳng tối ưu hoàn toàn không thay đổi.
+Khi đó, những điểm dữ liệu huấn luyện thỏa mãn đẳng thức `y_i f(x_i) = 1` (nằm chính xác trên hai đường biên lề `f(x) = +1` hoặc `f(x) = −1`) được gọi là các **{{term:support-vector}}**. Các điểm này đóng vai trò then chốt quyết định vị trí của ranh giới tối ưu; nếu loại bỏ hoặc dịch chuyển các điểm khác nằm xa ngoài lề (`y_i f(x_i) > 1`), vị trí của siêu phẳng tối ưu hoàn toàn không thay đổi.
 
 ### Lề mềm, hàm mất mát hinge và siêu tham số C
 
-Trong thực tế, dữ liệu văn bản thường bị nhiễu và không thể phân tách tuyến tính hoàn hảo. Do đó, SVM sử dụng cơ chế lề mềm (soft margin), cho phép một số điểm dữ liệu vi phạm điều kiện lề thông qua hàm mất mát hinge:
+Trong thực tế, dữ liệu văn bản thường bị nhiễu và không thể phân tách tuyến tính hoàn hảo. Do đó, SVM sử dụng cơ chế {{term:soft-margin}}, cho phép một số điểm dữ liệu vi phạm điều kiện lề thông qua hàm mất mát hinge:
 
 <div class="formula-block" role="math" aria-label="hinge loss equals maximum of zero and one minus y times f x">
   <span class="formula-main">L(x,y) = max(0, 1 − y(w·x+b))</span>
@@ -196,7 +196,7 @@ Trong giai đoạn dự đoán, ta dùng `w, b` đã biết để tính `f(x)`. 
 
 Slide nguồn: 8
 
-Ma trận nhầm lẫn (confusion matrix) cho bài toán phân loại nhị phân quy ước hàng là nhãn thực tế (actual) và cột là nhãn dự đoán (predicted):
+{{term:confusion-matrix}} cho bài toán phân loại nhị phân quy ước hàng là nhãn thực tế (actual) và cột là nhãn dự đoán (predicted):
 
 | Thực tế \ Dự đoán | Positive | Negative |
 | --- | ---: | ---: |
@@ -220,7 +220,7 @@ Xét bảng ma trận nhầm lẫn cho bài toán phân loại 3 lớp (A, B, C)
 | B | 4 | 4 | 2 |
 | C | 3 | 2 | 5 |
 
-| Lớp | Độ chính xác (Precision) | Độ bao phủ (Recall) | Điểm F1 |
+| Lớp | {{term:precision}} | {{term:recall}} | Điểm F1 |
 | --- | ---: | ---: | ---: |
 | A | `45 / (45 + 7) = 0.865` | `45 / 50 = 0.900` | 0.882 |
 | B | `4 / (4 + 5) = 0.444` | `4 / 10 = 0.400` | 0.421 |
@@ -240,8 +240,8 @@ Slide nguồn: 9–12
 
 ### Mô hình sinh và mô hình phân biệt
 
-- **Mô hình sinh (generative model):** Mô hình hóa quá trình dữ liệu được sinh ra từ các lớp thông qua phân phối xác suất `P(c)` và `P(d|c)`. Ví dụ tiêu biểu là Naive Bayes.
-- **Mô hình phân biệt (discriminative model):** Học trực tiếp ranh giới phân tách hoặc hàm điều kiện `P(c|d)`. Ví dụ tiêu biểu là SVM.
+- **{{term:generative-model}}:** Mô hình hóa quá trình dữ liệu được sinh ra từ các lớp thông qua phân phối xác suất `P(c)` và `P(d|c)`. Ví dụ tiêu biểu là Naive Bayes.
+- **{{term:discriminative-model}}:** Học trực tiếp ranh giới phân tách hoặc hàm điều kiện `P(c|d)`. Ví dụ tiêu biểu là SVM.
 
 Mô hình sinh hữu hiệu khi tập dữ liệu nhỏ nhờ việc đặt ra các giả định về phân phối. Mô hình phân biệt tập trung trực tiếp vào việc tối ưu ranh giới phân lớp nên thường cho độ chính xác cao hơn khi có đủ dữ liệu huấn luyện.
 
@@ -251,7 +251,7 @@ Bộ phân loại k láng giềng gần nhất (k-NN classifier) gán nhãn cho 
 
 ### Độ tăng thông tin (Information Gain)
 
-Trong xử lý văn bản, không gian từ vựng có thể lên tới hàng trăm nghìn từ. Kỹ thuật lựa chọn đặc trưng (feature selection) giúp loại bỏ các từ nhiễu để giảm độ phức tạp tính toán và chống quá khớp. Bắt buộc phải chọn đặc trưng trên tập dữ liệu huấn luyện, không được dùng tập kiểm thử.
+Trong xử lý văn bản, không gian từ vựng có thể lên tới hàng trăm nghìn từ. Kỹ thuật {{term:feature-selection}} giúp loại bỏ các từ nhiễu để giảm độ phức tạp tính toán và chống quá khớp. Bắt buộc phải chọn đặc trưng trên tập dữ liệu huấn luyện, không được dùng tập kiểm thử.
 
 Gọi biến ngẫu nhiên nhị phân `W ∈ {0, 1}` biểu thị việc từ `w` xuất hiện (`W = 1`) hay vắng mặt (`W = 0`) trong tài liệu. Độ hỗn loạn (entropy) đo lường mức độ bất định của phân phối lớp `C`, tính bằng bit (sử dụng logarit cơ số 2). Độ tăng thông tin (Information Gain, IG) đo lượng bất định giảm đi sau khi biết trạng thái của từ `w`:
 
@@ -313,12 +313,12 @@ Tùy vào đầu vào là truy vấn ngắn hay bài viết dài mà yêu cầu 
 
 Slide nguồn: 16
 
-Phân cụm phân cấp (hierarchical clustering) xây dựng một cấu trúc cây biểu diễn quan hệ bao hàm giữa các cụm. Thay vì chỉ đưa ra một phân hoạch cố định duy nhất, phương pháp này cho phép trực quan hóa toàn bộ quá trình các nhóm nhỏ được kết hợp dần thành các nhóm lớn theo thứ tự thông qua biểu đồ cây (dendrogram).
+{{term:hierarchical-clustering}} xây dựng một cấu trúc cây biểu diễn quan hệ bao hàm giữa các cụm. Thay vì chỉ đưa ra một phân hoạch cố định duy nhất, phương pháp này cho phép trực quan hóa toàn bộ quá trình các nhóm nhỏ được kết hợp dần thành các nhóm lớn theo thứ tự thông qua biểu đồ cây (dendrogram).
 
-- **Phân cụm tích tụ (agglomerative / bottom-up):** Khởi đầu với mỗi điểm dữ liệu là một cụm riêng biệt, sau đó lặp đi lặp lại việc hợp nhất hai cụm gần nhau nhất cho đến khi toàn bộ dữ liệu nằm chung trong một cụm duy nhất.
-- **Phân cụm phân chia (divisive / top-down):** Khởi đầu với toàn bộ tập dữ liệu nằm trong một cụm lớn duy nhất, sau đó chia nhỏ dần thành các cụm con.
+- **{{term:agglomerative-clustering}}:** Khởi đầu với mỗi điểm dữ liệu là một cụm riêng biệt, sau đó lặp đi lặp lại việc hợp nhất hai cụm gần nhau nhất cho đến khi toàn bộ dữ liệu nằm chung trong một cụm duy nhất.
+- **{{term:divisive-clustering}}:** Khởi đầu với toàn bộ tập dữ liệu nằm trong một cụm lớn duy nhất, sau đó chia nhỏ dần thành các cụm con.
 
-Khoảng cách giữa hai điểm đơn lẻ là tường minh, nhưng khoảng cách giữa hai cụm (mỗi cụm chứa nhiều điểm) đòi hỏi phải có quy tắc liên kết (linkage):
+Khoảng cách giữa hai điểm đơn lẻ là tường minh, nhưng khoảng cách giữa hai cụm (mỗi cụm chứa nhiều điểm) đòi hỏi phải có {{term:linkage}}:
 
 | Quy tắc liên kết | Khoảng cách giữa hai cụm | Xu hướng hình thành cụm |
 | --- | --- | --- |
@@ -361,7 +361,7 @@ Cần phân biệt rõ ba khái niệm sau:
 
 - **Phân loại k-NN (k-NN classification):** Bài toán có giám sát, dùng đa số phiếu bầu của `k` điểm huấn luyện láng giềng để dự đoán nhãn cho điểm mới.
 - **Phân cụm đồ thị láng giềng gần nhất:** Nối mỗi điểm với các láng giềng gần nhất để tạo thành đồ thị, sau đó tách các thành phần liên thông để tạo cụm.
-- **K-means:** Tham số `K` đại diện cho số lượng cụm và sử dụng khoảng cách tới các trọng tâm đại diện.
+- **{{term:k-means}}:** Tham số `K` đại diện cho số lượng cụm và sử dụng khoảng cách tới các trọng tâm đại diện.
 
 Khi xây dựng ví dụ bổ trợ, cần công bố rõ quy tắc, ví dụ: "kết nối mỗi điểm với 5 láng giềng gần nhất, chỉ giữ lại các cạnh nối qua lại hai chiều (mutual nearest neighbors), rồi lấy các thành phần liên thông làm cụm". Tuyệt đối không nhầm lẫn số lượng láng giềng 5 với số lượng cụm 5.
 
@@ -455,7 +455,7 @@ Sự phân bổ điểm vào các cụm ở vòng lặp 2 hoàn toàn trùng kh�
 
 ### Các cụm hội tụ cuối cùng
 
-| Cụm | Các điểm thành viên | Tọa độ trọng tâm (Centroid) |
+| Cụm | Các điểm thành viên | Tọa độ {{term:centroid}} |
 | --- | --- | --- |
 | C1 | A, E, H, J | `(2.5, 8.75)` |
 | C2 | D, F, G | `(6.6667, 4.3333)` |
@@ -465,8 +465,8 @@ Sự phân bổ điểm vào các cụm ở vòng lặp 2 hoàn toàn trùng kh�
 
 Slide gốc không đưa ra công thức định nghĩa, vì vậy lời giải chuẩn này áp dụng định nghĩa hình học phổ biến:
 
-- **Đường kính (diameter):** Khoảng cách Euclid lớn nhất giữa hai điểm bất kỳ nằm trong cùng một cụm.
-- **Bán kính (radius):** Khoảng cách Euclid lớn nhất từ trọng tâm của cụm tới một điểm thành viên trong cụm đó.
+- **{{term:radius}}:** Khoảng cách Euclid lớn nhất từ trọng tâm của cụm tới một điểm thành viên trong cụm đó.
+- **{{term:radius}}:** Khoảng cách Euclid lớn nhất từ trọng tâm của cụm tới một điểm thành viên trong cụm đó.
 
 | Cụm | Cặp điểm tạo đường kính | Giá trị đường kính | Điểm tạo bán kính | Giá trị bán kính |
 | --- | --- | ---: | --- | ---: |
@@ -532,19 +532,19 @@ Slide nguồn: 23
 - Multinomial Naive Bayes học xác suất tiên nghiệm của các lớp và hàm hợp lý của các từ vựng, sử dụng kỹ thuật làm mịn để tránh xác suất 0.
 - SVM tìm kiếm siêu phẳng có lề rộng nhất. Trong mô hình lề cứng, support vector là các điểm nằm trên đường biên lề; trong mô hình lề mềm, support vector bao gồm cả các điểm nằm trên biên lề, các điểm nằm trong vùng lề và các điểm bị phân loại sai.
 - Khi dữ liệu mất cân bằng lớp, độ chính xác tổng thể (accuracy) dễ gây hiểu lầm; trung bình Macro đối xử với các lớp bình đẳng nên đánh giá khách quan hơn trên các lớp thiểu số.
-- Độ tăng thông tin (Information Gain) định lượng mức độ giảm độ hỗn loạn (entropy) của các lớp khi biết sự xuất hiện hay vắng mặt của một từ khóa.
+- {{term:information-gain}} định lượng mức độ giảm {{term:entropy}} của các lớp khi biết sự xuất hiện hay vắng mặt của một từ khóa.
 - K-means yêu cầu xác định trước số cụm `K`, lặp đi lặp lại hai bước gán điểm vào trọng tâm gần nhất và cập nhật tọa độ trọng tâm cho đến khi hội tụ.
-- Độ tinh khiết (purity) đánh giá chất lượng phân cụm dựa trên nhãn bên ngoài, nhưng có thể tăng cao giả tạo khi chia nhỏ số lượng cụm.
+- {{term:purity}} đánh giá chất lượng phân cụm dựa trên nhãn bên ngoài, nhưng có thể tăng cao giả tạo khi chia nhỏ số lượng cụm.
 
 ## Câu hỏi tự kiểm tra {#quiz}
 
 1. Giả định độc lập có điều kiện trong Naive Bayes giúp đơn giản hóa điều gì trong tính toán?
-2. Điều gì sẽ xảy ra nếu gặp một từ mới chưa từng xuất hiện trong tập huấn luyện khi không sử dụng kỹ thuật làm mịn (smoothing)?
+2. Điều gì sẽ xảy ra nếu gặp một từ mới chưa từng xuất hiện trong tập huấn luyện khi không sử dụng kỹ thuật {{term:smoothing}}?
 3. Trong trường hợp nào một điểm dữ liệu được SVM phân loại đúng nhãn nhưng vẫn phải chịu mất mát hinge? Trong mô hình lề mềm, support vector có phải chỉ gồm các điểm gần ranh giới quyết định nhất không?
 4. Chỉ số Micro-F1 và Macro-F1 phản ứng như thế nào trước sự mất cân bằng về số lượng mẫu giữa các lớp?
-5. Tại sao tuyệt đối không được thực hiện việc lựa chọn đặc trưng (feature selection) trên tập dữ liệu kiểm thử?
+5. Tại sao tuyệt đối không được thực hiện việc {{term:feature-selection}} trên tập dữ liệu kiểm thử?
 6. Tham số `K` trong K-means và tham số `k` trong phân loại k-NN lần lượt đại diện cho điều gì?
-7. Tại sao một kết quả phân cụm có độ tinh khiết (purity) bằng 1 chưa chắc đã là một mô hình phân cụm tốt trong thực tế?
+7. Tại sao một kết quả phân cụm có {{term:purity}} bằng 1 chưa chắc đã là một mô hình phân cụm tốt trong thực tế?
 
 <details>
 <summary>Xem đáp án gợi ý</summary>
@@ -577,7 +577,7 @@ Slide nguồn: 23
 | Micro-average | Trung bình Micro | Cách tính chỉ số bằng cách cộng dồn toàn bộ số đếm của tất cả các lớp trước khi chia. |
 | Macro-average | Trung bình Macro | Cách tính chỉ số bằng cách lấy trung bình cộng bình đẳng điểm số của từng lớp. |
 | Feature selection | Lựa chọn đặc trưng | Quá trình chắt lọc các đặc trưng quan trọng nhất và loại bỏ các đặc trưng nhiễu. |
-| Information gain | Độ tăng thông tin | Lượng độ bất định (entropy) giảm đi khi biết một đặc trưng xuất hiện hay vắng mặt. |
+| Information gain | Độ tăng thông tin | {{term:entropy}} giảm đi khi biết một đặc trưng xuất hiện hay vắng mặt. |
 | Agglomerative clustering | Phân cụm tích tụ | Phương pháp phân cụm phân cấp đi từ dưới lên, gộp dần các cụm gần nhau. |
 | Divisive clustering | Phân cụm phân chia | Phương pháp phân cụm phân cấp đi từ trên xuống, chia nhỏ dần cụm lớn ban đầu. |
 | K-means | Thuật toán K-means | Phương pháp phân cụm phân hoạch lặp dựa trên khoảng cách tới K trọng tâm. |

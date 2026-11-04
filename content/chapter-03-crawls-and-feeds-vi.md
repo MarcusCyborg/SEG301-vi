@@ -9,9 +9,9 @@ SEG301m ghi chú học tập
 
 Sau khi học xong chương này, bạn có thể giải thích các nội dung sau:
 
-1. Trình bày luồng hoạt động của Web crawler từ khâu phát hiện URL, tải trang đến bổ sung các liên kết mới vào hàng đợi (frontier).
-2. Nêu rõ lý do cần thu thập song song đa luồng, chính sách lịch sự (politeness policy) và bài toán giữ độ tươi mới (freshness).
-3. So sánh sự khác biệt giữa các phương thức thu thập Web, tài liệu nội bộ, email và nguồn cấp (feed).
+3. So sánh sự khác biệt giữa các phương thức thu thập Web, tài liệu nội bộ, email và {{term:feed}}.
+2. Nêu rõ lý do cần thu thập song song đa luồng, {{term:politeness-policy}} {{term:freshness}}.
+3. So sánh sự khác biệt giữa các phương thức thu thập Web, tài liệu nội bộ, {{term:feed}}.
 4. Trình bày các nguyên lý cơ bản về bảng mã ký tự, lưu trữ tài liệu quy mô lớn, loại bỏ trùng lặp và loại bỏ nhiễu.
 
 Slide nguồn: 1-3
@@ -20,10 +20,10 @@ Slide nguồn: 1-3
 
 Ở Chương 2, chúng ta đã biết thu thập văn bản là cửa ngõ đầu vào của công cụ tìm kiếm. Chương này sẽ đi sâu vào cơ chế hoạt động của cửa ngõ đó:
 
-- **Tập tài liệu (Document collection):** Tập hợp các tài liệu được lưu trữ để phục vụ tìm kiếm.
-- **Trình thu thập (Crawler):** Chương trình tự động phát hiện và tải các trang Web hoặc tệp tin.
-- **Độ mới (Freshness):** Mức độ dữ liệu trong hệ thống phản ánh kịp thời các thay đổi trên thực tế.
-- **Chỉ mục đảo:** Cấu trúc tra cứu tài liệu từ từ ngữ. Các dấu vân tay (fingerprint) phát hiện trùng lặp cũng có thể lưu trong cấu trúc này.
+- **{{term:inverted-index}}:** Cấu trúc tra cứu tài liệu từ từ ngữ. Các {{term:fingerprint}} phát hiện trùng lặp cũng có thể lưu trong cấu trúc này.
+- **{{term:crawler}}:** Chương trình tự động phát hiện và tải các trang Web hoặc tệp tin.
+- **{{term:freshness}}:** Mức độ dữ liệu trong hệ thống phản ánh kịp thời các thay đổi trên thực tế.
+- **{{term:inverted-index}}:** Cấu trúc tra cứu tài liệu từ từ ngữ. Các dấu vân tay (fingerprint) phát hiện trùng lặp cũng có thể lưu trong cấu trúc này.
 
 **Giải thích dễ hiểu:** Crawler giống như thủ thư đi gom sách về cho thư viện. Không chỉ gom càng nhiều càng tốt, người thủ thư còn phải tránh gom nhiều bản trùng lặp, phải cập nhật bản in mới khi sách thay đổi nội dung, và không được nhầm lẫn tờ rơi quảng cáo với nội dung sách thực sự.
 
@@ -47,7 +47,7 @@ Slide nguồn: 5-8
 
 ### Vì sao phải sao chép dữ liệu Web
 
-Để người dùng có thể tìm kiếm tức thì, hệ thống phải tải nội dung các trang về máy chủ của mình trước. Quá trình phát hiện và tải trang này gọi là **thu thập Web (crawling)**, và chương trình thực hiện gọi là **trình thu thập Web (Web crawler)** (hay spider / bot).
+Để người dùng có thể tìm kiếm tức thì, hệ thống phải tải nội dung các trang về máy chủ của mình trước. Quá trình phát hiện và tải trang này gọi là **{{term:crawling}}**, và chương trình thực hiện gọi là **{{term:web-crawler}}** (hay spider / bot).
 
 Hai khó khăn mang tính bản chất:
 
@@ -72,13 +72,13 @@ Mặc dù URL là định danh cơ bản, trong thực tế nhiều URL khác nh
 
 Slide nguồn: 7
 
-- **GET:** Yêu cầu máy chủ gửi về nội dung của tài nguyên được chỉ định. Đây là phương thức chủ yếu mà crawler sử dụng.
+- **{{term:get}}:** Yêu cầu máy chủ gửi về nội dung của tài nguyên được chỉ định. Đây là phương thức chủ yếu mà crawler sử dụng.
 
 ```http
 GET /csinfo/people.html HTTP/1.0
 ```
 
-- **POST:** Gửi dữ liệu bổ sung lên máy chủ, thường dùng cho việc bấm nút thanh toán, gửi biểu mẫu hoặc cập nhật trạng thái. Crawler thông thường tuyệt đối không được tự tiện gửi lệnh POST bừa bãi vì có thể gây biến đổi dữ liệu ngoài ý muốn trên máy chủ mục tiêu.
+- **{{term:post}}:** Gửi dữ liệu bổ sung lên máy chủ, thường dùng cho việc bấm nút thanh toán, gửi biểu mẫu hoặc cập nhật trạng thái. Crawler thông thường tuyệt đối không được tự tiện gửi lệnh POST bừa bãi vì có thể gây biến đổi dữ liệu ngoài ý muốn trên máy chủ mục tiêu.
 
 ### Lần theo liên kết
 
@@ -110,7 +110,7 @@ Nếu sử dụng kiến trúc đa luồng, trong lúc một luồng đang chờ
 
 Slide nguồn: 10
 
-**Chính sách lịch sự (politeness policy)** là tập hợp các quy tắc nhằm bảo vệ máy chủ của trang web khỏi nguy cơ bị nghẽn do crawler:
+**{{term:politeness-policy}}** là tập hợp các quy tắc nhằm bảo vệ máy chủ của trang web khỏi nguy cơ bị nghẽn do crawler:
 
 - Không gửi nhiều yêu cầu đồng thời tới cùng một máy chủ.
 - Giữ khoảng cách tối thiểu vài giây giữa hai lần yêu cầu liên tiếp tới cùng một máy chủ.
@@ -163,13 +163,13 @@ Slide nguồn: 12-15
 
 ### Vì sao phải thu thập lại một trang web đã có
 
-Các trang Web liên tục được thêm mới, sửa đổi hoặc xóa bỏ. Nếu crawler không quay lại thu thập định kỳ, bản sao lưu trong chỉ mục sẽ trở nên lỗi thời so với thực tế. Mục tiêu của việc thu thập lại (re-crawling) là duy trì **độ mới (freshness)** cho bộ sưu tập.
+Các trang Web liên tục được thêm mới, sửa đổi hoặc xóa bỏ. Nếu crawler không quay lại thu thập định kỳ, bản sao lưu trong chỉ mục sẽ trở nên lỗi thời so với thực tế. Mục tiêu của việc thu thập lại (re-crawling) là duy trì **{{term:freshness}}** cho bộ sưu tập.
 
 ### Yêu cầu HEAD và Tiêu đề Last-Modified
 
 Slide nguồn: 13-14
 
-Phương thức HTTP **HEAD** yêu cầu máy chủ chỉ gửi về các dòng tiêu đề (header) mà không gửi phần thân (body) của tài liệu. Bằng cách kiểm tra trường `Last-Modified`, crawler biết được thời điểm trang được cập nhật lần cuối:
+Phương thức HTTP **{{term:head}}** yêu cầu máy chủ chỉ gửi về các dòng tiêu đề (header) mà không gửi phần thân (body) của tài liệu. Bằng cách kiểm tra trường `Last-Modified`, crawler biết được thời điểm trang được cập nhật lần cuối:
 
 ```http
 HEAD /csinfo/people.html HTTP/1.1
@@ -248,7 +248,7 @@ Slide nguồn: 16-18
 
 ### Thu thập theo chủ đề (Focused crawling)
 
-**Thu thập theo chủ đề (focused crawling)** ưu tiên thu thập các trang thuộc một chủ đề cụ thể (như điện ảnh, y khoa, tài chính). Nhờ loại bớt các trang không liên quan ngay từ khâu thu thập, hệ thống tiết kiệm băng thông và đạt độ chính xác cao hơn cho các công cụ tìm kiếm chuyên ngành.
+**{{term:focused-crawling}}** ưu tiên thu thập các trang thuộc một chủ đề cụ thể (như điện ảnh, y khoa, tài chính). Nhờ loại bớt các trang không liên quan ngay từ khâu thu thập, hệ thống tiết kiệm băng thông và đạt độ chính xác cao hơn cho các công cụ tìm kiếm chuyên ngành.
 
 So sánh hai phương pháp tiếp cận:
 
@@ -261,7 +261,7 @@ So sánh hai phương pháp tiếp cận:
 
 Slide nguồn: 17
 
-Slide định nghĩa **Deep Web (hidden Web)** là vùng thông tin rộng lớn mà crawler thông thường không thể tự tìm tới bằng cách lần theo liên kết tĩnh:
+Slide định nghĩa **{{term:deep-web}}** là vùng thông tin rộng lớn mà crawler thông thường không thể tự tìm tới bằng cách lần theo liên kết tĩnh:
 
 - Các trang yêu cầu đăng nhập mật khẩu hoặc phân quyền nội bộ.
 - Dữ liệu nằm trong cơ sở dữ liệu, chỉ xuất hiện sau khi người dùng điền biểu mẫu tìm kiếm.
@@ -295,8 +295,8 @@ Trong ghi chú của slide, hệ thống tìm kiếm desktop có thể đọc n�
 
 **Nguồn cấp tài liệu (document feed)** là cơ chế truyền nhận dữ liệu có thứ tự từ một nguồn phát:
 
-- **Cơ chế đẩy (Push feed):** Bên phát hành chủ động gửi thông báo và dữ liệu tài liệu mới ngay khi vừa xuất bản cho các bên đăng ký.
-- **Cơ chế kéo (Pull feed):** Bên nhận định kỳ gửi yêu cầu thăm dò xem có bài viết mới hay không (tiêu biểu như đọc RSS feed).
+- **{{term:push-feed}}:** Bên phát hành chủ động gửi thông báo và dữ liệu tài liệu mới ngay khi vừa xuất bản cho các bên đăng ký.
+- **{{term:pull-feed}}:** Bên nhận định kỳ gửi yêu cầu thăm dò xem có bài viết mới hay không (tiêu biểu như đọc RSS feed).
 
 Cơ chế đẩy cập nhật nhanh tức thì nhưng đòi hỏi hạ tầng lắng nghe phức tạp. Cơ chế kéo dễ triển khai nhưng nếu thăm dò quá dày sẽ tốn băng thông, thăm dò quá thưa sẽ bị trễ thông tin.
 
@@ -306,7 +306,7 @@ Slide nguồn: 21-25
 
 ### Bảng mã ký tự (Character Encoding)
 
-Máy tính biểu diễn chữ viết bằng các chuỗi bit nhị phân thông qua quy tắc ánh xạ gọi là **bảng mã ký tự (character encoding)**.
+Máy tính biểu diễn chữ viết bằng các chuỗi bit nhị phân thông qua quy tắc ánh xạ gọi là **{{term:character-encoding}}**.
 
 Slide giới thiệu ASCII là chuẩn 1 byte (chỉ biểu diễn được bảng chữ cái tiếng Anh cơ bản), các chuẩn CJK dùng 2 byte cho chữ tượng hình, và bảng mẫu biểu diễn 1 đến 4 byte tương ứng với chuẩn UTF-8.
 
@@ -320,11 +320,11 @@ Slide nguồn: 22-24
 
 Phương pháp lưu trữ tài liệu sau chuyển đổi cho tới khi xây dựng chỉ mục cần đáp ứng các yêu cầu sau:
 
-- **Truy cập ngẫu nhiên (random access):** Có thể lấy nhanh nội dung văn bản gốc theo URL hoặc mã tài liệu docID để tạo đoạn trích kết quả (snippet).
+- **{{term:random-access}}:** Có thể lấy nhanh nội dung văn bản gốc theo URL hoặc mã tài liệu docID để tạo {{term:snippet}}.
 - **Nén dữ liệu (compression):** Giảm thiểu dung lượng ổ đĩa lưu trữ và băng thông truyền tải mạng.
 - **Khả năng cập nhật (updating):** Dễ dàng phản ánh tài liệu mới thêm vào, các chỉnh sửa hoặc thao tác xóa tài liệu.
 
-Trong tìm kiếm trên máy tính cá nhân (desktop search), vì tệp gốc đã nằm sẵn trên hệ thống tệp nên có thể thiết kế hệ thống mà không cần thêm một kho lưu trữ tài liệu riêng biệt. Để tạo đoạn trích kết quả (snippet), hệ thống cần truy cập nhanh vào phần thân tài liệu, và hàm băm từ URL có thể được dùng để tra cứu nhanh vị trí lưu trữ.
+Trong {{term:desktop-search}}, vì tệp gốc đã nằm sẵn trên hệ thống tệp nên có thể thiết kế hệ thống mà không cần thêm một kho lưu trữ tài liệu riêng biệt. Để tạo {{term:snippet}}, hệ thống cần truy cập nhanh vào phần thân tài liệu, và hàm băm từ URL có thể được dùng để tra cứu nhanh vị trí lưu trữ.
 
 ### Cơ sở dữ liệu và BigTable
 
@@ -332,7 +332,7 @@ Slide nguồn: 23, 25
 
 Cơ sở dữ liệu thông thường rất tốt cho việc lưu trữ dữ liệu nhỏ có cấu trúc. Tuy nhiên, với kho tài liệu Web lên tới hàng tỷ trang, cần đến các hệ thống lưu trữ phân tán chuyên dụng như BigTable của Google.
 
-Trong BigTable, một bảng dữ liệu khổng lồ được chia thành nhiều khối nhỏ gọi là **tablet**, phân tán và phục vụ trên hàng nghìn máy chủ. Hệ thống tối ưu hóa tối đa cho thao tác đọc/ghi theo từng hàng với tốc độ cực cao, thay vì hỗ trợ các câu lệnh truy vấn quan hệ phức tạp.
+Trong BigTable, một bảng dữ liệu khổng lồ được chia thành nhiều khối nhỏ gọi là **{{term:tablet}}**, phân tán và phục vụ trên hàng nghìn máy chủ. Hệ thống tối ưu hóa tối đa cho thao tác đọc/ghi theo từng hàng với tốc độ cực cao, thay vì hỗ trợ các câu lệnh truy vấn quan hệ phức tạp.
 
 ## 3.8 Giảm thiểu trùng lặp tài liệu {#duplicate-removal}
 
@@ -358,7 +358,7 @@ Khi tìm kiếm sự trùng khớp tuyệt đối, việc đối chiếu giá tr
 
 Slide nguồn: 27
 
-Nhiều trang web có nội dung bài viết chính giống hệt nhau nhưng chỉ khác nhau ngày tháng, tên tác giả, thanh điều hướng hoặc banner quảng cáo. Chúng là các trang **trùng lặp gần (near duplicates)** (ví dụ giống nhau trên 90% nội dung).
+Nhiều trang web có nội dung bài viết chính giống hệt nhau nhưng chỉ khác nhau ngày tháng, tên tác giả, thanh điều hướng hoặc banner quảng cáo. Chúng là các trang **{{term:near-duplicate}}** (ví dụ giống nhau trên 90% nội dung).
 
 - **Kịch bản tìm kiếm (search scenario):** So sánh 1 tài liệu mới tải về với `N` tài liệu đã có trong kho, độ phức tạp là `O(N)`.
 - **Kịch bản khám phá (discovery scenario):** So sánh từng cặp giữa tất cả các tài liệu trong kho, độ phức tạp là `O(N²)`.
@@ -399,7 +399,7 @@ Cột có tổng dương nhận giá trị bit 1, cột có tổng âm nhận gi
 
 Slide 29 áp dụng nguyên lý tương tự với chuỗi 8-bit cho câu `Tropical fish include ...`, dùng tần suất từ làm trọng số. Vector tổng các cột thu được là `1, -5, 9, -9, 3, 1, 3, 3`. Chuyển các cột dương thành 1 và cột âm thành 0, ta được fingerprint 8-bit `10101111`.
 
-**Giải thích dễ hiểu:** Dấu vân tay (fingerprint) không phải là toàn văn tài liệu, mà là bản tóm lược ngắn gọn các đặc trưng nội dung. Khi được thiết kế sao cho các tài liệu hơi khác nhau vẫn có fingerprint tương tự nhau, hệ thống có thể phát hiện các tài liệu gần trùng lặp với tốc độ rất nhanh.
+**Giải thích dễ hiểu:** {{term:fingerprint}} không phải là toàn văn tài liệu, mà là bản tóm lược ngắn gọn các đặc trưng nội dung. Khi được thiết kế sao cho các tài liệu hơi khác nhau vẫn có fingerprint tương tự nhau, hệ thống có thể phát hiện các tài liệu gần trùng lặp với tốc độ rất nhanh.
 
 **Kiểm tra nhanh:** Trong ví dụ 4-bit trên, nếu trọng số của từ `fish` giảm từ 3 xuống 1 thì tổng các cột và fingerprint cuối cùng sẽ thay đổi như thế nào?
 
@@ -481,21 +481,21 @@ Các yêu cầu an toàn bắt buộc:
 Slide nguồn: 33 (và toàn bộ slide 1-32)
 
 - Web crawler quản lý các URL phát hiện được qua hàng đợi frontier, tải nội dung và trích xuất các liên kết mới.
-- Kiến trúc đa luồng giúp che giấu độ trễ mạng, nhưng phải tuân thủ chính sách lịch sự (politeness policy) để bảo vệ máy chủ nguồn.
+- Kiến trúc đa luồng giúp che giấu độ trễ mạng, nhưng phải tuân thủ {{term:politeness-policy}} để bảo vệ máy chủ nguồn.
 - Thu thập lại định kỳ, khai thác yêu cầu HEAD và sơ đồ sitemap là những công cụ giúp bảo đảm độ mới cho dữ liệu.
-- Tài liệu nội bộ, email và nguồn cấp (feed) có các đặc tính vận hành khác biệt so với thu thập web mở.
+- Tài liệu nội bộ, email và {{term:feed}} có các đặc tính vận hành khác biệt so với thu thập web mở.
 - Bảng mã ký tự cần được chuẩn hóa đồng nhất về Unicode/UTF-8; hệ thống lưu trữ phải đáp ứng truy cập ngẫu nhiên, nén và cập nhật.
-- Checksum, fingerprint (SimHash) và thuật toán phát hiện vùng văn bản chính giúp loại trừ trùng lặp và lọc sạch nhiễu nội dung.
+- Checksum, {{term:simhash}} và thuật toán phát hiện vùng văn bản chính giúp loại trừ trùng lặp và lọc sạch nhiễu nội dung.
 
 ## Câu hỏi tự kiểm tra {#quiz}
 
 1. Vì sao không phải cứ tăng số lượng tài liệu thu thập là chất lượng tìm kiếm sẽ tự động tăng theo?
 2. Hàng đợi frontier trong crawler dùng để lưu trữ đối tượng nào?
 3. Lý do chính khiến crawler bắt buộc phải sử dụng kiến trúc đa luồng là gì?
-4. Chính sách lịch sự (politeness policy) được thiết kế nhằm bảo vệ đối tượng nào?
+4. {{term:politeness-policy}} được thiết kế nhằm bảo vệ đối tượng nào?
 5. Yêu cầu HTTP HEAD hỗ trợ khâu quyết định thu thập lại trang như thế nào?
 6. Sự khác biệt cốt lõi giữa focused crawling và phương pháp "thu thập toàn bộ rồi lọc sau" là gì?
-7. Cơ chế đẩy (push feed) và kéo (pull feed) khác nhau như thế nào?
+7. Cơ chế {{term:push-feed}} và {{term:pull-feed}} khác nhau như thế nào?
 8. Vì sao phương pháp phát hiện trùng lặp hoàn toàn và trùng lặp gần lại sử dụng kỹ thuật khác nhau?
 9. Trong công thức loại bỏ nhiễu, số hạng ở giữa `Σ (1 - b_n)` đo lường đại lượng gì?
 10. Trong chỉ số Age, tham số `t` và biểu thức `t - x` khác nhau như thế nào?
@@ -524,12 +524,12 @@ Slide nguồn: 33 (và toàn bộ slide 1-32)
 | --- | --- | --- | --- |
 | Crawling | Thu thập Web / Crawling | Quá trình phát hiện và tải về các trang web | 5 |
 | Web crawler | Trình thu thập Web | Chương trình tự động lần theo liên kết để thu thập trang | 5, 8–11 |
-| URL | Định danh tài nguyên mạng (URL) | Chuỗi ký tự định danh duy nhất một tài nguyên trên mạng | 6 |
+| URL | {{term:url}} | Chuỗi ký tự định danh duy nhất một tài nguyên trên mạng | 6 |
 | Scheme | Giao thức URL (Scheme) | Thành phần xác định phương thức giao tiếp (như http, https) | 6 |
 | Hostname | Tên máy chủ | Thành phần xác định máy tính cung cấp dịch vụ web | 6 |
 | GET | Yêu cầu GET | Phương thức HTTP yêu cầu lấy dữ liệu tài nguyên về máy | 7 |
 | POST | Yêu cầu POST | Phương thức HTTP gửi dữ liệu bổ sung lên máy chủ | 7 |
-| Frontier | Hàng đợi biên / frontier (Frontier) | Hàng đợi quản lý danh sách các URL đang chờ thu thập | 9–11 |
+| Frontier | Hàng đợi biên / {{term:frontier}} | Hàng đợi quản lý danh sách các URL đang chờ thu thập | 9–11 |
 | Thread | Luồng xử lý | Đơn vị thực thi độc lập bên trong tiến trình máy tính | 9, 11 |
 | Politeness policy | Chính sách lịch sự | Quy định giãn cách yêu cầu để tránh gây quá tải máy chủ đối tác | 10 |
 | Revisit | Thu thập lại / revisit | Quá trình crawler quay lại kiểm tra trang web đã thu thập từ trước | 12 |
@@ -537,11 +537,11 @@ Slide nguồn: 33 (và toàn bộ slide 1-32)
 | Last-Modified | Thời điểm cập nhật cuối | Trường tiêu đề HTTP phản ánh thời điểm sửa trang web | 13 |
 | Age | Chỉ số Age | Kỳ vọng thời gian lưu giữ bản sao cũ khi trang có thay đổi | 15 |
 | Focused crawling | Thu thập theo chủ đề | Chiến lược thu thập ưu tiên các trang thuộc một miền chủ đề | 16 |
-| Deep Web | Web ẩn (Deep Web) | Vùng dữ liệu khó tiếp cận bằng cách lần liên kết thông thường | 17 |
+| Deep Web | {{term:deep-web}} | Vùng dữ liệu khó tiếp cận bằng cách lần liên kết thông thường | 17 |
 | Sitemap | Sơ đồ trang / sitemap | Tệp XML thông báo cấu trúc URL và tần suất cập nhật trang | 18 |
 | Push feed | Nguồn cấp kiểu đẩy | Cơ chế bên phát hành chủ động gửi nội dung mới cho bên nhận | 20 |
 | Pull feed | Nguồn cấp kiểu kéo | Cơ chế bên nhận định kỳ gửi yêu cầu kiểm tra nội dung mới | 20 |
-| Character encoding | Mã hóa ký tự (Character encoding) | Quy tắc ánh xạ chuỗi bit nhị phân thành chữ viết hiển thị | 21 |
+| Character encoding | {{term:character-encoding}} | Quy tắc ánh xạ chuỗi bit nhị phân thành chữ viết hiển thị | 21 |
 | Random access | Truy cập ngẫu nhiên | Khả năng đọc thẳng một bản ghi tài liệu mà không cần duyệt tuần tự | 22, 24 |
 | Tablet | Tablet | Khối phân vùng dữ liệu nhỏ trong kiến trúc lưu trữ BigTable | 25 |
 | Checksum | Mã kiểm tra / checksum | Con số ngắn tính từ nội dung phục vụ kiểm tra trùng lặp | 26 |

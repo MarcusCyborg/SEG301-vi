@@ -9,11 +9,11 @@ SEG301m ghi chú học tập
 
 Sau khi học xong chương này, bạn có thể giải thích và thực hiện các nội dung sau:
 
-1. Trình bày lý do vì sao nhu cầu thông tin (information need) và câu truy vấn (query) không đồng nhất với nhau.
-2. Phân biệt rõ chuẩn hóa (normalization), sửa lỗi chính tả (spelling correction), gợi ý truy vấn (query suggestion), mở rộng truy vấn (query expansion) và phản hồi độ liên quan (relevance feedback).
-3. Thực hiện các phép tính cơ bản về khoảng cách chỉnh sửa (edit distance), mô hình kênh nhiễu (noisy channel model) và hệ số Dice.
-4. Giải thích vai trò của tiêu đề, URL, đoạn trích tóm tắt (snippet), vùng từ khóa nổi bật (highlighting) và phân cụm kết quả giúp người dùng phán đoán tài liệu.
-5. Nêu rõ luồng hoạt động và giới hạn của tìm kiếm xuyên ngôn ngữ (cross-language search) khi ngôn ngữ truy vấn khác với ngôn ngữ tài liệu.
+5. Nêu rõ luồng hoạt động và giới hạn của {{term:cross-language-search}} khi ngôn ngữ truy vấn khác với ngôn ngữ tài liệu.
+2. Phân biệt rõ chuẩn hóa (normalization), {{term:spelling-correction}}, {{term:query-suggestion}}, {{term:query-expansion}} {{term:relevance-feedback}}.
+3. {{term:edit-distance}}, {{term:noisy-channel-model}} và hệ số Dice.
+4. Giải thích vai trò của tiêu đề, URL, {{term:snippet}}, vùng từ khóa nổi bật (highlighting) và phân cụm kết quả giúp người dùng phán đoán tài liệu.
+5. {{term:cross-language-search}} khi ngôn ngữ truy vấn khác với ngôn ngữ tài liệu.
 
 Slide nguồn: 1-3
 
@@ -22,7 +22,7 @@ Slide nguồn: 1-3
 - Các kỹ thuật chuẩn hóa, loại bỏ từ dừng và rút gọn gốc từ ở Chương 4 không chỉ áp dụng cho tài liệu mà áp dụng cho cả câu truy vấn.
 - Chỉ mục đảo ở Chương 5 chịu trách nhiệm tìm các tài liệu ứng viên từ các từ truy vấn.
 - Điểm số xếp hạng cao không đảm bảo chắc chắn rằng truy vấn đã thể hiện đầy đủ nhu cầu thực sự của người dùng.
-- Hành vi nhấp chuột (click) và thời gian xem trang (dwell time) là tín hiệu hành vi, không phải nhãn độ liên quan tuyệt đối.
+- Hành vi nhấp chuột (click) và {{term:dwell-time}} là tín hiệu hành vi, không phải nhãn độ liên quan tuyệt đối.
 
 **Giải thích dễ hiểu:** Nếu vào cửa hàng máy tính và chỉ nói cụt lủn "máy tính", người bán hàng không thể biết bạn mua để học lập trình, chơi game hay làm đồ họa, ngân sách bao nhiêu tiền. Câu chữ ngắn gọn người dùng gõ vào ô tìm kiếm cũng vậy. Hệ thống không được tự suy diễn tùy tiện mà phải dùng gợi ý, sửa lỗi, ngữ cảnh và cách trình bày kết quả để thu hẹp khoảng cách này.
 
@@ -48,7 +48,7 @@ Chương này tập trung vào ranh giới tương tác giữa con người và 
 
 Slide nguồn: 4
 
-Nhu cầu thông tin (information need) là mục tiêu mà người dùng muốn đạt được trong thực tế, còn truy vấn (query) là chuỗi ký tự cụ thể mà người dùng nhập vào hệ thống tìm kiếm.
+{{term:information-need}} là mục tiêu mà người dùng muốn đạt được trong thực tế, còn {{term:query}} là chuỗi ký tự cụ thể mà người dùng nhập vào hệ thống tìm kiếm.
 
 **Ví dụ xuyên suốt:** Nhu cầu thực tế của sinh viên:
 
@@ -193,7 +193,7 @@ Khi `n_ab = 12`, ta có `N n_ab / (n_a n_b) = (100 × 12) / 1200 = 1`. Vì `ln(1
 
 </details>
 
-Trong mở rộng truy vấn (query expansion), hệ thống có thể thêm các từ liên quan như `may tinh xach tay`, `mong nhe`, `pin trau` vào truy vấn `laptop sinh vien`. Tuy nhiên, nếu mở rộng không kiểm soát sẽ gây ra hiện tượng **trôi truy vấn (query drift)**, ví dụ từ `laptop` bị kéo sang linh kiện bàn phím hoặc `sinh vien` bị kéo sang chủ đề vay vốn học sinh.
+Trong {{term:query-expansion}}, hệ thống có thể thêm các từ liên quan như `may tinh xach tay`, `mong nhe`, `pin trau` vào truy vấn `laptop sinh vien`. Tuy nhiên, nếu mở rộng không kiểm soát sẽ gây ra hiện tượng **{{term:query-drift}}**, ví dụ từ `laptop` bị kéo sang linh kiện bàn phím hoặc `sinh vien` bị kéo sang chủ đề vay vốn học sinh.
 
 ### Ba hình thức phản hồi độ liên quan (Relevance Feedback)
 
@@ -201,9 +201,9 @@ Trong mở rộng truy vấn (query expansion), hệ thống có thể thêm cá
 | --- | --- | --- | --- |
 | Phản hồi tường minh (Explicit feedback) | Người dùng chủ động đánh giá | Bấm nút "Bài viết này hữu ích" | Độ chính xác rất cao nhưng làm phiền người dùng |
 | Phản hồi ngầm định (Implicit feedback) | Hành vi tự nhiên của người dùng | Bấm nhấp, cuộn xem, lưu bài viết | Dễ thu thập quy mô lớn nhưng dễ bị nhiễu và thiên lệch vị trí |
-| Phản hồi giả định (Pseudo-relevance feedback) | Tự động coi top kết quả đầu là đúng | Lấy các từ xuất hiện nhiều trong top 5 | Không cần người dùng can thiệp nhưng dễ trôi truy vấn nếu top đầu sai |
+| Phản hồi {{term:pseudo-relevance-feedback}} | Tự động coi top kết quả đầu là đúng | Lấy các từ xuất hiện nhiều trong top 5 | Không cần người dùng can thiệp nhưng dễ trôi truy vấn nếu top đầu sai |
 
-Hành vi nhấp chuột thể hiện người dùng có chú ý đến tiêu đề, nhưng không khẳng định là nội dung bên trong thực sự đáp ứng nhu cầu. Người dùng có thể nhấp nhầm, nhấp vì vị trí hiển thị ở trên cùng (position bias), hoặc ngược lại không nhấp vì đã đọc được câu trả lời ngay trên đoạn trích snippet.
+Hành vi nhấp chuột thể hiện người dùng có chú ý đến tiêu đề, nhưng không khẳng định là nội dung bên trong thực sự đáp ứng nhu cầu. Người dùng có thể nhấp nhầm, nhấp vì {{term:position-bias}}, hoặc ngược lại không nhấp vì đã đọc được câu trả lời ngay trên đoạn trích snippet.
 
 ### Ngữ cảnh và Cá nhân hóa (Personalization)
 
@@ -223,7 +223,7 @@ Trang kết quả tìm kiếm (Search Engine Results Page - SERP) là giao diệ
 | --- | --- | --- |
 | Tiêu đề (Title) | Nêu bật chủ đề chính hoặc tên trang | Tiêu đề giật gân có thể không khớp nội dung thực |
 | URL / Tên miền | Cho biết nguồn gốc và cấp bậc thư mục | Cần kiểm tra độ uy tín của tên miền |
-| Đoạn trích (Snippet) | Trích xuất ngắn chứa từ khóa truy vấn | Không phải là bản tóm tắt toàn bộ tài liệu |
+| {{term:snippet}} | Trích xuất ngắn chứa từ khóa truy vấn | Không phải là bản tóm tắt toàn bộ tài liệu |
 | Làm nổi bật (Highlight) | In đậm các từ khớp với truy vấn | Xuất hiện nhiều từ chưa chắc nội dung đã hay |
 | Bản sao lưu (Cached link) | Xem bản lưu trữ tại thời điểm lập chỉ mục | Dữ liệu có thể khác biệt so với trang thực tế hiện tại |
 
@@ -321,7 +321,7 @@ Slide nguồn: 18
 
 Sử dụng kho ngữ liệu văn bản Wikipedia để lập kế hoạch thực nghiệm:
 
-1. Xây dựng chỉ mục không áp dụng rút gọn gốc từ (stemming).
+1. Xây dựng chỉ mục không áp dụng rút gọn gốc {{term:stemming}}.
 2. Lấy ra 1.000 từ đầu tiên theo thứ tự từ điển.
 3. Áp dụng thuật toán stemmer cho 1.000 từ đó, gom các từ có cùng gốc thành các nhóm lớp (stem classes).
 4. Tính toán hệ số Dice cho từng cặp từ trong cùng một nhóm lớp.
@@ -349,7 +349,7 @@ Với truy vấn đầu vào bị lỗi `studnet lapotp batery`, hãy thiết k�
 
 ### Bài tập 3: Lựa chọn hình thức hiển thị cho truy vấn so sánh giá
 
-Đối với truy vấn so sánh giá máy tính của người dùng, hãy giải thích cách kết hợp giữa đoạn trích tóm tắt (snippet), bộ lọc (filter) và phân cụm kết quả (cluster).
+Đối với truy vấn so sánh giá máy tính của người dùng, hãy giải thích cách kết hợp giữa {{term:snippet}}, bộ lọc (filter) và phân cụm kết quả (cluster).
 
 <details>
 <summary>Xem đáp án gợi ý</summary>
@@ -371,9 +371,9 @@ Slide nguồn: 19
 
 ## Câu hỏi tự kiểm tra {#quiz}
 
-1. Trình bày sự khác biệt giữa nhu cầu thông tin (information need) và câu truy vấn (query).
+1. Trình bày sự khác biệt giữa {{term:information-need}} và {{term:query}}.
 2. Vì sao trong khoảng cách Levenshtein tiêu chuẩn, thao tác hoán vị hai chữ cái kề nhau lại tính là 2 phép biến đổi?
-3. Phương pháp phản hồi độ liên quan giả định (pseudo-relevance feedback) dựa trên giả định ngầm định nào?
+3. Phương pháp {{term:pseudo-relevance-feedback}} dựa trên giả định ngầm định nào?
 4. Điểm khác biệt căn bản giữa đoạn trích phụ thuộc truy vấn (query-biased snippet) và bản tóm tắt tài liệu (summary) là gì?
 5. Nêu hai lý do vì sao lượt nhấp chuột (click) không thể coi là nhãn khẳng định chắc chắn 100% về độ liên quan của tài liệu.
 
@@ -384,7 +384,7 @@ Slide nguồn: 19
 2. Vì thuật toán Levenshtein tiêu chuẩn chỉ gồm ba phép toán chèn, xóa và thay thế; muốn đổi chỗ hai ký tự `ot → to` bắt buộc phải thực hiện 2 phép thay thế riêng rẽ.
 3. Giả định rằng một số tài liệu đứng ở các vị trí đầu tiên của kết quả tìm kiếm vòng 1 chắc chắn là các tài liệu có độ liên quan đúng đắn.
 4. Đoạn trích phụ thuộc truy vấn trích lọc linh hoạt các câu văn chứa từ khóa của câu truy vấn hiện tại; bản tóm tắt tài liệu đúc kết nội dung chính của văn bản độc lập với câu truy vấn.
-5. Thứ nhất, người dùng có thể nhấp chuột do bị thu hút bởi tiêu đề hoặc do thiên lệch vị trí ở trên cùng (position bias) nhưng vào đọc thấy nội dung vô ích; thứ hai, người dùng có thể không nhấp chuột nhưng đã hoàn toàn thỏa mãn vì đọc được ngay thông tin cần tìm trên đoạn trích snippet.
+5. Thứ nhất, người dùng có thể nhấp chuột do bị thu hút bởi tiêu đề hoặc do {{term:position-bias}} nhưng vào đọc thấy nội dung vô ích; thứ hai, người dùng có thể không nhấp chuột nhưng đã hoàn toàn thỏa mãn vì đọc được ngay thông tin cần tìm trên đoạn trích snippet.
 
 </details>
 
